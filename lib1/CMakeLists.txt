@@ -10,6 +10,8 @@ file(GLOB_RECURSE CXX_HEADERS CONFIGURE_DEPENDS
   "${SRC_SUBDIR}/*.hpp")
 
 add_library(lib1 "${CXX_SOURCES}")
+target_include_directories(lib1
+  INTERFACE "${CMAKE_INSTALL_PREFIX}/include")
 
 target_sources(lib1 PUBLIC
   FILE_SET HEADERS
