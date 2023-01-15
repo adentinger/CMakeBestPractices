@@ -3,6 +3,10 @@
 
 #include <iostream>
 
+#if !defined(LIB1_MACRO) || LIB1_MACRO != 42
+#error "!defined(LIB1_MACRO)"
+#endif // !LIB1_MACRO
+
 namespace lib2 {
 void f() {
 	std::cout << "lib2::" << __FUNCTION__ << '\n';
