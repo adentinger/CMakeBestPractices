@@ -11,6 +11,8 @@ include("${LIB1_INSTALL_DIR}/cmake/lib1/lib1Export.cmake")
 add_library(lib2 "${CXX_SOURCES}")
 target_link_libraries(lib2
   PUBLIC lib1)
+# target_include_directories(lib2
+#   PUBLIC "${LIB1_INSTALL_DIR}/include")
 
 target_sources(lib2 PUBLIC
   FILE_SET HEADERS
