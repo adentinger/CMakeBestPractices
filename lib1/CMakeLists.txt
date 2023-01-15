@@ -3,8 +3,11 @@ cmake_minimum_required(VERSION 3.23)
 project(lib1 LANGUAGES CXX)
 set(SRC_SUBDIR src)
 
-file(GLOB_RECURSE CXX_SOURCES CONFIGURE_DEPENDS "${SRC_SUBDIR}/*.cpp")
-file(GLOB_RECURSE CXX_HEADERS CONFIGURE_DEPENDS "${SRC_SUBDIR}/*.h")
+file(GLOB_RECURSE CXX_SOURCES CONFIGURE_DEPENDS
+  "${SRC_SUBDIR}/*.cpp")
+file(GLOB_RECURSE CXX_HEADERS CONFIGURE_DEPENDS
+  "${SRC_SUBDIR}/*.h"
+  "${SRC_SUBDIR}/*.hpp")
 
 add_library(lib1 "${CXX_SOURCES}")
 
@@ -15,7 +18,8 @@ target_sources(lib1 PUBLIC
   BASE_DIRS "${SRC_SUBDIR}"
   FILES "${CXX_HEADERS}")
 
-install(TARGETS lib1 EXPORT lib1Export
+install(TARGETS lib1
+  EXPORT lib1Export
   FILE_SET HEADERS
   DESTINATION include/lib1)
 install(EXPORT lib1Export
