@@ -1,0 +1,7 @@
+# A YAML file for the clangd tool that implements C++ LSP:
+# https://clangd.llvm.org/
+
+CompileFlags:
+  # Directory where the compile_commands.json file is.
+  CompilationDatabase: build
+
