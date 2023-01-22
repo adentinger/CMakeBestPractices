@@ -1,0 +1,76 @@
+{
+	"version": 6,
+	"cmakeMinimumRequired": {
+		"major": 3,
+		"minor": 25
+	},
+	"include": [
+		"../CMakePresetsBase.json"
+	],
+	"configurePresets": [
+		{
+			"name": "ninja-release",
+			"inherits": "base-ninja-release",
+			"displayName": "Release Config",
+			"description": "Release configure with Ninja.",
+			"cacheVariables": {
+			}
+		},
+		{
+			"name": "ninja-debug",
+			"inherits": "base-ninja-debug",
+			"displayName": "Debug Config",
+			"description": "Debug configure with Ninja.",
+			"cacheVariables": {
+			}
+		}
+	],
+	"buildPresets": [
+		{
+			"name": "ninja-release",
+			"inherits": "base-ninja-release",
+			"configurePreset": "ninja-release",
+			"displayName": "Ninja Release Build",
+			"description": "Build with ninja in release type."
+		},
+		{
+			"name": "ninja-debug",
+			"inherits": "base-ninja-debug",
+			"configurePreset": "ninja-debug",
+			"displayName": "Ninja Debug Build",
+			"description": "Build with ninja in debug type."
+		}
+	],
+	"workflowPresets": [
+		{
+			"name": "ninja-release",
+			"displayName": "Ninja release workflow",
+			"description": "Release workflow using Ninja.",
+			"steps": [
+				{
+					"type": "configure",
+					"name": "ninja-release"
+				},
+				{
+					"type": "build",
+					"name": "ninja-release"
+				}
+			]
+		},
+		{
+			"name": "ninja-debug",
+			"displayName": "Ninja debug workflow",
+			"description": "Release workflow using Ninja.",
+			"steps": [
+				{
+					"type": "configure",
+					"name": "ninja-debug"
+				},
+				{
+					"type": "build",
+					"name": "ninja-debug"
+				}
+			]
+		}
+	]
+}
