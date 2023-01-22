@@ -1,0 +1,66 @@
+{
+	"version": 6,
+	"cmakeMinimumRequired": {
+		"major": 3,
+		"minor": 25
+	},
+	"configurePresets": [
+		{
+			"name": "base-ninja",
+			"hidden": true,
+			"generator": "Ninja",
+			"binaryDir": "${sourceDir}/build",
+			"installDir": "install/",
+			"cacheVariables": {
+				"CMAKE_EXPORT_COMPILE_COMMANDS": {
+					"type": "BOOL",
+					"value": "ON"
+				},
+				"BUILD_SHARED_LIBS": "OFF"
+			}
+		},
+		{
+			"name": "base-ninja-release",
+			"hidden": true,
+			"inherits": "base-ninja",
+			"displayName": "Base Release Config",
+			"description": "Base Release configure with Ninja.",
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": "Release"
+			}
+		},
+		{
+			"name": "base-ninja-debug",
+			"hidden": true,
+			"inherits": "base-ninja",
+			"displayName": "Base Debug Config",
+			"description": "Base Debug configure with Ninja.",
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": "Debug"
+			}
+		}
+	],
+	"buildPresets": [
+		{
+			"name": "base-ninja",
+			"hidden": true,
+			"jobs": 10
+		},
+		{
+			"name": "base-ninja-release",
+			"hidden": true,
+			"inherits": "base-ninja",
+			"configurePreset": "base-ninja-release",
+			"displayName": "Base Ninja Release Build",
+			"description": "Base Build with ninja in release type."
+		},
+		{
+			"name": "base-ninja-debug",
+			"hidden": true,
+			"inherits": "base-ninja",
+			"configurePreset": "base-ninja-debug",
+			"displayName": "Base Ninja Debug Build",
+			"description": "Base Build with ninja in debug type."
+		}
+	]
+}
