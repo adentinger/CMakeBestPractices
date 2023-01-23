@@ -11,7 +11,7 @@ file(GLOB_RECURSE CXX_HEADERS CONFIGURE_DEPENDS
 
 add_library(lib1 "${CXX_SOURCES}")
 target_include_directories(lib1
-  INTERFACE "${CMAKE_INSTALL_PREFIX}/include")
+  INTERFACE "$<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>")
 target_compile_definitions(lib1 PUBLIC LIB1_MACRO=42)
 
 target_sources(lib1 PUBLIC
