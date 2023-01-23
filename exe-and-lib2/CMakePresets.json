@@ -16,7 +16,7 @@
 			"cacheVariables": {
 				"LIB1_INSTALL_DIR": {
 					"type": "PATH",
-					"value": "${sourceDir}/../lib1"
+					"value": "${sourceDir}/../lib1/install"
 				}
 			}
 		},
@@ -28,7 +28,7 @@
 			"cacheVariables": {
 				"LIB1_INSTALL_DIR": {
 					"type": "PATH",
-					"value": "${sourceDir}/../lib1"
+					"value": "${sourceDir}/../lib1/install"
 				}
 			}
 		}
