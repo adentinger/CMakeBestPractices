@@ -12,6 +12,18 @@ file(GLOB_RECURSE CXX_HEADERS_PRIVATE CONFIGURE_DEPENDS
   "src/*.hpp")
 
 add_library(lib1 ${CXX_SOURCES})
+# Libraries built outside *this* CMake build (aka "external dependencies") will
+# link agains this one prepended with the "lib1::" namespace. In order for
+# libraries build inside *this* CMake build (aka "internal dependencies") to
+# have their dependencies look exactly the same as external dependencies, let's
+# create an alias target that looks exactly like the external, exported,
+# target.
+#
+# https://youtu.be/bsXLMQ6WgIk?t=3124
+#
+# Since this CMake build doesn't have any other library/executable, that means
+# doing this is useless, but this is just to keep things consistent no matter what.
+add_library(lib1::lib1 ALIAS lib1)
 
 target_compile_definitions(lib1 PUBLIC LIB1_MACRO=42)
 
@@ -42,5 +54,8 @@ install(TARGETS lib1
   FILE_SET HEADERS
   DESTINATION include)
 install(EXPORT lib1Targets
+  # Why to have "::" is described here:
+  # https://youtu.be/bsXLMQ6WgIk?t=1578
+  NAMESPACE lib1::
   DESTINATION lib/cmake/lib1)
 
