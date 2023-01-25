@@ -1,13 +1,11 @@
-set(SRC_SUBDIR src)
-
 file(GLOB_RECURSE CXX_SOURCES CONFIGURE_DEPENDS
-  "${SRC_SUBDIR}/*.cpp")
+  "src/*.cpp")
 file(GLOB_RECURSE CXX_HEADERS_PUBLIC CONFIGURE_DEPENDS
-  "${PROJECT_INCLUDE_DIR}/*.h"
-  "${PROJECT_INCLUDE_DIR}/*.hpp")
+  "include/*.h"
+  "include/*.hpp")
 file(GLOB_RECURSE CXX_HEADERS_PRIVATE CONFIGURE_DEPENDS
-  "${SRC_SUBDIR}/*.h"
-  "${SRC_SUBDIR}/*.hpp")
+  "src/*.h"
+  "src/*.hpp")
 
 include(${LIB1_INSTALL_DIR}/lib/cmake/lib1/lib1Targets.cmake)
 
@@ -25,9 +23,13 @@ target_sources(lib2
   # This also works if there are no headers.
   PUBLIC
     FILE_SET HEADERS
+	# "include/" is the include directory to use for the headers in this
+	# file set. This also means that the files will be installed without an
+	# initial "include" directory at the begining.
     BASE_DIRS include
     FILES ${CXX_HEADERS_PUBLIC}
 	# The headers that are available only for compilation of this library.
+	# Won't be installed.
   PRIVATE
     FILE_SET private_headers
     TYPE HEADERS
