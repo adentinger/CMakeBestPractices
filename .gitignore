@@ -1,7 +1,3 @@
+install/
 build/
-bin/
-include/
-lib/
-# CMake import scripts
-cmake/
 
