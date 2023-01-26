@@ -9,45 +9,54 @@
 	],
 	"configurePresets": [
 		{
-			"name": "ninja-release-static",
-			"inherits": "base-ninja-release",
-			"displayName": "Release Config",
-			"description": "Release configure with Ninja.",
+			"name": "cmake-prefix",
+			"hidden": true,
 			"cacheVariables": {
 				"CMAKE_PREFIX_PATH": "${sourceDir}/../lib1/install"
 			}
 		},
 		{
+			"name": "ninja-release-static",
+			"inherits": ["base-ninja-release", "base-static", "cmake-prefix"]
+		},
+		{
 			"name": "ninja-debug-static",
-			"inherits": "base-ninja-debug",
-			"displayName": "Debug Config",
-			"description": "Debug configure with Ninja.",
-			"cacheVariables": {
-				"CMAKE_PREFIX_PATH": "${sourceDir}/../lib1/install"
-			}
+			"inherits": ["base-ninja-debug", "base-static", "cmake-prefix"]
+		},
+		{
+			"name": "ninja-release-shared",
+			"inherits": ["base-ninja-release", "base-shared", "cmake-prefix"]
+		},
+		{
+			"name": "ninja-debug-shared",
+			"inherits": ["base-ninja-debug", "base-shared", "cmake-prefix"]
 		}
 	],
 	"buildPresets": [
 		{
 			"name": "ninja-release-static",
-			"inherits": "base-ninja-release",
-			"configurePreset": "ninja-release-static",
-			"displayName": "Ninja Release Build",
-			"description": "Build with ninja in release type."
+			"inherits": ["base-ninja-release"],
+			"configurePreset": "ninja-release-static"
 		},
 		{
 			"name": "ninja-debug-static",
-			"inherits": "base-ninja-debug",
-			"configurePreset": "ninja-debug-static",
-			"displayName": "Ninja Debug Build",
-			"description": "Build with ninja in debug type."
+			"inherits": ["base-ninja-debug"],
+			"configurePreset": "ninja-debug-static"
+		},
+		{
+			"name": "ninja-release-shared",
+			"inherits": ["base-ninja-release"],
+			"configurePreset": "ninja-release-shared"
+		},
+		{
+			"name": "ninja-debug-shared",
+			"inherits": ["base-ninja-debug"],
+			"configurePreset": "ninja-debug-shared"
 		}
 	],
 	"workflowPresets": [
 		{
 			"name": "ninja-release-static",
-			"displayName": "Ninja release workflow",
-			"description": "Release workflow using Ninja.",
 			"steps": [
 				{
 					"type": "configure",
@@ -61,8 +70,6 @@
 		},
 		{
 			"name": "ninja-debug-static",
-			"displayName": "Ninja debug workflow",
-			"description": "Debug workflow using Ninja.",
 			"steps": [
 				{
 					"type": "configure",
@@ -73,6 +80,33 @@
 					"name": "ninja-debug-static"
 				}
 			]
+		},
+		{
+			"name": "ninja-release-shared",
+			"steps": [
+				{
+					"type": "configure",
+					"name": "ninja-release-shared"
+				},
+				{
+					"type": "build",
+					"name": "ninja-release-shared"
+				}
+			]
+		},
+		{
+			"name": "ninja-debug-shared",
+			"steps": [
+				{
+					"type": "configure",
+					"name": "ninja-debug-shared"
+				},
+				{
+					"type": "build",
+					"name": "ninja-debug-shared"
+				}
+			]
 		}
 	]
 }
+
