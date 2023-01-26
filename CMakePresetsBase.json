@@ -15,8 +15,7 @@
 				"CMAKE_EXPORT_COMPILE_COMMANDS": {
 					"type": "BOOL",
 					"value": "ON"
-				},
-				"BUILD_SHARED_LIBS": "OFF"
+				}
 			}
 		},
 		{
@@ -37,6 +36,26 @@
 			"description": "Base Debug configure with Ninja.",
 			"cacheVariables": {
 				"CMAKE_BUILD_TYPE": "Debug"
+			}
+		},
+		{
+			"name": "base-static",
+			"hidden": true,
+			"cacheVariables": {
+				"BUILD_SHARED_LIBS": {
+					"type": "BOOL",
+					"value": "OFF"
+				}
+			}
+		},
+		{
+			"name": "base-shared",
+			"hidden": true,
+			"cacheVariables": {
+				"BUILD_SHARED_LIBS": {
+					"type": "BOOL",
+					"value": "ON"
+				}
 			}
 		}
 	],

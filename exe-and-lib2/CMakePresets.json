@@ -9,7 +9,7 @@
 	],
 	"configurePresets": [
 		{
-			"name": "ninja-release",
+			"name": "ninja-release-static",
 			"inherits": "base-ninja-release",
 			"displayName": "Release Config",
 			"description": "Release configure with Ninja.",
@@ -18,7 +18,7 @@
 			}
 		},
 		{
-			"name": "ninja-debug",
+			"name": "ninja-debug-static",
 			"inherits": "base-ninja-debug",
 			"displayName": "Debug Config",
 			"description": "Debug configure with Ninja.",
@@ -29,48 +29,48 @@
 	],
 	"buildPresets": [
 		{
-			"name": "ninja-release",
+			"name": "ninja-release-static",
 			"inherits": "base-ninja-release",
-			"configurePreset": "ninja-release",
+			"configurePreset": "ninja-release-static",
 			"displayName": "Ninja Release Build",
 			"description": "Build with ninja in release type."
 		},
 		{
-			"name": "ninja-debug",
+			"name": "ninja-debug-static",
 			"inherits": "base-ninja-debug",
-			"configurePreset": "ninja-debug",
+			"configurePreset": "ninja-debug-static",
 			"displayName": "Ninja Debug Build",
 			"description": "Build with ninja in debug type."
 		}
 	],
 	"workflowPresets": [
 		{
-			"name": "ninja-release",
+			"name": "ninja-release-static",
 			"displayName": "Ninja release workflow",
 			"description": "Release workflow using Ninja.",
 			"steps": [
 				{
 					"type": "configure",
-					"name": "ninja-release"
+					"name": "ninja-release-static"
 				},
 				{
 					"type": "build",
-					"name": "ninja-release"
+					"name": "ninja-release-static"
 				}
 			]
 		},
 		{
-			"name": "ninja-debug",
+			"name": "ninja-debug-static",
 			"displayName": "Ninja debug workflow",
 			"description": "Debug workflow using Ninja.",
 			"steps": [
 				{
 					"type": "configure",
-					"name": "ninja-debug"
+					"name": "ninja-debug-static"
 				},
 				{
 					"type": "build",
-					"name": "ninja-debug"
+					"name": "ninja-debug-static"
 				}
 			]
 		}
