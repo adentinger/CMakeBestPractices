@@ -1,0 +1,6 @@
+include(CMakeFindDependencyMacro)
+@PACKAGE_INIT@
+# This package has no dependencies.
+# find_dependency(<dep> <version>)
+include("@PACKAGE_EXPORT_FILE@")
+

@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.23)
 
-project(lib1 LANGUAGES CXX)
+project(lib1
+  VERSION 1.0
+  LANGUAGES CXX)
 
 file(GLOB_RECURSE CXX_SOURCES CONFIGURE_DEPENDS
   "src/*.cpp")
@@ -13,11 +15,10 @@ file(GLOB_RECURSE CXX_HEADERS_PRIVATE CONFIGURE_DEPENDS
 
 add_library(lib1 ${CXX_SOURCES})
 # Libraries built outside *this* CMake build (aka "external dependencies") will
-# link agains this one prepended with the "lib1::" namespace. In order for
-# libraries build inside *this* CMake build (aka "internal dependencies") to
+# link against this one prepended with the "lib1::" namespace. In order for
+# libraries built inside *this* CMake build (aka "internal dependencies") to
 # have their dependencies look exactly the same as external dependencies, let's
-# create an alias target that looks exactly like the external, exported,
-# target.
+# create an alias target that looks exactly like the external target.
 #
 # https://youtu.be/bsXLMQ6WgIk?t=3124
 #
@@ -49,6 +50,8 @@ target_sources(lib1
     BASE_DIRS src
     FILES ${CXX_HEADERS_PRIVATE})
 
+set(PACKAGE_CMAKE_SCRIPTS_DIR lib/cmake/lib1)
+
 install(TARGETS lib1
   EXPORT lib1Targets
   FILE_SET HEADERS
@@ -57,5 +60,25 @@ install(EXPORT lib1Targets
   # Why to have "::" is described here:
   # https://youtu.be/bsXLMQ6WgIk?t=1578
   NAMESPACE lib1::
-  DESTINATION lib/cmake/lib1)
+  DESTINATION "${PACKAGE_CMAKE_SCRIPTS_DIR}")
+
+set(EXPORT_FILE "${PACKAGE_CMAKE_SCRIPTS_DIR}/lib1Targets.cmake")
+
+include(CMakePackageConfigHelpers)
+configure_package_config_file(cmake/lib1Config.cmake.in
+  "${CMAKE_CURRENT_BINARY_DIR}/lib1Config.cmake"
+  INSTALL_DESTINATION "${PACKAGE_CMAKE_SCRIPTS_DIR}"
+  PATH_VARS EXPORT_FILE)
+# Write a CMake script containing the version information & checking for
+# this project. This is used in the find_package() call of the project that
+# uses this project to do version checking:
+# https://cmake.org/cmake/help/latest/command/find_package.html#config-mode-version-selection
+write_basic_package_version_file(lib1ConfigVersion.cmake
+  VERSION ${PROJECT_VERSION}
+  COMPATIBILITY SameMinorVersion)
+
+install(FILES
+  "${CMAKE_CURRENT_BINARY_DIR}/lib1ConfigVersion.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/lib1Config.cmake"
+  DESTINATION "${PACKAGE_CMAKE_SCRIPTS_DIR}")
 
