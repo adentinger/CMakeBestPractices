@@ -26,7 +26,16 @@ add_library(lib1 ${CXX_SOURCES})
 # doing this is useless, but this is just to keep things consistent no matter what.
 add_library(lib1::lib1 ALIAS lib1)
 
-target_compile_definitions(lib1 PUBLIC LIB1_MACRO=42)
+target_compile_definitions(lib1
+  PUBLIC
+    LIB1_MACRO=42
+  PRIVATE
+    # This macro will be used as part of the compilation of this library, but
+    # won't be used for libraries/executables that depend on it. This is
+	# exactly what we want when building shared libraries on Windows: we want
+	# headers to have __declspec(dllexport) when building the library, but
+	# we want headers to have __declspec(dllimport) when using the library.
+    LIB1_EXPORT)
 
 target_sources(lib1
   # The headers that are available to consumer targets and for compilation of
