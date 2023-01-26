@@ -14,10 +14,7 @@
 			"displayName": "Release Config",
 			"description": "Release configure with Ninja.",
 			"cacheVariables": {
-				"LIB1_INSTALL_DIR": {
-					"type": "PATH",
-					"value": "${sourceDir}/../lib1/install"
-				}
+				"CMAKE_PREFIX_PATH": "${sourceDir}/../lib1/install"
 			}
 		},
 		{
@@ -26,10 +23,7 @@
 			"displayName": "Debug Config",
 			"description": "Debug configure with Ninja.",
 			"cacheVariables": {
-				"LIB1_INSTALL_DIR": {
-					"type": "PATH",
-					"value": "${sourceDir}/../lib1/install"
-				}
+				"CMAKE_PREFIX_PATH": "${sourceDir}/../lib1/install"
 			}
 		}
 	],
@@ -68,7 +62,7 @@
 		{
 			"name": "ninja-debug",
 			"displayName": "Ninja debug workflow",
-			"description": "Release workflow using Ninja.",
+			"description": "Debug workflow using Ninja.",
 			"steps": [
 				{
 					"type": "configure",

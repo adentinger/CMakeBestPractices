@@ -60,7 +60,7 @@
 		{
 			"name": "ninja-debug",
 			"displayName": "Ninja debug workflow",
-			"description": "Release workflow using Ninja.",
+			"description": "Debug workflow using Ninja.",
 			"steps": [
 				{
 					"type": "configure",

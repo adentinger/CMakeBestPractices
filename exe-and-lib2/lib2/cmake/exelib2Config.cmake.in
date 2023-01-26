@@ -1,0 +1,4 @@
+include(CMakeFindDependencyMacro)
+@PACKAGE_INIT@
+find_dependency(lib1 1.0)
+include("@PACKAGE_EXPORT_FILE@")
