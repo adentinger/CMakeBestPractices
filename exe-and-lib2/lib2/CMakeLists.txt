@@ -21,7 +21,16 @@ find_package(lib1 1.0 REQUIRED CONFIG)
 target_link_libraries(lib2
   PUBLIC lib1::lib1)
 
+get_target_property(LIB_TYPE lib2 TYPE)
+if (LIB_TYPE STREQUAL SHARED_LIBRARY)
+  set(LIB_SHARED_MACRO "LIB2_SHARED")
+endif()
+
 target_compile_definitions(lib2
+  PUBLIC
+	# Unquoted variable expansion; this is on purpose: if the variable is empty
+	# or undefined, we *actually* want this to expand to nothing.
+	${LIB_SHARED_MACRO}
   PRIVATE
     # This macro will be used as part of the compilation of this library, but
     # won't be used for libraries/executables that depend on it. This is

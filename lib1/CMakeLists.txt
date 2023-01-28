@@ -26,9 +26,17 @@ add_library(lib1 ${CXX_SOURCES})
 # doing this is useless, but this is just to keep things consistent no matter what.
 add_library(lib1::lib1 ALIAS lib1)
 
+get_target_property(LIB_TYPE lib1 TYPE)
+if (LIB_TYPE STREQUAL SHARED_LIBRARY)
+  set(LIB_SHARED_MACRO "LIB1_SHARED")
+endif()
+
 target_compile_definitions(lib1
   PUBLIC
     LIB1_MACRO=42
+	# Unquoted variable expansion; this is on purpose: if the variable is empty
+	# or undefined, we *actually* want this to expand to nothing.
+	${LIB_SHARED_MACRO}
   PRIVATE
     # This macro will be used as part of the compilation of this library, but
     # won't be used for libraries/executables that depend on it. This is
