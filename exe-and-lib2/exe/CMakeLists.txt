@@ -6,6 +6,8 @@ file(GLOB_RECURSE CXX_HEADERS CONFIGURE_DEPENDS
 
 add_executable(exe ${CXX_SOURCES})
 target_link_libraries(exe lib2::lib2)
+set_target_properties(exe PROPERTIES
+  INSTALL_RPATH ../lib)
 install(TARGETS exe
   DESTINATION bin)
 # On Windows, DLLs need to be in the same directory as the executable for it to
