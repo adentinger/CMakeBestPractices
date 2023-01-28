@@ -9,26 +9,36 @@
 	],
 	"configurePresets": [
 		{
+			"name": "project-base",
+			"hidden": true,
+			"cacheVariables": {
+				"lib1_BUILD_WITH_PIC": {
+					"type": "BOOL",
+					"value": "ON"
+				}
+			}
+		},
+		{
 			"name": "ninja-release-static",
-			"inherits": ["base-ninja-release", "base-static"],
+			"inherits": ["base-ninja-release", "base-static", "project-base"],
 			"displayName": "Release Config Static",
 			"description": "Release configure with ninja with static libraries."
 		},
 		{
 			"name": "ninja-debug-static",
-			"inherits": ["base-ninja-debug", "base-static"],
+			"inherits": ["base-ninja-debug", "base-static", "project-base"],
 			"displayName": "Debug Config Static",
 			"description": "Debug configure with ninja with static libraries."
 		},
 		{
 			"name": "ninja-release-shared",
-			"inherits": ["base-ninja-release", "base-shared"],
+			"inherits": ["base-ninja-release", "base-shared", "project-base"],
 			"displayName": "Release Config Shared",
 			"description": "Release configure with ninja with shared libraries."
 		},
 		{
 			"name": "ninja-debug-shared",
-			"inherits": ["base-ninja-debug", "base-shared"],
+			"inherits": ["base-ninja-debug", "base-shared", "project-base"],
 			"displayName": "Debug Config Shared",
 			"description": "Debug configure with ninja with shared libraries."
 		}
