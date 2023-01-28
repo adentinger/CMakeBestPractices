@@ -12,7 +12,7 @@
 			"name": "project-base",
 			"hidden": true,
 			"cacheVariables": {
-				"CMAKE_PREFIX_PATH": "${sourceDir}/../lib1/install",
+				"CMAKE_PREFIX_PATH": "${sourceDir}/../install",
 				"lib2_BUILD_WITH_PIC": {
 					"type": "BOOL",
 					"value": "ON"

@@ -10,7 +10,7 @@
 			"hidden": true,
 			"generator": "Ninja",
 			"binaryDir": "${sourceDir}/build",
-			"installDir": "install/",
+			"installDir": "${sourceDir}/../install/",
 			"cacheVariables": {
 				"CMAKE_EXPORT_COMPILE_COMMANDS": {
 					"type": "BOOL",
