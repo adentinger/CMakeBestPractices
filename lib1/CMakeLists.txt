@@ -4,6 +4,10 @@ project(lib1
   VERSION 1.0
   LANGUAGES CXX)
 
+# Reason to do that even if we don't have tests:
+# https://youtu.be/IZXNsim9TWI?t=2426
+enable_testing()
+
 file(GLOB_RECURSE CXX_SOURCES CONFIGURE_DEPENDS
   "src/*.cpp")
 file(GLOB_RECURSE CXX_HEADERS_PUBLIC CONFIGURE_DEPENDS
