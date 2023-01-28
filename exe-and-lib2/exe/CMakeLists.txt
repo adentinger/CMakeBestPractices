@@ -15,20 +15,21 @@ target_link_libraries(exe lib2::lib2)
 # relative path because it would be relative to where the executable is run
 # from, which isn't what we want. So instead we specify a special string to
 # make the path relative to where the executable is located.
+#
+# Note that we use CACHE variables here. This is to allow whoever is
+# configuring the CMake build to override the values if they want to, while
+# still providing a sane default.
 if(APPLE)
-  set_target_properties(exe
-	PROPERTIES
-      # There is also "@rpath" that is a bit more flexible, but really the equivalent
-	  # of "$ORIGIN" for Unix is "@executable_path".
-      INSTALL_RPATH @executable_path/../lib)
+  # There is also "@rpath" that is a bit more flexible, but really the equivalent
+  # of "$ORIGIN" for Unix is "@executable_path".
+  set(EXE_INSTALL_RPATH @executable_path/../lib CACHE STRING "RPATH to use for this target.")
 elseif(UNIX AND NOT CYGWIN)
-  set_target_properties(exe
-	PROPERTIES
-	  # "$ORIGIN" is a special string that means "the directory containing the
-	  # executable that is running".
-      INSTALL_RPATH $ORIGIN/../lib)
+  # "$ORIGIN" is a special string that means "the directory containing the
+  # executable that is running".
+  set(EXE_INSTALL_RPATH $ORIGIN/../lib CACHE STRING "RPATH to use for this target.")
 elseif(WIN32)
-  # Nothing to do yet; we'll handle DLLs below.
+  # DLL platforms don't support RPATH.
+  set(EXE_INSTALL_RPATH "")
 else()
   get_target_property(LIB_SHARED lib2::lib2 TYPE)
   if ("${LIB_SHARED}" STREQUAL SHARED_LIBRARY)
@@ -36,7 +37,12 @@ else()
 	  "Unsupported target platform ${CMAKE_SYSTEM_NAME} for linking against "
 	  "shared libraries.")
   endif()
+  set(EXE_INSTALL_RPATH "")
 endif()
+
+set_target_properties(exe
+  PROPERTIES
+  INSTALL_RPATH "${EXE_INSTALL_RPATH}")
 
 install(TARGETS exe
   DESTINATION bin)
