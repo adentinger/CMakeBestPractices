@@ -9,27 +9,31 @@
 	],
 	"configurePresets": [
 		{
-			"name": "cmake-prefix",
+			"name": "project-base",
 			"hidden": true,
 			"cacheVariables": {
-				"CMAKE_PREFIX_PATH": "${sourceDir}/../lib1/install"
+				"CMAKE_PREFIX_PATH": "${sourceDir}/../lib1/install",
+				"lib2_BUILD_WITH_PIC": {
+					"type": "BOOL",
+					"value": "ON"
+				}
 			}
 		},
 		{
 			"name": "ninja-release-static",
-			"inherits": ["base-ninja-release", "base-static", "cmake-prefix"]
+			"inherits": ["base-ninja-release", "base-static", "project-base"]
 		},
 		{
 			"name": "ninja-debug-static",
-			"inherits": ["base-ninja-debug", "base-static", "cmake-prefix"]
+			"inherits": ["base-ninja-debug", "base-static", "project-base"]
 		},
 		{
 			"name": "ninja-release-shared",
-			"inherits": ["base-ninja-release", "base-shared", "cmake-prefix"]
+			"inherits": ["base-ninja-release", "base-shared", "project-base"]
 		},
 		{
 			"name": "ninja-debug-shared",
-			"inherits": ["base-ninja-debug", "base-shared", "cmake-prefix"]
+			"inherits": ["base-ninja-debug", "base-shared", "project-base"]
 		}
 	],
 	"buildPresets": [

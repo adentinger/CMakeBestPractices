@@ -22,8 +22,19 @@ target_link_libraries(lib2
   PUBLIC lib1::lib1)
 
 get_target_property(LIB_TYPE lib2 TYPE)
-if (LIB_TYPE STREQUAL SHARED_LIBRARY)
+if(LIB_TYPE STREQUAL SHARED_LIBRARY)
   set(LIB_SHARED_MACRO "LIB2_SHARED")
+else()
+  # Providing a CACHE option for this, since some users might want this.
+  #
+  # Default is OFF because this can sometimes have overhead:
+  # https://stackoverflow.com/a/15890369/2252948.
+  option(lib2_BUILD_WITH_PIC
+	"Whether to build this static library with position-independent code in case it is linked against by a shared library."
+	OFF)
+  set_target_properties(lib2
+	PROPERTIES
+      POSITION_INDEPENDENT_CODE "${lib2_BUILD_WITH_PIC}")
 endif()
 
 target_compile_definitions(lib2
