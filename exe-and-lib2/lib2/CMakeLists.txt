@@ -61,6 +61,37 @@ target_sources(lib2
     BASE_DIRS src
     FILES ${CXX_HEADERS_PRIVATE})
 
+# Properties used only when building shared libraries.
+#
+# For Apple and Unix-like platforms (although maybe not Cygwin?), an RPATH
+# metadata variable can be set inside the linked executable/library to specify
+# a search path for dependant shared libraries. However, this cannot be a
+# relative path because it would be relative to where the executable is run
+# from, which isn't what we want. So instead we specify a special string to
+# make the path relative to where the executable is located.
+if(APPLE)
+  set_target_properties(lib2
+	PROPERTIES
+      # There is also "@rpath" that is a bit more flexible, but really the equivalent
+	  # of "$ORIGIN" for Unix is "@executable_path".
+      INSTALL_RPATH @executable_path/../lib)
+elseif(UNIX AND NOT CYGWIN)
+  set_target_properties(lib2
+	PROPERTIES
+	  # "$ORIGIN" is a special string that means "the directory containing the
+	  # executable that is running".
+      INSTALL_RPATH $ORIGIN/../lib)
+elseif(WIN32)
+  # Nothing to do yet; we'll handle DLLs below.
+else()
+  get_target_property(LIB_SHARED lib1::lib1 TYPE)
+  if ("${LIB_SHARED}" STREQUAL SHARED_LIBRARY)
+	message(FATAL_ERROR
+	  "Unsupported target platform ${CMAKE_SYSTEM_NAME} for linking against "
+	  "shared libraries.")
+  endif()
+endif()
+
 set(PACKAGE_CMAKE_SCRIPTS_DIR lib/cmake/lib2)
 
 install(TARGETS lib2
