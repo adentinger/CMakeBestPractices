@@ -46,13 +46,30 @@ set_target_properties(exe
 
 install(TARGETS exe
   DESTINATION bin)
-# On Windows, DLLs need to be in the same directory as the executable for it to
-# run. Not super happy about having to pull a file from an external
-# installation into this installation because a package manager like vcpkg
-# would want to manage the dependencies themselves (that's what they are there
-# for right?), but I don't really see an alternative at the moment, aside from
-# making sure that the package of lib1 is installed to the same directory as
-# the package of this project.
-install(FILES $<TARGET_RUNTIME_DLLS:exe>
-  DESTINATION bin)
+
+if(WIN32)
+  # Providing a CACHE option for this, since this is a nice convenience that
+  # some users might want.
+  #
+  # Default is OFF, which means it's up to the user to make sure that the
+  # dependant DLLs are installed in the same directory as the executable. This
+  # is the default because that's what would be required on Unix-like systems
+  # as well, so keeping that OFF makes it nice and consistent.
+  option(exe_INSTALL_DEPENDANT_DLLS
+	"Whether to install any DLL that this executable depends on along with it."
+	OFF)
+else()
+  set(exe_INSTALL_DEPENDANT_DLLS OFF)
+endif()
+
+if (exe_INSTALL_DEPENDANT_DLLS)
+  # On Windows, DLLs need to be in the same directory as the executable for it
+  # to run. This is not a perfect solution because 1) this is inconsistent with
+  # what happens on Unix-like systems (where the shared libraries would need to
+  # be installed in one of the directories specified in the RPATH), and 2) a
+  # package manager like vcpkg would want to manage the dependencies themselves
+  # (that's what they are there for right?).
+  install(FILES $<TARGET_RUNTIME_DLLS:exe>
+	DESTINATION bin)
+endif()
 
