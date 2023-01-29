@@ -15,6 +15,10 @@
 				"CMAKE_EXPORT_COMPILE_COMMANDS": {
 					"type": "BOOL",
 					"value": "ON"
+				},
+				"CMAKE_CXX_CLANG_TIDY": {
+					"type": "STRING",
+					"value": "clang-tidy;--config-file=${sourceDir}/../.clang-tidy"
 				}
 			}
 		},
