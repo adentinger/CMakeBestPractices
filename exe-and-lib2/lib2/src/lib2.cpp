@@ -9,7 +9,7 @@
 
 namespace lib2 {
 void f() {
-	std::cout << "lib2::" << __FUNCTION__ << '\n';
+	std::cout << "lib2::" << static_cast<const char*>(__FUNCTION__) << '\n';
 	lib1::f();
 }
 } // namespace lib2

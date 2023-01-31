@@ -5,6 +5,7 @@ Checks: >
   -*,
   abseil-*,
   bugprone-*,
+  cppcoreguidelines-*,
   google-*,
   misc-*,
   modernize-*,

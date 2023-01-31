@@ -5,7 +5,7 @@
 namespace lib1 {
 
 void f() {
-	std::cout << "lib1::" << __FUNCTION__ << '\n';
+	std::cout << "lib1::" << static_cast<const char*>(__FUNCTION__) << '\n';
 }
 
 } // namespace lib1
