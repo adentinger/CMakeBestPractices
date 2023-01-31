@@ -1,0 +1,32 @@
+# Shamelessly taken and modified from:
+# https://github.com/googleapis/google-cloud-cpp/blob/main/.clang-format
+
+BasedOnStyle: Google
+
+# Every developer's heated debate question! I prefer spaces, but work uses
+# tabs.
+UseTab: ForIndentation
+TabWidth: 4
+
+# Another heated debate. I tend to be pretty strict with 80 columns, but I
+# think a tad more is fine.
+ColumnLimit: 80
+
+# "int& foo", not "int &foo"
+DerivePointerAlignment: false
+PointerAlignment: Left
+
+# "const int", not "int const".
+QualifierAlignment: Left
+
+# Group #include categories together into separate #include blocks (each block
+# being separated by an empty line), then sort include paths.
+# "IncludeCategories" defines the #include categories.
+IncludeBlocks: Regroup
+IncludeCategories:
+  # Nothing
+
+# Regex defining comments that should not be changed (e.g. moved to separate
+# lines, etc).
+CommentPragmas: ''
+
