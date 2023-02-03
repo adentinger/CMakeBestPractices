@@ -1,29 +1,86 @@
-# SPDX-License-Identifier: Apache-2.0
-#
-# Copyright 2017 Google LLC
-# License text: http://www.apache.org/licenses/LICENSE-2.0
-# Added/deleted format style choices and options.
+# SPDX-License-Identifier: MIT
 
-# Shamelessly taken and modified from:
-# https://github.com/googleapis/google-cloud-cpp/blob/main/.clang-format
+# See: https://clang.llvm.org/docs/ClangFormatStyleOptions.html
 
 BasedOnStyle: Google
 
+IndentWidth: 4
+
 # Every developer's heated debate question! I prefer spaces, but work uses
-# tabs.
-UseTab: ForIndentation
+# tabs. This setting uses tabs, except for aligning stuff which is done using
+# spaces.
+UseTab: AlignWithSpaces
 TabWidth: 4
 
-# Another heated debate. I tend to be pretty strict with 80 columns, but I
-# think a tad more is fine.
+# Visibility modifiers inside classes/structs are on the same column as the
+# e.g. "class" keyword.
+AccessModifierOffset: -4
+
+# Another heated debate. I tend to be pretty strict with 80 columns (I like
+# to boost my font size to be able to keep my eyes for many years), but I
+# realize that a tad more is also fine.
 ColumnLimit: 80
+
+# Requires clang-format 16, which isn't out yet...
+# InsertNewlineAtEOF: true
 
 # "int& foo", not "int &foo"
 DerivePointerAlignment: false
 PointerAlignment: Left
 
 # "const int", not "int const".
+#
+# Note that according to the clang-format doc, this setting can sometimes
+# produce badly formatted code.
 QualifierAlignment: Left
+
+# Function declaration parameters and function call arguments should be one per
+# line if breaks need to be inserted.
+BinPackParameters: false
+BinPackArguments: false
+
+# Open parentheses, angle brackets and square brackets should have a line-break
+# after them if whatever comes after them doesn't fit in one line, and the
+# closing brace shouldn't have a line-break before it:
+#
+# void long_func_name(
+#     int a,
+#     int b);
+AlignAfterOpenBracket: AlwaysBreak
+
+# Don't indent namespaces, and neither what's inside them.
+# Also add a "// namespace <name>" comment when closing a namespace.
+NamespaceIndentation: None
+FixNamespaceComments: true
+
+# Name says what this is...
+KeepEmptyLinesAtTheStartOfBlocks: false
+
+# Requires clang-format 16, which isn't out yet...
+# IntegerLiteralSeparator:
+#   Binary: 8
+#   Decimal: 3
+#   Hex: 4
+
+# Class inheritance bases are one per line, with any comma being aligned with
+# the colon of the first base.
+BreakInheritanceList: BeforeComma
+
+# Initializers in an init-list are one per line, with any comma being aligned
+# with the colon of the first member.
+PackConstructorInitializers: Never
+BreakConstructorInitializers: BeforeComma
+
+# "case" is on the same level as the "switch".
+IndentCaseLabels: false
+
+# Fancy whitespaces after the "#", but the "#" itself is always the first
+# character of the line.
+IndentPPDirectives: AfterHash
+
+# Backslashes that escape newlines (such as in multiline macros) should be
+# placed on the right-most column allowed.
+AlignEscapedNewlines: Right
 
 # Group #include categories together into separate #include blocks (each block
 # being separated by an empty line), then sort include paths.
@@ -31,6 +88,7 @@ QualifierAlignment: Left
 IncludeBlocks: Regroup
 IncludeCategories:
   # Nothing
+SortIncludes: CaseSensitive
 
 # Regex defining comments that should not be changed (e.g. moved to separate
 # lines, etc).
