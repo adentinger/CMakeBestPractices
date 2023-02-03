@@ -1,4 +1,5 @@
-#include <exception>
+// SPDX-License-Identifier: MIT
+
 #include <iostream>
 
 #include "lib2/hdr.h"

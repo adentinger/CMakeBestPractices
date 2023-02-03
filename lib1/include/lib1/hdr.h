@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 #ifndef LIB1_HDR_H
 #define LIB1_HDR_H
 

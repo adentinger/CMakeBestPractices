@@ -1,4 +1,5 @@
 #!/bin/bash -e
+# SPDX-License-Identifier: MIT
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" 2>/dev/null && pwd)"
 LIB1_WORKFLOW=ninja-release-shared
