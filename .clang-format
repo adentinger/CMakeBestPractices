@@ -1,3 +1,9 @@
+# SPDX-License-Identifier: Apache-2.0
+#
+# Copyright 2017 Google LLC
+# License text: http://www.apache.org/licenses/LICENSE-2.0
+# Added/deleted format style choices and options.
+
 # Shamelessly taken and modified from:
 # https://github.com/googleapis/google-cloud-cpp/blob/main/.clang-format
 

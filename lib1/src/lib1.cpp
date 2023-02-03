@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 #include "lib1/hdr.h"
 
 #include <vector>
