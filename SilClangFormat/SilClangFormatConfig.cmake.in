@@ -1,0 +1,141 @@
+# SPDX-License-Identifier: MIT
+
+# Configure package file for this CMake package.
+#
+# Find package with find_dependency(<pkg> CONFIG REQUIRED).
+
+# If this module has a dependency, this other module defines the
+# find_dependency() macro for that purpose.
+include(CMakeFindDependencyMacro)
+# See documentation of cmake_package_configure_file()
+@PACKAGE_INIT@
+
+# Internal function; do not use.
+function(__sil_clang_format_target tgt commandline event_time)
+  if(NOT TARGET "${tgt}")
+	message(FATAL_ERROR "Target \"${tgt}\" does not exist")
+  endif()
+
+  get_target_property(tgt_sources "${tgt}" SOURCES)
+
+  if (NOT "${tgt_sources}" STREQUAL "")
+	add_custom_command(TARGET "${tgt}"
+	  "${event_time}"
+	  COMMAND ${commandline} --dry-run ${tgt_sources})
+  else()
+	add_custom_command(TARGET "${tgt}"
+	  "${event_time}"
+	  COMMAND echo "Not running clang-format for target ${tgt}: No sources")
+  endif()
+endfunction()
+
+function(sil_clang_format_targets)
+  ####
+  #
+  # TL;DR: This is an explanation on how to pass arguments to CMake functions.
+  # For literal strings, if they don't contain whitespaces or
+  # semicolons, then you *may* use the my_string syntax, otherwise use the
+  # "my_string" syntax. For variable expansion, if you want to expand a
+  # variable containing a list into zero or more function arguments, then do
+  # the variable expansion outside of any quotes ${like_this}. Otherwise, do
+  # the variable expansion inside quotes "${like_this}".
+  #
+  ####
+  #
+  # Most of this CMake package needs to handle variables and strings that may
+  # have whitespaces, as well as lists. To explain how supporting that works,
+  # let's have a FULL explanation of CMake lists, strings and variable
+  # expansion.
+  #
+  # According to experimentation, there are 3 cases:
+  #
+  # 1) Quoted strings ("like \t \n ; this") are ALWAYS considered a single
+  # unmodified argument, whether the string contains whitespaces, semicolons
+  # or is an empty string. If a variable is expanded inside quotes
+  # ("${like_this}"), the expansion is literally replaced by the contents of
+  # the variable to produce the string, even if the variable is a list. By the
+  # way, in CMake a list is a semicolon-separated string. So:
+  #     set(my_list a " b " "c ;d")
+  # ...produces a list variable of four-elements: "a; b ;c ;d".
+  #
+  # 2) Unquoted string literal: Begins and ends in first non-whitespace,
+  # non-semicolon character. E.g.:
+  #     HELLO  \t\n  WORLD;! ; \ \; ; ?;;;;
+  # ...is considered to be five arguments, the same as if we had written:
+  #     "HELLO" "WORLD" "!" " ;" "?"
+  # Because this is really weird, for clarity and to avoid bugs it's advisable
+  # to quote literal strings unless what happens is obvious.
+  #
+  # 3) Unquoted variable expansion: This is the variable expansion to use if
+  # you want to expand a list in a situation where you want one argument per list
+  # item. E.g.:
+  #     set(my_list qwer "as  df ;  z\n xc\tv")
+  # Any unquoted variable expansion is considered to be a special situation
+  # where the variable is considered to be a list, with each item separated by
+  # a semicolon. Therefore this:
+  #     ${my_list}
+  # ...expands to three arguments, as if we had written:
+  #     "qwer" "as  df " "  z\n xc\tv"
+  #
+  # WARNING: You *cannot* always use unquoted variable expansion. For example:
+  #     if(${my_list} STREQUAL "")
+  # ...when my_list is empty will expand to:
+  #     if(STREQUAL "")
+  # ...which will cause a CMake error.
+
+  # For a quick explanation of cmake_parse_arguments(), see:
+  # https://youtu.be/IZXNsim9TWI?t=1618
+  cmake_parse_arguments(
+	parsed                          # Magic var prefix
+
+	# Here we want an actual single argument containing semicolons, since this
+	# is what cmake_parse_arguments() expects as its second argument.
+	"PRE_BUILD;PRE_LINK;POST_BUILD" # Options
+
+	""                              # Single-value keywords
+
+	# Likewise here.
+	"TARGETS;COMMAND"               # Multi-value keywords
+
+	# Here we want to pass one argument per list item of ARGN, which is the
+	# list of arguments passed to *this* function. So this variable expansion
+	# must not be inside a quoted string.
+	${ARGN}
+  )
+
+  if(parsed_UNPARSED_ARGUMENTS)
+	message(FATAL_ERROR
+	  "Unrecognized argument(s): ${parsed_UNPARSED_ARGUMENTS}.")
+  endif()
+
+  if(NOT DEFINED parsed_TARGETS)
+	message(FATAL_ERROR "TARGETS keyword missing.")
+  endif()
+
+  if(NOT DEFINED parsed_COMMAND AND NOT DEFINED SIL_CLANG_FORMAT)
+	message(FATAL_ERROR
+	  "COMMAND keyword missing and SIL_CLANG_FORMAT is undefined.")
+  endif()
+
+  if(parsed_PRE_BUILD AND NOT parsed_PRE_LINK AND NOT parsed_POST_BUILD)
+	set(event_time PRE_BUILD)
+  elseif(NOT parsed_PRE_BUILD AND parsed_PRE_LINK AND NOT parsed_POST_BUILD)
+	set(event_time PRE_LINK)
+  elseif(NOT parsed_PRE_BUILD AND NOT parsed_PRE_LINK AND parsed_POST_BUILD)
+	set(event_time POST_BUILD)
+  else()
+	message(FATAL_ERROR
+	  "Must be specified exactly one of PRE_BUILD, PRE_LINK, or POST_BUILD.")
+  endif()
+
+  foreach(tgt IN LISTS parsed_TARGETS)
+	if(DEFINED parsed_COMMAND)
+	  set(COMMAND ${parsed_COMMAND})
+	else()
+	  set(COMMAND ${SIL_CLANG_FORMAT})
+	endif()
+
+	__sil_clang_format_target("${tgt}" "${COMMAND}" "${event_time}")
+  endforeach()
+endfunction()
+

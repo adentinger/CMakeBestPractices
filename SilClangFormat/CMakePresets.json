@@ -1,0 +1,45 @@
+{
+	"version": 6,
+	"cmakeMinimumRequired": {
+		"major": 3,
+		"minor": 25
+	},
+	"include": [
+		"../CMakePresetsBase.json"
+	],
+	"configurePresets": [
+		{
+			"name": "ninja",
+			"displayName": "Ninja",
+			"inherits": [
+				"base-ninja"
+			]
+		}
+	],
+	"buildPresets": [
+		{
+			"name": "ninja",
+			"displayName": "Ninja",
+			"inherits": [
+				"base-ninja"
+			],
+			"configurePreset": "ninja"
+		}
+	],
+	"workflowPresets": [
+		{
+			"name": "ninja",
+			"displayName": "Ninja",
+			"steps": [
+				{
+					"type": "configure",
+					"name": "ninja"
+				},
+				{
+					"type": "build",
+					"name": "ninja"
+				}
+			]
+		}
+	]
+}
