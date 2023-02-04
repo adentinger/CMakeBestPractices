@@ -126,7 +126,7 @@ set(EXPORT_FILE "${PACKAGE_CMAKE_SCRIPTS_DIR}/lib1Targets.cmake")
 include(CMakePackageConfigHelpers)
 # Write a CMake script containing the version information & checking for
 # this project. This is used in the find_package() call of the project that
-# uses this project to do version checking:
+# uses this package to do version checking:
 # https://cmake.org/cmake/help/latest/command/find_package.html#config-mode-version-selection
 write_basic_package_version_file(exelib2ConfigVersion.cmake
   VERSION ${PROJECT_VERSION}

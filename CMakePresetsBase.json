@@ -19,6 +19,10 @@
 				"CMAKE_CXX_CLANG_TIDY": {
 					"type": "STRING",
 					"value": "clang-tidy;--config-file=${sourceDir}/../.clang-tidy"
+				},
+				"SIL_CLANG_FORMAT": {
+					"type": "STRING",
+					"value": "clang-format;--style=file:${sourceDir}/../.clang-format"
 				}
 			}
 		},
