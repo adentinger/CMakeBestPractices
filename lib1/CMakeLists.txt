@@ -4,7 +4,7 @@ project(lib1
   VERSION 1.0
   LANGUAGES CXX)
 
-# Reason to do that even if we don't have tests:
+# Reason to do that whether we have tests or not:
 # https://youtu.be/IZXNsim9TWI?t=2426
 enable_testing()
 
@@ -29,6 +29,9 @@ add_library(lib1 ${CXX_SOURCES})
 # Since this CMake build doesn't have any other library/executable, that means
 # doing this is useless, but this is just to keep things consistent no matter what.
 add_library(lib1::lib1 ALIAS lib1)
+
+find_package(SilClangFormat 1.0 CONFIG REQUIRED)
+sil_clang_format_targets(TARGETS lib1 PRE_BUILD)
 
 get_target_property(LIB_TYPE lib1 TYPE)
 if (LIB_TYPE STREQUAL SHARED_LIBRARY)
@@ -103,7 +106,7 @@ configure_package_config_file(cmake/lib1Config.cmake.in
   PATH_VARS EXPORT_FILE)
 # Write a CMake script containing the version information & checking for
 # this project. This is used in the find_package() call of the project that
-# uses this project to do version checking:
+# uses this package to do version checking:
 # https://cmake.org/cmake/help/latest/command/find_package.html#config-mode-version-selection
 write_basic_package_version_file(lib1ConfigVersion.cmake
   VERSION ${PROJECT_VERSION}

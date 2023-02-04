@@ -4,7 +4,7 @@ project(exe
   VERSION 1.0
   LANGUAGES CXX)
 
-# Reason to do that even if we don't have tests:
+# Reason to do that whether we have tests or not:
 # https://youtu.be/IZXNsim9TWI?t=2426
 enable_testing()
 
