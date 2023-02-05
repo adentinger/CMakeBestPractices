@@ -55,42 +55,42 @@
 	"buildPresets": [
 		{
 			"name": "ninja-release-static",
-			"inherits": ["base-ninja-release"],
+			"inherits": ["base-default"],
 			"configurePreset": "ninja-release-static"
 		},
 		{
 			"name": "ninja-debug-static",
-			"inherits": ["base-ninja-debug"],
+			"inherits": ["base-default"],
 			"configurePreset": "ninja-debug-static"
 		},
 		{
 			"name": "ninja-release-shared",
-			"inherits": ["base-ninja-release"],
+			"inherits": ["base-default"],
 			"configurePreset": "ninja-release-shared"
 		},
 		{
 			"name": "ninja-debug-shared",
-			"inherits": ["base-ninja-debug"],
+			"inherits": ["base-default"],
 			"configurePreset": "ninja-debug-shared"
 		},
 		{
 			"name": "ninja-release-static-dev",
-			"inherits": ["base-ninja-release"],
+			"inherits": ["base-default"],
 			"configurePreset": "ninja-release-static-dev"
 		},
 		{
 			"name": "ninja-debug-static-dev",
-			"inherits": ["base-ninja-debug"],
+			"inherits": ["base-default"],
 			"configurePreset": "ninja-debug-static-dev"
 		},
 		{
 			"name": "ninja-release-shared-dev",
-			"inherits": ["base-ninja-release"],
+			"inherits": ["base-default"],
 			"configurePreset": "ninja-release-shared-dev"
 		},
 		{
 			"name": "ninja-debug-shared-dev",
-			"inherits": ["base-ninja-debug"],
+			"inherits": ["base-default"],
 			"configurePreset": "ninja-debug-shared-dev"
 		}
 	],

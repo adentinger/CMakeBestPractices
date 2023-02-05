@@ -21,7 +21,7 @@
 			"name": "ninja",
 			"displayName": "Ninja",
 			"inherits": [
-				"base-ninja"
+				"base-default"
 			],
 			"configurePreset": "ninja"
 		}

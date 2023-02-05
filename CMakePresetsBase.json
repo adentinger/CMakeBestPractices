@@ -74,25 +74,9 @@
 	],
 	"buildPresets": [
 		{
-			"name": "base-ninja",
+			"name": "base-default",
 			"hidden": true,
 			"jobs": 10
-		},
-		{
-			"name": "base-ninja-release",
-			"hidden": true,
-			"inherits": "base-ninja",
-			"configurePreset": "base-ninja-release",
-			"displayName": "Base Ninja Release Build",
-			"description": "Base Build with ninja in release type."
-		},
-		{
-			"name": "base-ninja-debug",
-			"hidden": true,
-			"inherits": "base-ninja",
-			"configurePreset": "base-ninja-debug",
-			"displayName": "Base Ninja Debug Build",
-			"description": "Base Build with ninja in debug type."
 		}
 	]
 }
