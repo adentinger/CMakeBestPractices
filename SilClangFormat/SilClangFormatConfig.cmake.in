@@ -113,8 +113,33 @@ function(sil_clang_format_targets)
   endif()
 
   if(NOT DEFINED parsed_COMMAND AND NOT DEFINED SIL_CLANG_FORMAT)
-	message(FATAL_ERROR
-	  "COMMAND keyword missing and SIL_CLANG_FORMAT is undefined.")
+	# If no command is specific, then we should do nothing. The reasons for
+	# this choice:
+	#
+	# 1) To avoid users of this CMake package having to do something like
+	# "If we're one the CI machine, then call sil_clang_format, otherwise do
+	# nothing." This sort of thing would be messy and error-prone, because it
+	# forces having specific configurations for the CI machine inside the
+	# CMakeLists.txt, which should generally remain declarative and focus
+	# mostly just on describing project structure and install package
+	# structure. Instead, CI configs and dev configs for the CMake project
+	# should be controlled externally to the CMake project, e.g. via the
+	# CMakePresets.json file, via some CMake cache variable specified on the
+	# commandline, or via an environment variable. To be fair, if we do not
+	# need to call clang-format (e.g. non-dev, non-CI environment), then the
+	# calling CMakeLists.txt might try not to attempt finding this package so
+	# that these setups don't need this package installed. But still, we should
+	# not make that decision here. Let's leave that decision to whoever uses
+	# us; they know their setup better than we do.
+	#
+	# 2) To remain consistent with CMake's clang-tidy integration, where if you
+	# don't define the CMAKE_<lang>_CLANG_TIDY variable nor the
+	# <lang>_CLANG_TIDY target property, then clang-tidy is not run.
+	message(VERBOSE
+	  "sil_clang_format_targets(): COMMAND keyword missing and "
+	  "SIL_CLANG_FORMAT is undefined; clang-format will not be run on "
+	  "specified target(s) \"${parsed_TARGETS}\".")
+	return()
   endif()
 
   if(parsed_PRE_BUILD AND NOT parsed_PRE_LINK AND NOT parsed_POST_BUILD)
