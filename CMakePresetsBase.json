@@ -15,7 +15,14 @@
 				"CMAKE_EXPORT_COMPILE_COMMANDS": {
 					"type": "BOOL",
 					"value": "ON"
-				},
+				}
+			}
+		},
+		{
+			"name": "base-dev",
+			"hidden": true,
+			"description": "Base for dev/CI setup",
+			"cacheVariables": {
 				"CMAKE_CXX_CLANG_TIDY": {
 					"type": "STRING",
 					"value": "clang-tidy;--config-file=${sourceDir}/../.clang-tidy"
@@ -27,9 +34,8 @@
 			}
 		},
 		{
-			"name": "base-ninja-release",
+			"name": "base-release",
 			"hidden": true,
-			"inherits": "base-ninja",
 			"displayName": "Base Release Config",
 			"description": "Base Release configure with Ninja.",
 			"cacheVariables": {
@@ -37,9 +43,8 @@
 			}
 		},
 		{
-			"name": "base-ninja-debug",
+			"name": "base-debug",
 			"hidden": true,
-			"inherits": "base-ninja",
 			"displayName": "Base Debug Config",
 			"description": "Base Debug configure with Ninja.",
 			"cacheVariables": {

@@ -14,6 +14,8 @@ big_message() {
 	echo
 }
 
+echo "Assuming cmake command is \"${CMAKE_BIN_DIR}cmake\""
+
 cd "${SCRIPT_DIR}"
 
 rm -rf {SilClangFormat,lib1,exe-and-lib2}/build install

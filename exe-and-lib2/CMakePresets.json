@@ -21,19 +21,35 @@
 		},
 		{
 			"name": "ninja-release-static",
-			"inherits": ["base-ninja-release", "base-static", "project-base"]
+			"inherits": ["base-ninja", "base-release", "base-static", "project-base"]
 		},
 		{
 			"name": "ninja-debug-static",
-			"inherits": ["base-ninja-debug", "base-static", "project-base"]
+			"inherits": ["base-ninja", "base-debug", "base-static", "project-base"]
 		},
 		{
 			"name": "ninja-release-shared",
-			"inherits": ["base-ninja-release", "base-shared", "project-base"]
+			"inherits": ["base-ninja", "base-release", "base-shared", "project-base"]
 		},
 		{
 			"name": "ninja-debug-shared",
-			"inherits": ["base-ninja-debug", "base-shared", "project-base"]
+			"inherits": ["base-ninja", "base-debug", "base-shared", "project-base"]
+		},
+		{
+			"name": "ninja-release-static-dev",
+			"inherits": ["ninja-release-static", "base-dev"]
+		},
+		{
+			"name": "ninja-debug-static-dev",
+			"inherits": ["ninja-debug-static", "base-dev"]
+		},
+		{
+			"name": "ninja-release-shared-dev",
+			"inherits": ["ninja-release-shared", "base-dev"]
+		},
+		{
+			"name": "ninja-debug-shared-dev",
+			"inherits": ["ninja-debug-shared", "base-dev"]
 		}
 	],
 	"buildPresets": [
@@ -56,6 +72,26 @@
 			"name": "ninja-debug-shared",
 			"inherits": ["base-ninja-debug"],
 			"configurePreset": "ninja-debug-shared"
+		},
+		{
+			"name": "ninja-release-static-dev",
+			"inherits": ["base-ninja-release"],
+			"configurePreset": "ninja-release-static-dev"
+		},
+		{
+			"name": "ninja-debug-static-dev",
+			"inherits": ["base-ninja-debug"],
+			"configurePreset": "ninja-debug-static-dev"
+		},
+		{
+			"name": "ninja-release-shared-dev",
+			"inherits": ["base-ninja-release"],
+			"configurePreset": "ninja-release-shared-dev"
+		},
+		{
+			"name": "ninja-debug-shared-dev",
+			"inherits": ["base-ninja-debug"],
+			"configurePreset": "ninja-debug-shared-dev"
 		}
 	],
 	"workflowPresets": [
@@ -108,6 +144,58 @@
 				{
 					"type": "build",
 					"name": "ninja-debug-shared"
+				}
+			]
+		},
+		{
+			"name": "ninja-release-static-dev",
+			"steps": [
+				{
+					"type": "configure",
+					"name": "ninja-release-static-dev"
+				},
+				{
+					"type": "build",
+					"name": "ninja-release-static-dev"
+				}
+			]
+		},
+		{
+			"name": "ninja-debug-static-dev",
+			"steps": [
+				{
+					"type": "configure",
+					"name": "ninja-debug-static-dev"
+				},
+				{
+					"type": "build",
+					"name": "ninja-debug-static-dev"
+				}
+			]
+		},
+		{
+			"name": "ninja-release-shared-dev",
+			"steps": [
+				{
+					"type": "configure",
+					"name": "ninja-release-shared-dev"
+				},
+				{
+					"type": "build",
+					"name": "ninja-release-shared-dev"
+				}
+			]
+		},
+		{
+			"name": "ninja-debug-shared-dev",
+			"steps": [
+				{
+					"type": "configure",
+					"name": "ninja-debug-shared-dev"
+				},
+				{
+					"type": "build",
+					"name": "ninja-debug-shared-dev"
 				}
 			]
 		}
