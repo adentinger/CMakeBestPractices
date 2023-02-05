@@ -31,7 +31,7 @@ add_library(lib1 ${CXX_SOURCES})
 add_library(lib1::lib1 ALIAS lib1)
 
 find_package(SilClangFormat 1.0 CONFIG REQUIRED)
-sil_clang_format_targets(TARGETS lib1 PRE_BUILD)
+sil_clang_format_targets(TARGETS lib1 POST_BUILD)
 
 get_target_property(LIB_TYPE lib1 TYPE)
 if (LIB_TYPE STREQUAL SHARED_LIBRARY)

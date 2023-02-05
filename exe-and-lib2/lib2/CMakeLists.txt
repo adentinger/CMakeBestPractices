@@ -21,6 +21,9 @@ find_package(lib1 1.0 REQUIRED CONFIG)
 target_link_libraries(lib2
   PUBLIC lib1::lib1)
 
+find_package(SilClangFormat 1.0 CONFIG REQUIRED)
+sil_clang_format_targets(TARGETS lib2 POST_BUILD)
+
 get_target_property(LIB_TYPE lib2 TYPE)
 if(LIB_TYPE STREQUAL SHARED_LIBRARY)
   set(LIB_SHARED_MACRO "LIB2_SHARED")
