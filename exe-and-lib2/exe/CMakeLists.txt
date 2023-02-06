@@ -44,8 +44,9 @@ set_target_properties(exe
   PROPERTIES
   INSTALL_RPATH "${EXE_INSTALL_RPATH}")
 
-find_package(SilClangFormat 1.0 CONFIG REQUIRED)
-sil_clang_format_targets(TARGETS exe POST_BUILD)
+find_package(SilClangFormat 1.1 CONFIG REQUIRED)
+sil_clang_format_targets(TARGETS exe
+  POSTFIX format)
 
 install(TARGETS exe
   DESTINATION bin)
