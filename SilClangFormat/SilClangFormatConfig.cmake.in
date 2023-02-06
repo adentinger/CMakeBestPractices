@@ -2,34 +2,78 @@
 
 # Configure package file for this CMake package.
 #
-# Find package with find_dependency(<pkg> CONFIG REQUIRED).
+# Find this package with find_dependency(<pkg> CONFIG REQUIRED).
 
 # If this module has a dependency, this other module defines the
 # find_dependency() macro for that purpose.
 include(CMakeFindDependencyMacro)
-# See documentation of cmake_package_configure_file()
-@PACKAGE_INIT@
 
 # Internal function; do not use.
-function(__sil_clang_format_target tgt commandline event_time)
+function(__sil_clang_format_target tgt tgt_clang_format command_or_empty main_target_or_empty)
   if(NOT TARGET "${tgt}")
 	message(FATAL_ERROR "Target \"${tgt}\" does not exist")
   endif()
 
+  if(TARGET "${tgt_clang_format}")
+	message(FATAL_ERROR
+	  "Cannot create target \"${tgt_clang_format}\" for clang-format: A "
+	  "target with the same name already exists. Use the "
+	  "SIL_CLANG_FORMAT_MAIN_TARGET CMake variable to specify a different"
+	  "target.")
+  endif()
+
   get_target_property(tgt_sources "${tgt}" SOURCES)
 
-  if (NOT "${tgt_sources}" STREQUAL "")
-	add_custom_command(TARGET "${tgt}"
-	  "${event_time}"
-	  COMMAND ${commandline} --dry-run ${tgt_sources})
-  else()
-	add_custom_command(TARGET "${tgt}"
-	  "${event_time}"
+  message(VERBOSE "Creating target ${tgt_clang_format}.")
+  if(NOT "${tgt_sources}" STREQUAL "" AND
+	  NOT "${command_or_empty}" STREQUAL "")
+	add_custom_target("${tgt_clang_format}"
+	  COMMENT "Running clang-format for target ${tgt}..."
+	  COMMAND ${command_or_empty} -i ${tgt_sources})
+  elseif(NOT "${tgt_sources}" STREQUAL "")
+	add_custom_target("${tgt_clang_format}"
 	  COMMAND echo "Not running clang-format for target ${tgt}: No sources")
+  else()
+	# If no command is specified, then we should do nothing. The reasons for
+	# this choice:
+	#
+	# 1) To avoid users of this CMake package having to do something like
+	# "If we're one the CI machine, then call sil_clang_format, otherwise do
+	# nothing." This sort of thing would be messy and error-prone, because it
+	# forces having specific configurations for the CI machine inside the
+	# CMakeLists.txt, which should generally remain declarative and focus
+	# mostly just on describing project structure and install package
+	# structure. Instead, CI configs and dev configs for the CMake project
+	# should be controlled externally to the CMake project, e.g. via the
+	# CMakePresets.json file, via some CMake cache variable specified on the
+	# commandline, or via an environment variable. To be fair, if we do not
+	# need to call clang-format (e.g. non-dev, non-CI environment), then the
+	# calling CMakeLists.txt might try not to attempt finding this package so
+	# that these setups don't need this package installed. But still, we should
+	# not make that decision here. Let's leave that decision to whoever uses
+	# us; they know their setup better than we do.
+	#
+	# 2) To remain consistent with CMake's clang-tidy integration, where if you
+	# don't define the CMAKE_<lang>_CLANG_TIDY variable nor the
+	# <lang>_CLANG_TIDY target property, then clang-tidy is not run.
+	add_custom_target("${tgt_clang_format}"
+	  COMMAND echo "Not running clang-format for target ${tgt}: COMMAND specified.")
+  endif()
+
+  if(NOT "${main_target_or_empty}" STREQUAL "")
+	if (NOT TARGET "${main_target_or_empty}")
+	  add_custom_target("${main_target_or_empty}"
+		COMMENT "Running clang-format sub-targets.")
+	  message(VERBOSE "Creating target ${main_target_or_empty} and adding ${tgt_clang_format} as a dependency.")
+	else()
+	  	  message(VERBOSE "Adding ${tgt_clang_format} as a dependency of ${main_target_or_empty}.")
+	endif()
+	add_dependencies("${main_target_or_empty}" "${tgt_clang_format}")
   endif()
 endfunction()
 
 function(sil_clang_format_targets)
+  message(VERBOSE "sil_clang_format_targets(): Parsing arguments.")
   ####
   #
   # TL;DR: This is an explanation on how to pass arguments to CMake functions.
@@ -86,22 +130,21 @@ function(sil_clang_format_targets)
   # For a quick explanation of cmake_parse_arguments(), see:
   # https://youtu.be/IZXNsim9TWI?t=1618
   cmake_parse_arguments(
-	parsed                          # Magic var prefix
+	parsed                # Magic var prefix
+
+	""                    # Options
 
 	# Here we want an actual single argument containing semicolons, since this
-	# is what cmake_parse_arguments() expects as its second argument.
-	"PRE_BUILD;PRE_LINK;POST_BUILD" # Options
+	# is what cmake_parse_arguments() expects as this argument.
+	"MAIN_TARGET;POSTFIX" # Single-value keywords
 
-	""                              # Single-value keywords
-
-	# Likewise here.
-	"TARGETS;COMMAND"               # Multi-value keywords
+	# Same here
+	"TARGETS;COMMAND"     # Multi-value keywords
 
 	# Here we want to pass one argument per list item of ARGN, which is the
 	# list of arguments passed to *this* function. So this variable expansion
 	# must not be inside a quoted string.
-	${ARGN}
-  )
+	${ARGN})
 
   if(parsed_UNPARSED_ARGUMENTS)
 	message(FATAL_ERROR
@@ -112,55 +155,39 @@ function(sil_clang_format_targets)
 	message(FATAL_ERROR "TARGETS keyword missing.")
   endif()
 
-  if(NOT DEFINED parsed_COMMAND AND NOT DEFINED SIL_CLANG_FORMAT)
-	# If no command is specific, then we should do nothing. The reasons for
-	# this choice:
-	#
-	# 1) To avoid users of this CMake package having to do something like
-	# "If we're one the CI machine, then call sil_clang_format, otherwise do
-	# nothing." This sort of thing would be messy and error-prone, because it
-	# forces having specific configurations for the CI machine inside the
-	# CMakeLists.txt, which should generally remain declarative and focus
-	# mostly just on describing project structure and install package
-	# structure. Instead, CI configs and dev configs for the CMake project
-	# should be controlled externally to the CMake project, e.g. via the
-	# CMakePresets.json file, via some CMake cache variable specified on the
-	# commandline, or via an environment variable. To be fair, if we do not
-	# need to call clang-format (e.g. non-dev, non-CI environment), then the
-	# calling CMakeLists.txt might try not to attempt finding this package so
-	# that these setups don't need this package installed. But still, we should
-	# not make that decision here. Let's leave that decision to whoever uses
-	# us; they know their setup better than we do.
-	#
-	# 2) To remain consistent with CMake's clang-tidy integration, where if you
-	# don't define the CMAKE_<lang>_CLANG_TIDY variable nor the
-	# <lang>_CLANG_TIDY target property, then clang-tidy is not run.
+  if(NOT DEFINED parsed_POSTFIX)
+	message(FATAL_ERROR "POSTFIX keyword missing.")
+  endif()
+
+  if(DEFINED parsed_COMMAND)
+	set(COMMAND_OR_EMPTY ${parsed_COMMAND})
+  elseif(DEFINED SIL_CLANG_FORMAT)
+	set(COMMAND_OR_EMPTY ${SIL_CLANG_FORMAT})
+  else()
 	message(VERBOSE
 	  "sil_clang_format_targets(): COMMAND keyword missing and "
 	  "SIL_CLANG_FORMAT is undefined; clang-format will not be run on "
 	  "specified target(s) \"${parsed_TARGETS}\".")
-	return()
+
+	set(COMMAND_OR_EMPTY)
   endif()
 
-  if(parsed_PRE_BUILD AND NOT parsed_PRE_LINK AND NOT parsed_POST_BUILD)
-	set(event_time PRE_BUILD)
-  elseif(NOT parsed_PRE_BUILD AND parsed_PRE_LINK AND NOT parsed_POST_BUILD)
-	set(event_time PRE_LINK)
-  elseif(NOT parsed_PRE_BUILD AND NOT parsed_PRE_LINK AND parsed_POST_BUILD)
-	set(event_time POST_BUILD)
+  if(DEFINED parsed_MAIN_TARGET)
+	set(MAIN_TARGET ${parsed_MAIN_TARGET})
+  elseif(DEFINED SIL_CLANG_FORMAT_MAIN_TARGET)
+	set(MAIN_TARGET ${SIL_CLANG_FORMAT_MAIN_TARGET})
   else()
-	message(FATAL_ERROR
-	  "Must be specified exactly one of PRE_BUILD, PRE_LINK, or POST_BUILD.")
+	set(MAIN_TARGET clang-format)
   endif()
 
   foreach(tgt IN LISTS parsed_TARGETS)
-	if(DEFINED parsed_COMMAND)
-	  set(COMMAND ${parsed_COMMAND})
-	else()
-	  set(COMMAND ${SIL_CLANG_FORMAT})
-	endif()
+	set(clang_format_tgt "${tgt}-${parsed_POSTFIX}")
 
-	__sil_clang_format_target("${tgt}" "${COMMAND}" "${event_time}")
+	__sil_clang_format_target(
+	  "${tgt}"
+	  "${clang_format_tgt}"
+	  "${COMMAND_OR_EMPTY}"
+	  "${MAIN_TARGET}")
   endforeach()
 endfunction()
 

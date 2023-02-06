@@ -30,8 +30,9 @@ add_library(lib1 ${CXX_SOURCES})
 # doing this is useless, but this is just to keep things consistent no matter what.
 add_library(lib1::lib1 ALIAS lib1)
 
-find_package(SilClangFormat 1.0 CONFIG REQUIRED)
-sil_clang_format_targets(TARGETS lib1 POST_BUILD)
+find_package(SilClangFormat 1.1 CONFIG REQUIRED)
+sil_clang_format_targets(TARGETS lib1
+  POSTFIX format)
 
 get_target_property(LIB_TYPE lib1 TYPE)
 if (LIB_TYPE STREQUAL SHARED_LIBRARY)
