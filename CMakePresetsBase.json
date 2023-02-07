@@ -78,5 +78,14 @@
 			"hidden": true,
 			"jobs": 10
 		}
+	],
+	"testPresets": [
+		{
+			"name": "base-default",
+			"hidden": true,
+			"execution": {
+				"jobs": 10
+			}
+		}
 	]
 }

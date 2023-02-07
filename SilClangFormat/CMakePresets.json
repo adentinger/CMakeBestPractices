@@ -18,8 +18,18 @@
 	],
 	"buildPresets": [
 		{
-			"name": "ninja",
-			"displayName": "Ninja",
+			"name": "default",
+			"displayName": "Default",
+			"inherits": [
+				"base-default"
+			],
+			"configurePreset": "ninja"
+		}
+	],
+	"testPresets": [
+		{
+			"name": "default",
+			"displayName": "Default",
 			"inherits": [
 				"base-default"
 			],
@@ -37,7 +47,11 @@
 				},
 				{
 					"type": "build",
-					"name": "ninja"
+					"name": "default"
+				},
+				{
+					"type": "test",
+					"name": "default"
 				}
 			]
 		}
