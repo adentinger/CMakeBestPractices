@@ -30,7 +30,7 @@ add_library(lib1 ${CXX_SOURCES})
 # doing this is useless, but this is just to keep things consistent no matter what.
 add_library(lib1::lib1 ALIAS lib1)
 
-find_package(SilClangFormat 1.1 CONFIG REQUIRED)
+find_package(SilClangFormat 2.0 CONFIG REQUIRED)
 sil_clang_format_targets(TARGETS lib1
   POSTFIX format)
 
@@ -111,6 +111,17 @@ configure_package_config_file(cmake/lib1Config.cmake.in
 # https://cmake.org/cmake/help/latest/command/find_package.html#config-mode-version-selection
 write_basic_package_version_file(lib1ConfigVersion.cmake
   VERSION ${PROJECT_VERSION}
+  # Define the version compatibility checking policy.
+  #
+  # Obviously, in a project this should be decided once and ideally only
+  # once, since changing this policy (or at least, making it less restrictive
+  # than it has once been) would otherwise be a compatibility break in the very
+  # thing that checks compatibility. Breaking compatibility of this policy is
+  # something, we suppose, could only be possible when introducing an extra
+  # level of indirection that provides the consistency, such as a package
+  # manager that already knows about newer versions of the package even if that
+  # newer version is not the one installed, or a "version-checking server" of
+  # some kind that would do this same thing.
   COMPATIBILITY SameMinorVersion)
 
 install(FILES
