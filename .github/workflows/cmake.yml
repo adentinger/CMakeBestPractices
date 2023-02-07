@@ -11,20 +11,28 @@ env:
 
 jobs:
   build:
-    # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
-    # You can convert this to a matrix build if you need cross-platform coverage.
-    # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#choosing-github-hosted-runners
+        runner-id: [ubuntu-latest, windows-latest]
+
+    runs-on: ${{matrix.runner-id}}
 
     steps:
-    - name: Download Ninja
+    - name: Ubuntu install ninja
       working-directory: ${{github.workspace}}
-      run: wget https://github.com/ninja-build/ninja/releases/download/v1.11.1/ninja-linux.zip
-
-    - name: Unzip Ninja and add to PATH.
-      working-directory: ${{github.workspace}}
+      if: matrix.runner-id == 'ubuntu-latest'
       run: |
+        wget https://github.com/ninja-build/ninja/releases/download/v1.11.1/ninja-linux.zip && \
         unzip ninja-linux.zip && rm ninja-linux.zip && \
+        echo "${{github.workspace}}" >> $GITHUB_PATH
+
+    - name: Windows install ninja
+      working-directory: ${{github.workspace}}
+      if: matrix.runner-id == 'windows-latest'
+      run: |
+        (new-object System.Net.WebClient).DownloadFile('https://github.com/ninja-build/ninja/releases/download/v1.11.1/ninja-win.zip','${{github.workspace}}\ninja-win.zip');
+        tar -xf ninja-win.zip;
         echo "${{github.workspace}}" >> $GITHUB_PATH
 
     - uses: actions/checkout@v3
@@ -56,4 +64,7 @@ jobs:
     - name: exe-and-lib2/Install
       working-directory: ${{github.workspace}}/repo/exe-and-lib2/build
       run: cmake --install .
+
+    - name: Run exe
+      run: ${{github.workspace}}/repo/install/bin/exe
 
