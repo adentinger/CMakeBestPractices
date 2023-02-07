@@ -34,8 +34,8 @@ function(__sil_clang_format_target tgt tgt_clang_format command_or_empty main_ta
 	add_custom_target("${tgt_clang_format}"
 	  COMMAND echo "Not running clang-format for target ${tgt}: No sources")
   else()
-	# If no command is specified, then we should do nothing. The reasons for
-	# this choice:
+	# If no command is specified, then this target should do nothing. The
+	# reasons for this choice:
 	#
 	# 1) To avoid users of this CMake package having to do something like
 	# "If we're one the CI machine, then call sil_clang_format, otherwise do
@@ -57,7 +57,7 @@ function(__sil_clang_format_target tgt tgt_clang_format command_or_empty main_ta
 	# don't define the CMAKE_<lang>_CLANG_TIDY variable nor the
 	# <lang>_CLANG_TIDY target property, then clang-tidy is not run.
 	add_custom_target("${tgt_clang_format}"
-	  COMMAND echo "Not running clang-format for target ${tgt}: COMMAND specified.")
+	  COMMAND echo "Not running clang-format for target ${tgt}: no command specified.")
   endif()
 
   if(NOT "${main_target_or_empty}" STREQUAL "")
