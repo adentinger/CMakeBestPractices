@@ -2,7 +2,7 @@
 
 cmake_minimum_required(VERSION 3.25)
 project(SilClangFormat
-  VERSION 1.1
+  VERSION 2.0
   LANGUAGES NONE)
 
 # Reason to do that whether we have tests or not:
@@ -20,7 +20,18 @@ include(CMakePackageConfigHelpers)
 # https://cmake.org/cmake/help/latest/command/find_package.html#config-mode-version-selection
 write_basic_package_version_file(SilClangFormatConfigVersion.cmake
   VERSION ${PROJECT_VERSION}
-  COMPATIBILITY SameMinorVersion)
+  # Define the version compatibility checking policy.
+  #
+  # Obviously, in a project this should be decided once and ideally only
+  # once, since changing this policy (or at least, making it less restrictive
+  # than it has once been) would otherwise be a compatibility break in the very
+  # thing that checks compatibility. Breaking compatibility of this policy is
+  # something, we suppose, could only be possible when introducing an extra
+  # level of indirection that provides the consistency, such as a package
+  # manager that already knows about newer versions of the package even if that
+  # newer version is not the one installed, or a "version-checking server" of
+  # some kind that would do this same thing.
+  COMPATIBILITY SameMajorVersion)
 
 install(FILES
   "${CMAKE_CURRENT_BINARY_DIR}/SilClangFormatConfig.cmake"
