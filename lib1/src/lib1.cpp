@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 
-#include "lib1/hdr.h"
-
-#include <vector>
 #include <utility>
+#include <vector>
+
+#include "lib1/hdr.h"
 
 namespace lib1 {
 
@@ -19,5 +19,4 @@ std::size_t fibo(uint32_t n) {
 	return v0;
 }
 
-} // namespace lib1
-
+}  // namespace lib1
