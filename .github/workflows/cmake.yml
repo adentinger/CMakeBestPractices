@@ -17,18 +17,43 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Setup Ninja
-      uses: ashutoshvarma/setup-ninja@master
-      with:
-        version: 1.11.1
+    - name: Download Ninja
+      working-directory: ${{github.workspace}}
+      run: wget https://github.com/ninja-build/ninja/releases/download/v1.11.1/ninja-linux.zip
+
+    - name: Unzip Ninja and add to PATH.
+      working-directory: ${{github.workspace}}
+      run: |
+        unzip ninja-linux.zip && rm ninja-linux.zip && \
+        echo "${{github.workspace}}" >> $GITHUB_PATH
 
     - uses: actions/checkout@v3
+      with:
+        # The actions/checkout@v3 action clones into
+        # "${{github.workspace}}" by default, which wipes the ninja executable we just extracted.
+        path: repo
 
     - name: SilClangFormat/Workflow
-      working-directory: ${{github.workspace}}/SilClangFormat
+      working-directory: ${{github.workspace}}/repo/SilClangFormat
       run: cmake --workflow --preset ninja
 
     - name: SilClangFormat/Install
-      working-directory: ${{github.workspace}}/SilClangFormat/build
+      working-directory: ${{github.workspace}}/repo/SilClangFormat/build
+      run: cmake --install .
+
+    - name: lib1/Workflow
+      working-directory: ${{github.workspace}}/repo/lib1
+      run: cmake --workflow --preset ninja-release-static
+
+    - name: lib1/Install
+      working-directory: ${{github.workspace}}/repo/lib1/build
+      run: cmake --install .
+
+    - name: exe-and-lib2/Workflow
+      working-directory: ${{github.workspace}}/repo/exe-and-lib2
+      run: cmake --workflow --preset ninja-release-shared
+
+    - name: exe-and-lib2/Install
+      working-directory: ${{github.workspace}}/repo/exe-and-lib2/build
       run: cmake --install .
 
