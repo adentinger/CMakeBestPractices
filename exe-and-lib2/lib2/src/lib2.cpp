@@ -1,18 +1,18 @@
 // SPDX-License-Identifier: MIT
 
-#include "lib2/hdr.h"
+#include <inttypes.h>  // NOLINT(modernize-deprecated-headers) Just "uint<N>_t".
 
-#include <iostream>
-#include <vector>
-#include <numeric>
 #include <algorithm>
-#include <inttypes.h> // NOLINT(modernize-deprecated-headers) Just "uint<N>_t".
+#include <iostream>
+#include <numeric>
+#include <vector>
 
 #include "lib1/hdr.h"
+#include "lib2/hdr.h"
 
 #if !defined(LIB1_MACRO) || LIB1_MACRO != 42
-#error "!defined(LIB1_MACRO)"
-#endif // !defined(LIB1_MACRO) || LIB1_MACRO != 42
+#	error "!defined(LIB1_MACRO)"
+#endif  // !defined(LIB1_MACRO) || LIB1_MACRO != 42
 
 namespace lib2 {
 
@@ -31,11 +31,8 @@ std::size_t fibo_sum(uint32_t n) {
 	auto f = [&curr_n]() { return lib1::fibo(++curr_n); };
 	std::generate_n(fibo_values.begin(), fibo_values.size(), f);
 	const std::size_t sum = std::accumulate(
-		fibo_values.cbegin(),
-		fibo_values.cend(),
-		static_cast<std::size_t>(0));
+		fibo_values.cbegin(), fibo_values.cend(), static_cast<std::size_t>(0));
 	return sum;
 }
 
-} // namespace lib2
-
+}  // namespace lib2
