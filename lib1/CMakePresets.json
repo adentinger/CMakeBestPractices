@@ -72,64 +72,122 @@
 			"name": "ninja-release-static",
 			"inherits": ["base-default"],
 			"configurePreset": "ninja-release-static",
-			"displayName": "Ninja Release Build Static",
-			"description": "Release build with ninja with static libraries."
+			"displayName": "Ninja Release Static",
+			"description": "Release with ninja with static libraries."
 		},
 		{
 			"name": "ninja-debug-static",
 			"inherits": ["base-default"],
 			"configurePreset": "ninja-debug-static",
-			"displayName": "Ninja Debug Build Static",
-			"description": "Debug build with ninja with static libraries."
+			"displayName": "Ninja Debug Static",
+			"description": "Debug with ninja with static libraries."
 		},
 		{
 			"name": "ninja-release-shared",
 			"inherits": ["base-default"],
 			"configurePreset": "ninja-release-shared",
-			"displayName": "Ninja Release Build Shared",
-			"description": "Release build with ninja with shared libraries."
+			"displayName": "Ninja Release Shared",
+			"description": "Release with ninja with shared libraries."
 		},
 		{
 			"name": "ninja-debug-shared",
 			"inherits": ["base-default"],
 			"configurePreset": "ninja-debug-shared",
-			"displayName": "Ninja Debug Build Shared",
-			"description": "Debug build with ninja with shared libraries."
+			"displayName": "Ninja Debug Shared",
+			"description": "Debug with ninja with shared libraries."
 		},
 		{
 			"name": "ninja-release-static-dev",
 			"inherits": ["base-default"],
 			"configurePreset": "ninja-release-static-dev",
-			"displayName": "Ninja Release Build Static Dev/CI",
-			"description": "Release build with ninja with static libraries."
+			"displayName": "Ninja Release Static Dev/CI",
+			"description": "Release with ninja with static libraries."
 		},
 		{
 			"name": "ninja-debug-static-dev",
 			"inherits": ["base-default"],
 			"configurePreset": "ninja-debug-static-dev",
-			"displayName": "Ninja Debug Build Static Dev/CI",
-			"description": "Debug build with ninja with static libraries."
+			"displayName": "Ninja Debug Static Dev/CI",
+			"description": "Debug with ninja with static libraries."
 		},
 		{
 			"name": "ninja-release-shared-dev",
 			"inherits": ["base-default"],
 			"configurePreset": "ninja-release-shared-dev",
-			"displayName": "Ninja Release Build Shared Dev/CI",
-			"description": "Release build with ninja with shared libraries."
+			"displayName": "Ninja Release Shared Dev/CI",
+			"description": "Release with ninja with shared libraries."
 		},
 		{
 			"name": "ninja-debug-shared-dev",
 			"inherits": ["base-default"],
 			"configurePreset": "ninja-debug-shared-dev",
-			"displayName": "Ninja Debug Build Shared Dev/CI",
-			"description": "Debug build with ninja with shared libraries."
+			"displayName": "Ninja Debug Shared Dev/CI",
+			"description": "Debug with ninja with shared libraries."
+		}
+	],
+	"testPresets": [
+		{
+			"name": "ninja-release-static",
+			"inherits": ["base-default"],
+			"configurePreset": "ninja-release-static",
+			"displayName": "Ninja Release Static",
+			"description": "Release with ninja with static libraries."
+		},
+		{
+			"name": "ninja-debug-static",
+			"inherits": ["base-default"],
+			"configurePreset": "ninja-debug-static",
+			"displayName": "Ninja Debug Static",
+			"description": "Debug with ninja with static libraries."
+		},
+		{
+			"name": "ninja-release-shared",
+			"inherits": ["base-default"],
+			"configurePreset": "ninja-release-shared",
+			"displayName": "Ninja Release Shared",
+			"description": "Release with ninja with shared libraries."
+		},
+		{
+			"name": "ninja-debug-shared",
+			"inherits": ["base-default"],
+			"configurePreset": "ninja-debug-shared",
+			"displayName": "Ninja Debug Shared",
+			"description": "Debug with ninja with shared libraries."
+		},
+		{
+			"name": "ninja-release-static-dev",
+			"inherits": ["base-default"],
+			"configurePreset": "ninja-release-static-dev",
+			"displayName": "Ninja Release Static Dev/CI",
+			"description": "Release with ninja with static libraries."
+		},
+		{
+			"name": "ninja-debug-static-dev",
+			"inherits": ["base-default"],
+			"configurePreset": "ninja-debug-static-dev",
+			"displayName": "Ninja Debug Static Dev/CI",
+			"description": "Debug with ninja with static libraries."
+		},
+		{
+			"name": "ninja-release-shared-dev",
+			"inherits": ["base-default"],
+			"configurePreset": "ninja-release-shared-dev",
+			"displayName": "Ninja Release Shared Dev/CI",
+			"description": "Release with ninja with shared libraries."
+		},
+		{
+			"name": "ninja-debug-shared-dev",
+			"inherits": ["base-default"],
+			"configurePreset": "ninja-debug-shared-dev",
+			"displayName": "Ninja Debug Shared Dev/CI",
+			"description": "Debug with ninja with shared libraries."
 		}
 	],
 	"workflowPresets": [
 		{
 			"name": "ninja-release-static",
 			"displayName": "Ninja Release Static",
-			"description": "Release build with ninja with static libraries.",
+			"description": "Release with ninja with static libraries.",
 			"steps": [
 				{
 					"type": "configure",
@@ -137,6 +195,10 @@
 				},
 				{
 					"type": "build",
+					"name": "ninja-release-static"
+				},
+				{
+					"type": "test",
 					"name": "ninja-release-static"
 				}
 			]
@@ -144,7 +206,7 @@
 		{
 			"name": "ninja-debug-static",
 			"displayName": "Ninja Debug Static",
-			"description": "Debug build with ninja with static libraries.",
+			"description": "Debug with ninja with static libraries.",
 			"steps": [
 				{
 					"type": "configure",
@@ -152,6 +214,10 @@
 				},
 				{
 					"type": "build",
+					"name": "ninja-debug-static"
+				},
+				{
+					"type": "test",
 					"name": "ninja-debug-static"
 				}
 			]
@@ -159,7 +225,7 @@
 		{
 			"name": "ninja-release-shared",
 			"displayName": "Ninja Release Shared",
-			"description": "Release build with ninja with shared libraries.",
+			"description": "Release with ninja with shared libraries.",
 			"steps": [
 				{
 					"type": "configure",
@@ -167,6 +233,10 @@
 				},
 				{
 					"type": "build",
+					"name": "ninja-release-shared"
+				},
+				{
+					"type": "test",
 					"name": "ninja-release-shared"
 				}
 			]
@@ -174,7 +244,7 @@
 		{
 			"name": "ninja-debug-shared",
 			"displayName": "Ninja Debug Shared",
-			"description": "Debug build with ninja with shared libraries.",
+			"description": "Debug with ninja with shared libraries.",
 			"steps": [
 				{
 					"type": "configure",
@@ -182,6 +252,10 @@
 				},
 				{
 					"type": "build",
+					"name": "ninja-debug-shared"
+				},
+				{
+					"type": "test",
 					"name": "ninja-debug-shared"
 				}
 			]
@@ -189,7 +263,7 @@
 		{
 			"name": "ninja-release-static-dev",
 			"displayName": "Ninja Release Static Dev/CI",
-			"description": "Release build with ninja with static libraries.",
+			"description": "Release with ninja with static libraries.",
 			"steps": [
 				{
 					"type": "configure",
@@ -197,6 +271,10 @@
 				},
 				{
 					"type": "build",
+					"name": "ninja-release-static-dev"
+				},
+				{
+					"type": "test",
 					"name": "ninja-release-static-dev"
 				}
 			]
@@ -204,7 +282,7 @@
 		{
 			"name": "ninja-debug-static-dev",
 			"displayName": "Ninja Debug Static Dev/CI",
-			"description": "Debug build with ninja with static libraries.",
+			"description": "Debug with ninja with static libraries.",
 			"steps": [
 				{
 					"type": "configure",
@@ -212,6 +290,10 @@
 				},
 				{
 					"type": "build",
+					"name": "ninja-debug-static-dev"
+				},
+				{
+					"type": "test",
 					"name": "ninja-debug-static-dev"
 				}
 			]
@@ -219,7 +301,7 @@
 		{
 			"name": "ninja-release-shared-dev",
 			"displayName": "Ninja Release Shared Dev/CI",
-			"description": "Release build with ninja with shared libraries.",
+			"description": "Release with ninja with shared libraries.",
 			"steps": [
 				{
 					"type": "configure",
@@ -227,6 +309,10 @@
 				},
 				{
 					"type": "build",
+					"name": "ninja-release-shared-dev"
+				},
+				{
+					"type": "test",
 					"name": "ninja-release-shared-dev"
 				}
 			]
@@ -234,7 +320,7 @@
 		{
 			"name": "ninja-debug-shared-dev",
 			"displayName": "Ninja Debug Shared Dev/CI",
-			"description": "Debug build with ninja with shared libraries.",
+			"description": "Debug with ninja with shared libraries.",
 			"steps": [
 				{
 					"type": "configure",
@@ -243,8 +329,13 @@
 				{
 					"type": "build",
 					"name": "ninja-debug-shared-dev"
+				},
+				{
+					"type": "test",
+					"name": "ninja-debug-shared-dev"
 				}
 			]
 		}
 	]
 }
+
