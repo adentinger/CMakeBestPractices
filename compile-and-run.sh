@@ -3,8 +3,8 @@
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" 2>/dev/null && pwd)"
 SILCLANGFORMAT_WORKFLOW=ninja
-LIB1_WORKFLOW=ninja-release-shared
-LIB2EXE_WORKFLOW=ninja-release-shared
+LIB1_WORKFLOW=ninja-shared
+LIB2EXE_WORKFLOW=ninja-shared
 
 big_message() {
 	echo
