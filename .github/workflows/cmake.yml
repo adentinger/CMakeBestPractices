@@ -10,18 +10,21 @@ env:
   # Environment variables used by CMake.
   # See: https://cmake.org/cmake/help/latest/envvar/CMAKE_GENERATOR.html
   CMAKE_BUILD_TYPE: Release
-  CMAKE_GENERATOR: Ninja
   VERBOSE: ON
 
 jobs:
-  build:
+  ninja:
     strategy:
       matrix:
         # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#choosing-github-hosted-runners
         runner-id: [macos-latest, ubuntu-latest, windows-latest]
-        sil-clang-format-workflow: [ninja]
-        lib1-workflow: [ninja-static-dev, ninja-shared-dev]
-        exe-lib2-workflow: [ninja-static-dev, ninja-shared-dev]
+        lib1-workflow: [static-dev, shared-dev]
+        exe-lib2-workflow: [static-dev, shared-dev]
+
+    env:
+      # Environment variables used by CMake.
+      # See: https://cmake.org/cmake/help/latest/envvar/CMAKE_GENERATOR.html
+      CMAKE_GENERATOR: Ninja
 
     runs-on: ${{matrix.runner-id}}
 
@@ -55,9 +58,13 @@ jobs:
       working-directory: ${{github.workspace}}
       # https://stackoverflow.com/a/53380855/2252948
       run: |
-        ln -s "$(brew --prefix llvm)/bin/clang-format" "/usr/local/bin/clang-format" && \
-        ln -s "$(brew --prefix llvm)/bin/clang-tidy" "/usr/local/bin/clang-tidy" && \
-        ln -s "$(brew --prefix llvm)/bin/clang-apply-replacements" "/usr/local/bin/clang-apply-replacements"
+        echo "LLVM Brew prefix: $(brew --prefix llvm)" && \
+        echo "ls -l $(brew --prefix llvm):" && \
+        ls -l "$(brew --prefix llvm)" && \
+        echo "ls -l $(brew --prefix llvm)/bin:" && \
+        ls -l "$(brew --prefix llvm)/bin" && \
+        echo "Adding $(brew --prefix llvm)/bin to PATH" && \
+        echo "$(brew --prefix llvm)/bin" >> $GITHUB_PATH
 
     - uses: actions/checkout@v3
       with:
@@ -67,7 +74,7 @@ jobs:
 
     - name: SilClangFormat/Workflow
       working-directory: ${{github.workspace}}/repo/SilClangFormat
-      run: cmake --workflow --preset "${{matrix.sil-clang-format-workflow}}"
+      run: cmake --workflow --preset default
 
     - name: SilClangFormat/Install
       working-directory: ${{github.workspace}}/repo/SilClangFormat/build

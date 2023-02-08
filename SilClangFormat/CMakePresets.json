@@ -9,10 +9,10 @@
 	],
 	"configurePresets": [
 		{
-			"name": "ninja",
-			"displayName": "Ninja",
+			"name": "default",
+			"displayName": "Default",
 			"inherits": [
-				"base-ninja"
+				"base-default"
 			]
 		}
 	],
@@ -23,7 +23,7 @@
 			"inherits": [
 				"base-default"
 			],
-			"configurePreset": "ninja"
+			"configurePreset": "default"
 		}
 	],
 	"testPresets": [
@@ -33,17 +33,17 @@
 			"inherits": [
 				"base-default"
 			],
-			"configurePreset": "ninja"
+			"configurePreset": "default"
 		}
 	],
 	"workflowPresets": [
 		{
-			"name": "ninja",
-			"displayName": "Ninja",
+			"name": "default",
+			"displayName": "Default",
 			"steps": [
 				{
 					"type": "configure",
-					"name": "ninja"
+					"name": "default"
 				},
 				{
 					"type": "build",
