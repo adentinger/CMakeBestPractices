@@ -7,8 +7,10 @@ on:
     branches: [ "main" ]
 
 env:
-  BUILD_TYPE: Release
-  # https://cmake.org/cmake/help/latest/envvar/VERBOSE.html
+  # Environment variables used by CMake.
+  # See: https://cmake.org/cmake/help/latest/envvar/CMAKE_GENERATOR.html
+  CMAKE_BUILD_TYPE: Release
+  CMAKE_GENERATOR: Ninja
   VERBOSE: ON
 
 jobs:
@@ -18,8 +20,8 @@ jobs:
         # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#choosing-github-hosted-runners
         runner-id: [macos-latest, ubuntu-latest, windows-latest]
         sil-clang-format-workflow: [ninja]
-        lib1-workflow: [ninja-release-static-dev, ninja-release-shared-dev]
-        exe-lib2-workflow: [ninja-release-static-dev, ninja-release-shared-dev]
+        lib1-workflow: [ninja-static-dev, ninja-shared-dev]
+        exe-lib2-workflow: [ninja-static-dev, ninja-shared-dev]
 
     runs-on: ${{matrix.runner-id}}
 
