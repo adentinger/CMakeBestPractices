@@ -7,6 +7,11 @@ file(GLOB_RECURSE CXX_HEADERS CONFIGURE_DEPENDS
 add_executable(exe ${CXX_SOURCES})
 target_link_libraries(exe lib2::lib2)
 
+set_target_properties(exe
+  PROPERTIES
+  CXX_STANDARD 17
+  CXX_STANDARD_REQUIRED ON)
+
 # Properties used only when building shared libraries.
 #
 # For Apple and Unix-like platforms (although maybe not Cygwin?), an RPATH

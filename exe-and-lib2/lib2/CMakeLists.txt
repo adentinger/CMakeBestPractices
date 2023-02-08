@@ -25,6 +25,11 @@ find_package(SilClangFormat 2.0 CONFIG REQUIRED)
 sil_clang_format_targets(TARGETS lib2
   POSTFIX format)
 
+set_target_properties(lib2
+  PROPERTIES
+  CXX_STANDARD 17
+  CXX_STANDARD_REQUIRED ON)
+
 get_target_property(LIB_TYPE lib2 TYPE)
 if(LIB_TYPE STREQUAL SHARED_LIBRARY)
   set(LIB_SHARED_MACRO "LIB2_SHARED")
