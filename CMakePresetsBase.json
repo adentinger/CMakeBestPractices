@@ -34,24 +34,6 @@
 			}
 		},
 		{
-			"name": "base-release",
-			"hidden": true,
-			"displayName": "Base Release Config",
-			"description": "Base Release configure with Ninja.",
-			"cacheVariables": {
-				"CMAKE_BUILD_TYPE": "Release"
-			}
-		},
-		{
-			"name": "base-debug",
-			"hidden": true,
-			"displayName": "Base Debug Config",
-			"description": "Base Debug configure with Ninja.",
-			"cacheVariables": {
-				"CMAKE_BUILD_TYPE": "Debug"
-			}
-		},
-		{
 			"name": "base-static",
 			"hidden": true,
 			"cacheVariables": {
