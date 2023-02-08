@@ -12,7 +12,6 @@
 			"name": "project-base",
 			"hidden": true,
 			"cacheVariables": {
-				"CMAKE_PREFIX_PATH": "${sourceDir}/../install",
 				"lib2_BUILD_WITH_PIC": {
 					"type": "BOOL",
 					"value": "ON"
@@ -20,132 +19,135 @@
 			}
 		},
 		{
-			"name": "ninja-static",
-			"inherits": ["base-ninja", "base-static", "project-base"]
+			"name": "static",
+			"inherits": ["base-default", "base-static", "project-base"],
+			"hidden": true
 		},
 		{
-			"name": "ninja-shared",
-			"inherits": ["base-ninja", "base-shared", "project-base"]
+			"name": "shared",
+			"inherits": ["base-default", "base-shared", "project-base"],
+			"hidden": true
+
 		},
 		{
-			"name": "ninja-static-dev",
-			"inherits": ["ninja-static", "base-dev"]
+			"name": "static-dev",
+			"inherits": ["static", "base-dev"]
 		},
 		{
-			"name": "ninja-shared-dev",
-			"inherits": ["ninja-shared", "base-dev"]
+			"name": "shared-dev",
+			"inherits": ["shared", "base-dev"]
 		}
 	],
 	"buildPresets": [
 		{
-			"name": "ninja-static",
+			"name": "static",
 			"inherits": ["base-default"],
-			"configurePreset": "ninja-static"
+			"configurePreset": "static"
 		},
 		{
-			"name": "ninja-shared",
+			"name": "shared",
 			"inherits": ["base-default"],
-			"configurePreset": "ninja-shared"
+			"configurePreset": "shared"
 		},
 		{
-			"name": "ninja-static-dev",
+			"name": "static-dev",
 			"inherits": ["base-default"],
-			"configurePreset": "ninja-static-dev"
+			"configurePreset": "static-dev"
 		},
 		{
-			"name": "ninja-shared-dev",
+			"name": "shared-dev",
 			"inherits": ["base-default"],
-			"configurePreset": "ninja-shared-dev"
+			"configurePreset": "shared-dev"
 		}
 	],
 	"testPresets": [
 		{
-			"name": "ninja-static",
+			"name": "static",
 			"inherits": ["base-default"],
-			"configurePreset": "ninja-static"
+			"configurePreset": "static"
 		},
 		{
-			"name": "ninja-shared",
+			"name": "shared",
 			"inherits": ["base-default"],
-			"configurePreset": "ninja-shared"
+			"configurePreset": "shared"
 		},
 		{
-			"name": "ninja-static-dev",
+			"name": "static-dev",
 			"inherits": ["base-default"],
-			"configurePreset": "ninja-static-dev"
+			"configurePreset": "static-dev"
 		},
 		{
-			"name": "ninja-shared-dev",
+			"name": "shared-dev",
 			"inherits": ["base-default"],
-			"configurePreset": "ninja-shared-dev"
+			"configurePreset": "shared-dev"
 		}
 	],
 	"workflowPresets": [
 		{
-			"name": "ninja-static",
+			"name": "static",
 			"steps": [
 				{
 					"type": "configure",
-					"name": "ninja-static"
+					"name": "static"
 				},
 				{
 					"type": "build",
-					"name": "ninja-static"
+					"name": "static"
 				},
 				{
 					"type": "test",
-					"name": "ninja-static"
+					"name": "static"
 				}
 			]
 		},
 		{
-			"name": "ninja-shared",
+			"name": "shared",
 			"steps": [
 				{
 					"type": "configure",
-					"name": "ninja-shared"
+					"name": "shared"
 				},
 				{
 					"type": "build",
-					"name": "ninja-shared"
+					"name": "shared"
 				},
 				{
 					"type": "test",
-					"name": "ninja-shared"
+					"name": "shared"
 				}
 			]
 		},
 		{
-			"name": "ninja-static-dev",
+			"name": "static-dev",
 			"steps": [
 				{
 					"type": "configure",
-					"name": "ninja-static-dev"
+					"name": "static-dev"
 				},
 				{
 					"type": "build",
-					"name": "ninja-static-dev"
+					"name": "static-dev"
 				},
 				{
 					"type": "test",
-					"name": "ninja-static-dev"
+					"name": "static-dev"
 				}
 			]
 		},
 		{
-			"name": "ninja-shared-dev",
+			"name": "shared-dev",
 			"steps": [
 				{
 					"type": "configure",
-					"name": "ninja-shared-dev"
+					"name": "shared-dev"
 				},
 				{
 					"type": "build",
-					"name": "ninja-shared-dev"
+					"name": "shared-dev"
 				},
 				{
 					"type": "test",
-					"name": "ninja-shared-dev"
+					"name": "shared-dev"
 				}
 			]
 		}
