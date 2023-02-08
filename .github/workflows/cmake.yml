@@ -8,6 +8,8 @@ on:
 
 env:
   BUILD_TYPE: Release
+  # https://cmake.org/cmake/help/latest/envvar/VERBOSE.html
+  VERBOSE: ON
 
 jobs:
   build:
@@ -15,6 +17,9 @@ jobs:
       matrix:
         # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#choosing-github-hosted-runners
         runner-id: [macos-latest, ubuntu-latest, windows-latest]
+        sil-clang-format-workflow: [ninja]
+        lib1-workflow: [ninja-release-static-dev, ninja-release-shared-dev]
+        exe-lib2-workflow: [ninja-release-static-dev, ninja-release-shared-dev]
 
     runs-on: ${{matrix.runner-id}}
 
@@ -36,12 +41,21 @@ jobs:
         echo "${{github.workspace}}" >> $GITHUB_PATH
 
     - name: MacOS install ninja
-      working-directory: ${{github.workspace}}
       if: matrix.runner-id == 'macos-latest'
+      working-directory: ${{github.workspace}}
       run: |
         wget https://github.com/ninja-build/ninja/releases/download/v1.11.1/ninja-mac.zip && \
         unzip ninja-mac.zip && rm ninja-mac.zip && \
         echo "${{github.workspace}}" >> $GITHUB_PATH
+
+    - name: MacOS setup clang-tidy & clang-format
+      if: matrix.runner-id == 'macos-latest'
+      working-directory: ${{github.workspace}}
+      # https://stackoverflow.com/a/53380855/2252948
+      run: |
+        ln -s "$(brew --prefix llvm)/bin/clang-format" "/usr/local/bin/clang-format" && \
+        ln -s "$(brew --prefix llvm)/bin/clang-tidy" "/usr/local/bin/clang-tidy" && \
+        ln -s "$(brew --prefix llvm)/bin/clang-apply-replacements" "/usr/local/bin/clang-apply-replacements"
 
     - uses: actions/checkout@v3
       with:
@@ -51,7 +65,7 @@ jobs:
 
     - name: SilClangFormat/Workflow
       working-directory: ${{github.workspace}}/repo/SilClangFormat
-      run: cmake --workflow --preset ninja
+      run: cmake --workflow --preset "${{matrix.sil-clang-format-workflow}}"
 
     - name: SilClangFormat/Install
       working-directory: ${{github.workspace}}/repo/SilClangFormat/build
@@ -59,7 +73,7 @@ jobs:
 
     - name: lib1/Workflow
       working-directory: ${{github.workspace}}/repo/lib1
-      run: cmake --workflow --preset ninja-release-static
+      run: cmake --workflow --preset "${{matrix.lib1-workflow}}"
 
     - name: lib1/Install
       working-directory: ${{github.workspace}}/repo/lib1/build
@@ -67,7 +81,7 @@ jobs:
 
     - name: exe-and-lib2/Workflow
       working-directory: ${{github.workspace}}/repo/exe-and-lib2
-      run: cmake --workflow --preset ninja-release-shared
+      run: cmake --workflow --preset "${{matrix.exe-lib2-workflow}}"
 
     - name: exe-and-lib2/Install
       working-directory: ${{github.workspace}}/repo/exe-and-lib2/build
