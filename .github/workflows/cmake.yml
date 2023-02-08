@@ -14,7 +14,7 @@ jobs:
     strategy:
       matrix:
         # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#choosing-github-hosted-runners
-        runner-id: [ubuntu-latest, windows-latest]
+        runner-id: [macos-latest, ubuntu-latest, windows-latest]
 
     runs-on: ${{matrix.runner-id}}
 
@@ -33,6 +33,14 @@ jobs:
       run: |
         (new-object System.Net.WebClient).DownloadFile('https://github.com/ninja-build/ninja/releases/download/v1.11.1/ninja-win.zip','${{github.workspace}}\ninja-win.zip');
         tar -xf ninja-win.zip;
+        echo "${{github.workspace}}" >> $GITHUB_PATH
+
+    - name: MacOS install ninja
+      working-directory: ${{github.workspace}}
+      if: matrix.runner-id == 'macos-latest'
+      run: |
+        wget https://github.com/ninja-build/ninja/releases/download/v1.11.1/ninja-mac.zip && \
+        unzip ninja-mac.zip && rm ninja-mac.zip && \
         echo "${{github.workspace}}" >> $GITHUB_PATH
 
     - uses: actions/checkout@v3
