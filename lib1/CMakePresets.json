@@ -19,164 +19,150 @@
 			}
 		},
 		{
-			"name": "ninja-static",
-			"inherits": ["base-ninja", "base-static", "project-base"],
+			"name": "static",
+			"inherits": ["base-default", "base-static", "project-base"],
 			"displayName": "Config Static",
-			"description": "configure with ninja with static libraries."
+			"hidden": true
 		},
 		{
-			"name": "ninja-shared",
-			"inherits": ["base-ninja", "base-shared", "project-base"],
+			"name": "shared",
+			"inherits": ["base-default", "base-shared", "project-base"],
 			"displayName": "Config Shared",
-			"description": "configure with ninja with shared libraries."
+			"hidden": true
 		},
 		{
-			"name": "ninja-static-dev",
-			"inherits": ["ninja-static", "base-dev"],
-			"displayName": "Config Static Dev/CI",
-			"description": "configure with ninja with static libraries for dev/CI setup."
+			"name": "static-dev",
+			"inherits": ["static", "base-dev"],
+			"displayName": "Config Static Dev/CI"
 		},
 		{
-			"name": "ninja-shared-dev",
-			"inherits": ["ninja-shared", "base-dev"],
-			"displayName": "Config Shared Dev/CI",
-			"description": "configure with ninja with shared libraries for dev/CI setup."
+			"name": "shared-dev",
+			"inherits": ["shared", "base-dev"],
+			"displayName": "Config Shared Dev/CI"
 		}
 	],
 	"buildPresets": [
 		{
-			"name": "ninja-static",
+			"name": "static",
 			"inherits": ["base-default"],
-			"configurePreset": "ninja-static",
-			"displayName": "Ninja Static",
-			"description": "With ninja with static libraries."
+			"configurePreset": "static",
+			"displayName": "Static"
 		},
 		{
-			"name": "ninja-shared",
+			"name": "shared",
 			"inherits": ["base-default"],
-			"configurePreset": "ninja-shared",
-			"displayName": "Ninja Shared",
-			"description": "With ninja with shared libraries."
+			"configurePreset": "shared",
+			"displayName": "Shared"
 		},
 		{
-			"name": "ninja-static-dev",
+			"name": "static-dev",
 			"inherits": ["base-default"],
-			"configurePreset": "ninja-static-dev",
-			"displayName": "Ninja Static Dev/CI",
-			"description": "With ninja with static libraries."
+			"configurePreset": "static-dev",
+			"displayName": "Static Dev/CI"
 		},
 		{
-			"name": "ninja-shared-dev",
+			"name": "shared-dev",
 			"inherits": ["base-default"],
-			"configurePreset": "ninja-shared-dev",
-			"displayName": "Ninja Shared Dev/CI",
-			"description": "With ninja with shared libraries."
+			"configurePreset": "shared-dev",
+			"displayName": "Shared Dev/CI"
 		}
 	],
 	"testPresets": [
 		{
-			"name": "ninja-static",
+			"name": "static",
 			"inherits": ["base-default"],
-			"configurePreset": "ninja-static",
-			"displayName": "Ninja Static",
-			"description": "With ninja with static libraries."
+			"configurePreset": "static",
+			"displayName": "Static"
 		},
 		{
-			"name": "ninja-shared",
+			"name": "shared",
 			"inherits": ["base-default"],
-			"configurePreset": "ninja-shared",
-			"displayName": "Ninja Shared",
-			"description": "With ninja with shared libraries."
+			"configurePreset": "shared",
+			"displayName": "Shared"
 		},
 		{
-			"name": "ninja-static-dev",
+			"name": "static-dev",
 			"inherits": ["base-default"],
-			"configurePreset": "ninja-static-dev",
-			"displayName": "Ninja Static Dev/CI",
-			"description": "With ninja with static libraries."
+			"configurePreset": "static-dev",
+			"displayName": "Static Dev/CI"
 		},
 		{
-			"name": "ninja-shared-dev",
+			"name": "shared-dev",
 			"inherits": ["base-default"],
-			"configurePreset": "ninja-shared-dev",
-			"displayName": "Ninja Shared Dev/CI",
-			"description": "With ninja with shared libraries."
+			"configurePreset": "shared-dev",
+			"displayName": "Shared Dev/CI"
 		}
 	],
 	"workflowPresets": [
 		{
-			"name": "ninja-static",
-			"displayName": "Ninja Static",
-			"description": "With ninja with static libraries.",
+			"name": "static",
+			"displayName": "Static",
 			"steps": [
 				{
 					"type": "configure",
-					"name": "ninja-static"
+					"name": "static"
 				},
 				{
 					"type": "build",
-					"name": "ninja-static"
+					"name": "static"
 				},
 				{
 					"type": "test",
-					"name": "ninja-static"
+					"name": "static"
 				}
 			]
 		},
 		{
-			"name": "ninja-shared",
-			"displayName": "Ninja Shared",
-			"description": "With ninja with shared libraries.",
+			"name": "shared",
+			"displayName": "Shared",
 			"steps": [
 				{
 					"type": "configure",
-					"name": "ninja-shared"
+					"name": "shared"
 				},
 				{
 					"type": "build",
-					"name": "ninja-shared"
+					"name": "shared"
 				},
 				{
 					"type": "test",
-					"name": "ninja-shared"
+					"name": "shared"
 				}
 			]
 		},
 		{
-			"name": "ninja-static-dev",
-			"displayName": "Ninja Static Dev/CI",
-			"description": "With ninja with static libraries.",
+			"name": "static-dev",
+			"displayName": "Static Dev/CI",
 			"steps": [
 				{
 					"type": "configure",
-					"name": "ninja-static-dev"
+					"name": "static-dev"
 				},
 				{
 					"type": "build",
-					"name": "ninja-static-dev"
+					"name": "static-dev"
 				},
 				{
 					"type": "test",
-					"name": "ninja-static-dev"
+					"name": "static-dev"
 				}
 			]
 		},
 		{
-			"name": "ninja-shared-dev",
-			"displayName": "Ninja Shared Dev/CI",
-			"description": "With ninja with shared libraries.",
+			"name": "shared-dev",
+			"displayName": "Shared Dev/CI",
 			"steps": [
 				{
 					"type": "configure",
-					"name": "ninja-shared-dev"
+					"name": "shared-dev"
 				},
 				{
 					"type": "build",
-					"name": "ninja-shared-dev"
+					"name": "shared-dev"
 				},
 				{
 					"type": "test",
-					"name": "ninja-shared-dev"
+					"name": "shared-dev"
 				}
 			]
 		}
