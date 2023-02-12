@@ -9,7 +9,7 @@
 include(CMakeFindDependencyMacro)
 
 # Internal function; do not use.
-function(__sil_clang_format_target tgt tgt_clang_format command_or_empty main_target_or_empty)
+function(__ade_clang_format_target tgt tgt_clang_format command_or_empty main_target_or_empty)
   if(NOT TARGET "${tgt}")
 	message(FATAL_ERROR "Target \"${tgt}\" does not exist")
   endif()
@@ -18,7 +18,7 @@ function(__sil_clang_format_target tgt tgt_clang_format command_or_empty main_ta
 	message(FATAL_ERROR
 	  "Cannot create target \"${tgt_clang_format}\" for clang-format: A "
 	  "target with the same name already exists. Use the "
-	  "SIL_CLANG_FORMAT_MAIN_TARGET CMake variable to specify a different"
+	  "ADE_CLANG_FORMAT_MAIN_TARGET CMake variable to specify a different"
 	  "target.")
   endif()
 
@@ -38,7 +38,7 @@ function(__sil_clang_format_target tgt tgt_clang_format command_or_empty main_ta
 	# reasons for this choice:
 	#
 	# 1) To avoid users of this CMake package having to do something like
-	# "If we're one the CI machine, then call sil_clang_format, otherwise do
+	# "If we're one the CI machine, then call ade_clang_format, otherwise do
 	# nothing." This sort of thing would be messy and error-prone, because it
 	# forces having specific configurations for the CI machine inside the
 	# CMakeLists.txt, which should generally remain declarative and focus
@@ -72,8 +72,8 @@ function(__sil_clang_format_target tgt tgt_clang_format command_or_empty main_ta
   endif()
 endfunction()
 
-function(sil_clang_format_targets)
-  message(VERBOSE "sil_clang_format_targets(): Parsing arguments.")
+function(ade_clang_format_targets)
+  message(VERBOSE "ade_clang_format_targets(): Parsing arguments.")
   ####
   #
   # TL;DR: This is an explanation on how to pass arguments to CMake functions.
@@ -161,12 +161,12 @@ function(sil_clang_format_targets)
 
   if(DEFINED parsed_COMMAND)
 	set(COMMAND_OR_EMPTY ${parsed_COMMAND})
-  elseif(DEFINED SIL_CLANG_FORMAT)
-	set(COMMAND_OR_EMPTY ${SIL_CLANG_FORMAT})
+  elseif(DEFINED ADE_CLANG_FORMAT)
+	set(COMMAND_OR_EMPTY ${ADE_CLANG_FORMAT})
   else()
 	message(VERBOSE
-	  "sil_clang_format_targets(): COMMAND keyword missing and "
-	  "SIL_CLANG_FORMAT is undefined; clang-format will not be run on "
+	  "ade_clang_format_targets(): COMMAND keyword missing and "
+	  "ADE_CLANG_FORMAT is undefined; clang-format will not be run on "
 	  "specified target(s) \"${parsed_TARGETS}\".")
 
 	set(COMMAND_OR_EMPTY)
@@ -174,8 +174,8 @@ function(sil_clang_format_targets)
 
   if(DEFINED parsed_MAIN_TARGET)
 	set(MAIN_TARGET ${parsed_MAIN_TARGET})
-  elseif(DEFINED SIL_CLANG_FORMAT_MAIN_TARGET)
-	set(MAIN_TARGET ${SIL_CLANG_FORMAT_MAIN_TARGET})
+  elseif(DEFINED ADE_CLANG_FORMAT_MAIN_TARGET)
+	set(MAIN_TARGET ${ADE_CLANG_FORMAT_MAIN_TARGET})
   else()
 	set(MAIN_TARGET clang-format)
   endif()
@@ -183,7 +183,7 @@ function(sil_clang_format_targets)
   foreach(tgt IN LISTS parsed_TARGETS)
 	set(clang_format_tgt "${tgt}-${parsed_POSTFIX}")
 
-	__sil_clang_format_target(
+	__ade_clang_format_target(
 	  "${tgt}"
 	  "${clang_format_tgt}"
 	  "${COMMAND_OR_EMPTY}"

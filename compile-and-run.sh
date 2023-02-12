@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" 2>/dev/null && pwd)"
-SILCLANGFORMAT_WORKFLOW=default
+ADECLANGFORMAT_WORKFLOW=default
 LIB1_WORKFLOW=shared
 LIB2EXE_WORKFLOW=shared
 
@@ -46,10 +46,10 @@ check_cmake_version
 
 cd "${SCRIPT_DIR}"
 
-rm -rf {SilClangFormat,lib1,exe-and-lib2}/build install
-big_message "SilClangFormat workflow ${SILCLANGFORMAT_WORKFLOW}"
-cd "${SCRIPT_DIR}"/SilClangFormat
-"${CMAKE_CMD}" --workflow --preset "${SILCLANGFORMAT_WORKFLOW}"
+rm -rf {AdeClangFormat,lib1,exe-and-lib2}/build install
+big_message "AdeClangFormat workflow ${ADECLANGFORMAT_WORKFLOW}"
+cd "${SCRIPT_DIR}"/AdeClangFormat
+"${CMAKE_CMD}" --workflow --preset "${ADECLANGFORMAT_WORKFLOW}"
 "${CMAKE_CMD}" --install build --config "${CMAKE_CONFIG_TYPE}"
 big_message "lib1 workflow ${LIB1_WORKFLOW}"
 cd "${SCRIPT_DIR}"/lib1

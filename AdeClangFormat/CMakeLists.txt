@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: MIT
 
 cmake_minimum_required(VERSION 3.25)
-project(SilClangFormat
+project(AdeClangFormat
   VERSION 2.0
   LANGUAGES NONE)
 
@@ -9,8 +9,8 @@ project(SilClangFormat
 # https://youtu.be/IZXNsim9TWI?t=2426
 enable_testing()
 
-configure_file(SilClangFormatConfig.cmake.in
-  "${CMAKE_CURRENT_BINARY_DIR}/SilClangFormatConfig.cmake"
+configure_file(AdeClangFormatConfig.cmake.in
+  "${CMAKE_CURRENT_BINARY_DIR}/AdeClangFormatConfig.cmake"
   @ONLY
   USE_SOURCE_PERMISSIONS)
 include(CMakePackageConfigHelpers)
@@ -18,7 +18,7 @@ include(CMakePackageConfigHelpers)
 # this project. This is used in the find_package() call of the project that
 # uses this package to do version checking:
 # https://cmake.org/cmake/help/latest/command/find_package.html#config-mode-version-selection
-write_basic_package_version_file(SilClangFormatConfigVersion.cmake
+write_basic_package_version_file(AdeClangFormatConfigVersion.cmake
   VERSION ${PROJECT_VERSION}
   # Define the version compatibility checking policy.
   #
@@ -34,7 +34,7 @@ write_basic_package_version_file(SilClangFormatConfigVersion.cmake
   COMPATIBILITY SameMajorVersion)
 
 install(FILES
-  "${CMAKE_CURRENT_BINARY_DIR}/SilClangFormatConfig.cmake"
-  "${CMAKE_CURRENT_BINARY_DIR}/SilClangFormatConfigVersion.cmake"
-  DESTINATION share/cmake/SilClangFormat)
+  "${CMAKE_CURRENT_BINARY_DIR}/AdeClangFormatConfig.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/AdeClangFormatConfigVersion.cmake"
+  DESTINATION share/cmake/AdeClangFormat)
 
