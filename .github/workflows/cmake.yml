@@ -9,6 +9,11 @@ on:
 env:
   # Environment variables used by CMake.
   # See: https://cmake.org/cmake/help/latest/envvar/CMAKE_GENERATOR.html
+  #
+  # For multi-config generators (e.g. "Visual Studio *"), the CMAKE_BUILD_TYPE
+  # environement variable does nothing; we'll specify
+  # --config "${CMAKE_BUILD_TYPE}" to the commands instead, so you can still
+  # use this environement variable for them.
   CMAKE_BUILD_TYPE: Release
   VERBOSE: ON
 
@@ -107,24 +112,88 @@ jobs:
       run: cmake --workflow --preset default
 
     - name: AdeClangFormat/Install
-      working-directory: ${{github.workspace}}/repo/AdeClangFormat/build
-      run: cmake --install .
+      working-directory: ${{github.workspace}}/repo/AdeClangFormat
+      run: cmake --install build
 
     - name: lib1/Workflow
       working-directory: ${{github.workspace}}/repo/lib1
       run: cmake --workflow --preset "${{matrix.lib1-workflow}}"
 
     - name: lib1/Install
-      working-directory: ${{github.workspace}}/repo/lib1/build
-      run: cmake --install .
+      working-directory: ${{github.workspace}}/repo/lib1
+      run: cmake --install build
 
     - name: exe-and-lib2/Workflow
       working-directory: ${{github.workspace}}/repo/exe-and-lib2
       run: cmake --workflow --preset "${{matrix.exe-lib2-workflow}}"
 
     - name: exe-and-lib2/Install
-      working-directory: ${{github.workspace}}/repo/exe-and-lib2/build
-      run: cmake --install .
+      working-directory: ${{github.workspace}}/repo/exe-and-lib2
+      run: cmake --install build
+
+    - name: Run exe
+      run: ${{github.workspace}}/repo/install/bin/exe
+
+  vs:
+    strategy:
+      matrix:
+        generator: ["Visual Studio 17 2022"]
+        lib1-build-shared-libs: [ON, OFF]
+        exe-lib2-build-shared-libs: [ON, OFF]
+
+    runs-on: windows-latest
+
+    env:
+      # Environment variables used by CMake.
+      # See: https://cmake.org/cmake/help/latest/envvar/CMAKE_GENERATOR.html
+      CMAKE_GENERATOR: ${{matrix.generator}}
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        # To remain consistent with the 'ninja' jobs.
+        path: repo
+
+    - name: AdeClangFormat/Workflow
+      working-directory: ${{github.workspace}}/repo/AdeClangFormat
+      run: |
+        cmake -S . -B build &&                                                `
+        cmake --build build --config "${env:CMAKE_BUILD_TYPE}" -j10 &&        `
+        ctest --test-dir build --build-config "${env:CMAKE_BUILD_TYPE}" -j10
+
+    - name: AdeClangFormat/InstallQ
+      working-directory: ${{github.workspace}}/repo/AdeClangFormat
+      run: cmake --install build --config "${env:CMAKE_BUILD_TYPE}"
+
+    - name: lib1/Workflow
+      working-directory: ${{github.workspace}}/repo/lib1
+      run: |
+        cmake -S . -B build                                                   `
+            -DCMAKE_INSTALL_PREFIX="${{github.workspace}}/repo/install"       `
+            -DBUILD_SHARED_LIBS="${{matrix.lib1-build-shared-libs}}"          `
+            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON                                `
+            -Dlib1_BUILD_WITH_PIC=ON &&                                       `
+        cmake --build build --config "${env:CMAKE_BUILD_TYPE}" -j10 &&        `
+        ctest --test-dir build --build-config "${env:CMAKE_BUILD_TYPE}" -j10
+
+    - name: lib1/Install
+      working-directory: ${{github.workspace}}/repo/lib1
+      run: cmake --install build --config "${env:CMAKE_BUILD_TYPE}"
+
+    - name: exe-and-lib2/Workflow
+      working-directory: ${{github.workspace}}/repo/exe-and-lib2
+      run: |
+        cmake -S . -B build                                                   `
+            -DCMAKE_INSTALL_PREFIX="${{github.workspace}}/repo/install"       `
+            -DBUILD_SHARED_LIBS="${{matrix.exe-lib2-build-shared-libs}}"      `
+            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON                                `
+            -Dlib2_BUILD_WITH_PIC=ON &&                                       `
+        cmake --build build --config "${env:CMAKE_BUILD_TYPE}" -j10 &&        `
+        ctest --test-dir build --build-config "${env:CMAKE_BUILD_TYPE}" -j10
+
+    - name: exe-and-lib2/Install
+      working-directory: ${{github.workspace}}/repo/exe-and-lib2
+      run: cmake --install build --config "${env:CMAKE_BUILD_TYPE}"
 
     - name: Run exe
       run: ${{github.workspace}}/repo/install/bin/exe
