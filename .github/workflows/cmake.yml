@@ -47,6 +47,11 @@ jobs:
             exe-lib2-workflow: static
             is-analysis: false
 
+          # Don't do (shared, static) CI jobs --if the others work then there's
+          # a good chance that one will too.
+          - lib1-workflow: shared
+            exe-lib2-workflow: static
+
         # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstrategymatrixinclude
         include:
           - runner-id: ubuntu-latest
@@ -141,6 +146,12 @@ jobs:
         lib1-build-shared-libs: [ON, OFF]
         exe-lib2-build-shared-libs: [ON, OFF]
 
+        exclude:
+          # Don't do (shared, static) CI jobs --if the others work then there's
+          # a good chance that one will too.
+          - lib1-build-shared-libs: ON
+            exe-lib2-build-shared-libs: OFF
+
     runs-on: windows-latest
 
     env:
@@ -161,7 +172,7 @@ jobs:
         cmake --build build --config "${env:CMAKE_BUILD_TYPE}" -j10 &&        `
         ctest --test-dir build --build-config "${env:CMAKE_BUILD_TYPE}" -j10
 
-    - name: AdeClangFormat/InstallQ
+    - name: AdeClangFormat/Install
       working-directory: ${{github.workspace}}/repo/AdeClangFormat
       run: cmake --install build --config "${env:CMAKE_BUILD_TYPE}"
 
