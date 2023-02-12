@@ -102,12 +102,12 @@ jobs:
         # "${{github.workspace}}" by default, which wipes the ninja executable we just extracted.
         path: repo
 
-    - name: SilClangFormat/Workflow
-      working-directory: ${{github.workspace}}/repo/SilClangFormat
+    - name: AdeClangFormat/Workflow
+      working-directory: ${{github.workspace}}/repo/AdeClangFormat
       run: cmake --workflow --preset default
 
-    - name: SilClangFormat/Install
-      working-directory: ${{github.workspace}}/repo/SilClangFormat/build
+    - name: AdeClangFormat/Install
+      working-directory: ${{github.workspace}}/repo/AdeClangFormat/build
       run: cmake --install .
 
     - name: lib1/Workflow
