@@ -21,14 +21,12 @@
 		{
 			"name": "static",
 			"inherits": ["base-default", "base-static", "project-base"],
-			"displayName": "Config Static",
-			"hidden": true
+			"displayName": "Config Static"
 		},
 		{
 			"name": "shared",
 			"inherits": ["base-default", "base-shared", "project-base"],
-			"displayName": "Config Shared",
-			"hidden": true
+			"displayName": "Config Shared"
 		},
 		{
 			"name": "static-dev",

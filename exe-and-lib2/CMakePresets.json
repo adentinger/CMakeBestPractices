@@ -20,14 +20,11 @@
 		},
 		{
 			"name": "static",
-			"inherits": ["base-default", "base-static", "project-base"],
-			"hidden": true
+			"inherits": ["base-default", "base-static", "project-base"]
 		},
 		{
 			"name": "shared",
-			"inherits": ["base-default", "base-shared", "project-base"],
-			"hidden": true
-
+			"inherits": ["base-default", "base-shared", "project-base"]
 		},
 		{
 			"name": "static-dev",
