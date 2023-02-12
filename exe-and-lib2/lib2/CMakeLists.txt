@@ -21,8 +21,8 @@ find_package(lib1 1.0 REQUIRED CONFIG)
 target_link_libraries(lib2
   PUBLIC lib1::lib1)
 
-find_package(SilClangFormat 2.0 CONFIG REQUIRED)
-sil_clang_format_targets(TARGETS lib2
+find_package(AdeClangFormat 2.0 CONFIG REQUIRED)
+ade_clang_format_targets(TARGETS lib2
   POSTFIX format)
 
 set_target_properties(lib2
