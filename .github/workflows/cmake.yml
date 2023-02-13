@@ -8,7 +8,7 @@ on:
 
 env:
   # Environment variables used by CMake.
-  # See: https://cmake.org/cmake/help/latest/envvar/CMAKE_GENERATOR.html
+  # See: https://cmake.org/cmake/help/latest/manual/cmake-env-variables.7.html
   #
   # For multi-config generators (e.g. "Visual Studio *"), the CMAKE_BUILD_TYPE
   # environement variable does nothing; we'll specify
@@ -22,10 +22,10 @@ jobs:
     strategy:
       matrix:
         # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#choosing-github-hosted-runners
-        runner-id: [macos-latest, ubuntu-latest, windows-latest]
+        runner-id: [ubuntu-latest, macos-latest, windows-latest]
         lib1-workflow: [static, shared]
         exe-lib2-workflow: [static, shared]
-        is-analysis: [false]
+        has-analysis: [false]
 
         # Remove the configuration "ubuntu-latest, static, static", and replace
         # that with the configuration "ubuntu-latest, static-dev, static-dev".
@@ -45,7 +45,7 @@ jobs:
           - runner-id: ubuntu-latest
             lib1-workflow: static
             exe-lib2-workflow: static
-            is-analysis: false
+            has-analysis: false
 
           # Don't do (shared, static) CI jobs --if the others work then there's
           # a good chance that one will too.
@@ -57,15 +57,23 @@ jobs:
           - runner-id: ubuntu-latest
             lib1-workflow: static-dev
             exe-lib2-workflow: static-dev
-            is-analysis: true
+            has-analysis: true
+
+          # Use different CPack generators depending on the runner.
+          - runner-id: ubuntu-latest
+            cpack-generators: "DEB;RPM;External;STGZ;TGZ;ZIP"
+          - runner-id: macos-latest
+            cpack-generators: "DragNDrop;productbuild;External;STGZ;TGZ;ZIP"
+          - runner-id: windows-latest
+            cpack-generators: "NSIS64;WIX;External;STGZ;TGZ;ZIP"
 
     env:
       # Environment variables used by CMake.
-      # See: https://cmake.org/cmake/help/latest/envvar/CMAKE_GENERATOR.html
+      # See: https://cmake.org/cmake/help/latest/manual/cmake-env-variables.7.html
       CMAKE_GENERATOR: Ninja
 
     runs-on: ${{matrix.runner-id}}
-    continue-on-error: ${{matrix.is-analysis}}
+    continue-on-error: ${{matrix.has-analysis}}
 
     steps:
     - name: Ubuntu install ninja
@@ -93,7 +101,7 @@ jobs:
         echo "${{github.workspace}}" >> $GITHUB_PATH
 
     - name: MacOS setup clang-tidy & clang-format
-      if: matrix.runner-id == 'macos-latest' && matrix.is-analysis == 'true'
+      if: matrix.runner-id == 'macos-latest' && matrix.has-analysis == 'true'
       working-directory: ${{github.workspace}}
       # https://stackoverflow.com/a/53380855/2252948
       run: |
@@ -116,6 +124,10 @@ jobs:
       working-directory: ${{github.workspace}}/repo/AdeClangFormat
       run: cmake --workflow --preset default
 
+    - name: AdeClangFormat/CPack
+      working-directory: ${{github.workspace}}/repo/AdeClangFormat
+      run: cpack -B build -G "${{matrix.cpack-generators}}" --config build/CPackConfig.cmake
+
     - name: AdeClangFormat/Install
       working-directory: ${{github.workspace}}/repo/AdeClangFormat
       run: cmake --install build
@@ -124,6 +136,10 @@ jobs:
       working-directory: ${{github.workspace}}/repo/lib1
       run: cmake --workflow --preset "${{matrix.lib1-workflow}}"
 
+    - name: lib1/CPack
+      working-directory: ${{github.workspace}}/repo/lib1
+      run: cpack -B build -G "${{matrix.cpack-generators}}" --config build/CPackConfig.cmake
+
     - name: lib1/Install
       working-directory: ${{github.workspace}}/repo/lib1
       run: cmake --install build
@@ -131,6 +147,10 @@ jobs:
     - name: exe-and-lib2/Workflow
       working-directory: ${{github.workspace}}/repo/exe-and-lib2
       run: cmake --workflow --preset "${{matrix.exe-lib2-workflow}}"
+
+    - name: exe-and-lib2/CPack
+      working-directory: ${{github.workspace}}/repo/exe-and-lib2
+      run: cpack -B build -G "${{matrix.cpack-generators}}" --config build/CPackConfig.cmake
 
     - name: exe-and-lib2/Install
       working-directory: ${{github.workspace}}/repo/exe-and-lib2
@@ -156,7 +176,7 @@ jobs:
 
     env:
       # Environment variables used by CMake.
-      # See: https://cmake.org/cmake/help/latest/envvar/CMAKE_GENERATOR.html
+      # See: https://cmake.org/cmake/help/latest/manual/cmake-env-variables.7.html
       CMAKE_GENERATOR: ${{matrix.generator}}
 
     steps:
