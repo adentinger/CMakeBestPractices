@@ -3,11 +3,16 @@
 cmake_minimum_required(VERSION 3.25)
 project(AdeClangFormat
   VERSION 2.0
-  LANGUAGES NONE)
+  LANGUAGES NONE
+  DESCRIPTION "Simple clang-format integration into CMake."
+  HOMEPAGE_URL "https://github.com/AnthonyD973/CMakeBestPracticesTests")
 
 # Reason to do that whether we have tests or not:
 # https://youtu.be/IZXNsim9TWI?t=2426
 enable_testing()
+
+# https://youtu.be/bsXLMQ6WgIk?t=2809
+set(CMAKE_DEBUG_POSTFIX -d)
 
 configure_file(AdeClangFormatConfig.cmake.in
   "${CMAKE_CURRENT_BINARY_DIR}/AdeClangFormatConfig.cmake"
@@ -37,4 +42,18 @@ install(FILES
   "${CMAKE_CURRENT_BINARY_DIR}/AdeClangFormatConfig.cmake"
   "${CMAKE_CURRENT_BINARY_DIR}/AdeClangFormatConfigVersion.cmake"
   DESTINATION share/cmake/AdeClangFormat)
+
+# https://cmake.org/cmake/help/latest/module/CPack.html
+set(CPACK_PACKAGE_VENDOR "Anthony Dentinger"
+  CACHE STRING "Name of the package vendor.")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY
+  "Simple clang-format integration into CMake."
+  CACHE STRING "Short package description.")
+set(CPACK_PACKAGE_CHECKSUM SHA256
+  CACHE STRING "Checksum file algorithm.")
+set(CPACK_VERBATIM_VARIABLES ON
+  CACHE BOOL "If enabled, escapes contents of CPACK_* variables.")
+set(CPACK_THREADS 0
+  CACHE STRING "Number of threads if supported by package generator. 0 = #CPUs.")
+include(CPack)
 
