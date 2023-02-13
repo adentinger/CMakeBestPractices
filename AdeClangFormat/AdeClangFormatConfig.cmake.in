@@ -3,6 +3,9 @@
 # Configure package file for this CMake package.
 #
 # Find this package with find_dependency(<pkg> CONFIG REQUIRED).
+#
+# This package requires CMake >= 3.17 (we may want message(CHECK_*) at some
+# point).
 
 # If this module has a dependency, this other module defines the
 # find_dependency() macro for that purpose.
