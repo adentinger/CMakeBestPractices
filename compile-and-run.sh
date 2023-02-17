@@ -14,6 +14,44 @@ big_message() {
 	echo
 }
 
+set_system_info() {
+    # BASED ON https://unix.stackexchange.com/questions/6345/how-can-i-get-distribution-name-and-version-number-in-a-simple-shell-script
+    if [ -f /etc/os-release ]; then
+        # freedesktop.org and systemd
+        . /etc/os-release
+        OS=GNU/Linux
+        DISTRO="${NAME}"
+        VER="${VERSION_ID}"
+    elif type lsb_release >/dev/null 2>&1; then
+        # linuxbase.org
+        OS=GNU/Linux
+        DISTRO="$(lsb_release -si)"
+        VER="$(lsb_release -sr)"
+    elif [ -f /etc/lsb-release ]; then
+        # For some versions of Debian/Ubuntu without lsb_release command
+        . /etc/lsb-release
+        OS=GNU/Linux
+        DISTRO=$DISTRIB_ID
+        VER="${DISTRIB_RELEASE}"
+    elif [ -f /etc/debian_version ]; then
+        # Older Debian/Ubuntu/etc.
+        OS=GNU/Linux
+        DISTRO=Debian
+        VER="$(cat /etc/debian_version)"
+    elif [ -f /etc/SuSe-release ] || [ -f /etc/redhat-release ]; then
+        # Older Red Hat, CentOS, etc.
+        OS=GNU/Linux
+        DISTRO="$(grep -oP '^\w+' /etc/redhat-release)"
+        VER="$(grep -oP '\d+(\.\d+)*' /etc/redhat-release)"
+    else
+        # Fall back to uname, e.g. "Linux <version>",
+        # also works for BSD, Cygwin, MINGW, etc.
+        OS="$(uname -o)"
+        DISTRO="$(uname -s)"
+        VER="$(uname -r)"
+    fi
+}
+
 set_cmake() {
 	if [ ! -z "${CMAKE_DIR}" ]; then
 		export CMAKE_CMD="${CMAKE_DIR}/bin/cmake"
@@ -40,9 +78,49 @@ check_cmake_version() {
 	fi
 }
 
+check_vcpkg() {
+	if [ "${VCPKG_DIR+x}" == "" ]; then
+		export VCPKG_DIR="${SCRIPT_DIR}/vcpkg"
+		echo "VCPKG_DIR not set; setting it to $VCPKG_DIR ." >&2
+	fi
+
+	export VCPKG_EXE="$VCPKG_DIR/vcpkg"
+	big_message "Assuming vcpkg executable is \"$VCPKG_EXE\" and running vcpkg bootstrap."
+	if [ "$OS" == GNU/Linux ]; then
+		local vcpkg_bootstrap="$VCPKG_DIR/bootstrap-vcpkg.sh"
+		"${vcpkg_bootstrap}"
+	elif [ "$OS" == Msys ]; then
+		local vcpkg_bootstrap="$VCPKG_DIR/bootstrap-vcpkg.bat"
+		# 'cmd /c <cmd>' but since we're on an Msys shell, we need to add an
+		# extra '/' to '/c' so that the shell understands we aren't passing a
+		# file path that needs to be transformed into backslashes.
+		cmd //c "${vcpkg_bootstrap}"
+	else
+		echo "Unexpected platform \"$OS\"." >&2
+		exit 1
+	fi
+
+	if ! "${VCPKG_EXE}" version; then
+		echo "vcpkg executable does not exist or does not work." >&2
+		exit 1
+	fi
+}
+
+vcpkg_install_packages() {
+	cd "$SCRIPT_DIR"
+	"${VCPKG_EXE}" install
+}
+
+set_system_info
+
 set_cmake
 big_message "Assuming cmake command is \"${CMAKE_CMD}\""
 check_cmake_version
+
+big_message "Checking vcpkg"
+check_vcpkg
+big_message "Installing vcpkg packages"
+vcpkg_install_packages
 
 cd "${SCRIPT_DIR}"
 
