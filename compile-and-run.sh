@@ -106,11 +106,6 @@ check_vcpkg() {
 	fi
 }
 
-vcpkg_install_packages() {
-	cd "$SCRIPT_DIR"
-	"${VCPKG_EXE}" install
-}
-
 set_system_info
 
 set_cmake
@@ -119,12 +114,13 @@ check_cmake_version
 
 big_message "Checking vcpkg"
 check_vcpkg
-big_message "Installing vcpkg packages"
-vcpkg_install_packages
+# Nothing to do to install vcpkg packages; the packages will be installed
+# as part of the CMake build (as part of running the vcpkg toolchain file most
+# likely).
 
 cd "${SCRIPT_DIR}"
+rm -rf {AdeClangFormat,lib1,exe-and-lib2}/build install vcpkg_installed
 
-rm -rf {AdeClangFormat,lib1,exe-and-lib2}/build install
 big_message "AdeClangFormat workflow ${ADECLANGFORMAT_WORKFLOW}"
 cd "${SCRIPT_DIR}"/AdeClangFormat
 "${CMAKE_CMD}" --workflow --preset "${ADECLANGFORMAT_WORKFLOW}"

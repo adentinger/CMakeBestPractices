@@ -2,5 +2,5 @@ install/
 build/
 
 # Directory created by vcpkg in manifest mode (using vcpkg.json).
-/vcpkg_installed/
+vcpkg_installed/
 

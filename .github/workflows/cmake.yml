@@ -134,15 +134,13 @@ jobs:
       if: matrix.runner-id == 'macos-latest' || matrix.runner-id == 'ubuntu-latest'
       working-directory: ${{github.workspace}}/repo
       run: |
-        ./vcpkg/bootstrap-vcpkg.sh && \
-        ./vcpkg/vcpkg install
+        ./vcpkg/bootstrap-vcpkg.sh
 
     - name: Windows Setup Vcpkg
       if: matrix.runner-id == 'windows-latest'
       working-directory: ${{github.workspace}}/repo
       run: |
-        cmd /c vcpkg\bootstrap-vcpkg.bat && `
-        vcpkg\vcpkg install
+        cmd /c vcpkg\bootstrap-vcpkg.bat
 
     - name: AdeClangFormat/Workflow
       working-directory: ${{github.workspace}}/repo/AdeClangFormat
@@ -215,8 +213,7 @@ jobs:
     - name: Windows Setup Vcpkg
       working-directory: ${{github.workspace}}/repo
       run: |
-        cmd /c vcpkg\bootstrap-vcpkg.bat && `
-        vcpkg\vcpkg install
+        cmd /c vcpkg\bootstrap-vcpkg.bat
 
     - name: AdeClangFormat/Workflow
       working-directory: ${{github.workspace}}/repo/AdeClangFormat
