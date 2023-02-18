@@ -201,3 +201,5 @@ set(CPACK_WIX_UPGRADE_GUID "${CPACK_PROJECT_GUID}"
 
 include(CPack)
 
+find_package(GTest CONFIG REQUIRED)
+
