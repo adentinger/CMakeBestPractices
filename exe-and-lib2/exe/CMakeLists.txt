@@ -82,3 +82,5 @@ if (exe_INSTALL_DEPENDANT_DLLS)
 	DESTINATION bin)
 endif()
 
+add_subdirectory(test)
+

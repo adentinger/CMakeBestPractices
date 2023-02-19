@@ -104,7 +104,7 @@ jobs:
       if: matrix.runner-id == 'macos-latest'
       working-directory: ${{github.workspace}}
       run: |
-        # Needed when vcpkg installs GTest
+        # Needed by vcpkg install
         brew install pkg-config
 
     - name: MacOS clang-tidy && clang-format setup
