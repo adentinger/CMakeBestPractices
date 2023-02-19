@@ -161,3 +161,5 @@ install(FILES
   "${CMAKE_CURRENT_BINARY_DIR}/exelib2Config.cmake"
   DESTINATION "${PACKAGE_CMAKE_SCRIPTS_DIR}")
 
+add_subdirectory(test)
+
