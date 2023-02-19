@@ -43,12 +43,23 @@ set_system_info() {
         OS=GNU/Linux
         DISTRO="$(grep -oP '^\w+' /etc/redhat-release)"
         VER="$(grep -oP '\d+(\.\d+)*' /etc/redhat-release)"
+    elif [ "$(uname -s)" == Darwin ]; then
+        # Not sure whether the test for watchOS, tvOS etc is different.
+
+        # MacOS doesn't seem to have uname -o
+        OS=Darwin
+        DISTRO="$(uname -s)"
+        VER="(uname -r)"
     else
         # Fall back to uname, e.g. "Linux <version>",
         # also works for BSD, Cygwin, MINGW, etc.
         OS="$(uname -o)"
         DISTRO="$(uname -s)"
         VER="$(uname -r)"
+		if [ "$OS" == "" ] || [ "$DISTRO" == "" ] || [ "$VER" == "" ]; then
+			echo "One or more 'uname' command(s) failed." >&2
+			exit 1
+		fi
     fi
 }
 
@@ -86,7 +97,7 @@ check_vcpkg() {
 
 	export VCPKG_EXE="$VCPKG_DIR/vcpkg"
 	big_message "Assuming vcpkg executable is \"$VCPKG_EXE\" and running vcpkg bootstrap."
-	if [ "$OS" == GNU/Linux ]; then
+	if [ "$OS" == GNU/Linux ] || ["$OS" == Darwin ]; then
 		local vcpkg_bootstrap="$VCPKG_DIR/bootstrap-vcpkg.sh"
 		"${vcpkg_bootstrap}"
 	elif [ "$OS" == Msys ]; then
@@ -119,7 +130,7 @@ check_vcpkg
 # likely).
 
 cd "${SCRIPT_DIR}"
-rm -rf {AdeClangFormat,lib1,exe-and-lib2}/build install vcpkg_installed
+rm -rf {AdeClangFormat,lib1,exe-and-lib2}/{build,vcpkg_installed} install
 
 big_message "AdeClangFormat workflow ${ADECLANGFORMAT_WORKFLOW}"
 cd "${SCRIPT_DIR}"/AdeClangFormat
