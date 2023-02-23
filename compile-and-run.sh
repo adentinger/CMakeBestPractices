@@ -2,9 +2,16 @@
 # SPDX-License-Identifier: MIT
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" 2>/dev/null && pwd)"
-ADECLANGFORMAT_WORKFLOW=default
-LIB1_WORKFLOW=shared
-LIB2EXE_WORKFLOW=shared
+
+if [ -z "${ADECLANGFORMAT_WORKFLOW+x}" ]; then
+	ADECLANGFORMAT_WORKFLOW=default
+fi
+if [ -z "${LIB1_WORKFLOW+x}" ]; then
+	LIB1_WORKFLOW=shared
+fi
+if [ -z "${LIB2EXE_WORKFLOW+x}" ]; then
+	LIB2EXE_WORKFLOW=shared
+fi
 
 big_message() {
 	echo
