@@ -18,11 +18,15 @@ env:
   VERBOSE: ON
 
 jobs:
-  ninja:
+
+###############################################################################
+# 'ninja-nix' job
+###############################################################################
+  ninja-nix:
     strategy:
       matrix:
         # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#choosing-github-hosted-runners
-        runner-id: [ubuntu-latest, macos-latest, windows-latest]
+        runner-id: [ubuntu-latest, macos-latest]
         lib1-workflow: [static, shared]
         exe-lib2-workflow: [static, shared]
         has-analysis: [false]
@@ -64,8 +68,6 @@ jobs:
             cpack-generators: "DEB;RPM;External;STGZ;TGZ;ZIP"
           - runner-id: macos-latest
             cpack-generators: "DragNDrop;productbuild;External;STGZ;TGZ;ZIP"
-          - runner-id: windows-latest
-            cpack-generators: "NSIS64;WIX;External;STGZ;TGZ;ZIP"
 
     env:
       # Environment variables used by CMake.
@@ -84,14 +86,6 @@ jobs:
         unzip ninja-linux.zip && rm ninja-linux.zip && \
         echo "${{github.workspace}}" >> $GITHUB_PATH
 
-    - name: Windows install ninja
-      working-directory: ${{github.workspace}}
-      if: matrix.runner-id == 'windows-latest'
-      run: |
-        (new-object System.Net.WebClient).DownloadFile('https://github.com/ninja-build/ninja/releases/download/v1.11.1/ninja-win.zip','${{github.workspace}}\ninja-win.zip');
-        tar -xf ninja-win.zip;
-        echo "${{github.workspace}}" >> $GITHUB_PATH
-
     - name: MacOS install ninja
       if: matrix.runner-id == 'macos-latest'
       working-directory: ${{github.workspace}}
@@ -100,7 +94,7 @@ jobs:
         unzip ninja-mac.zip && rm ninja-mac.zip && \
         echo "${{github.workspace}}" >> $GITHUB_PATH
 
-    - name: MacOS brew packages setup
+    - name: MacOS packages setup
       if: matrix.runner-id == 'macos-latest'
       working-directory: ${{github.workspace}}
       run: |
@@ -130,21 +124,15 @@ jobs:
         # 'git submodule update --init --recursive')
         submodules: recursive
 
-    - name: Unix Setup Vcpkg
-      if: matrix.runner-id == 'macos-latest' || matrix.runner-id == 'ubuntu-latest'
+    - name: Setup Vcpkg
       working-directory: ${{github.workspace}}/repo
       run: |
         ./vcpkg/bootstrap-vcpkg.sh
 
-    - name: Windows Setup Vcpkg
-      if: matrix.runner-id == 'windows-latest'
-      working-directory: ${{github.workspace}}/repo
-      run: |
-        cmd /c vcpkg\bootstrap-vcpkg.bat
-
     - name: AdeClangFormat/Workflow
       working-directory: ${{github.workspace}}/repo/AdeClangFormat
-      run: cmake --workflow --preset default
+      run: |
+        cmake --workflow --preset default
 
     - name: AdeClangFormat/CPack
       working-directory: ${{github.workspace}}/repo/AdeClangFormat
@@ -156,7 +144,8 @@ jobs:
 
     - name: lib1/Workflow
       working-directory: ${{github.workspace}}/repo/lib1
-      run: cmake --workflow --preset "${{matrix.lib1-workflow}}"
+      run: |
+        cmake --workflow --preset "${{matrix.lib1-workflow}}"
 
     - name: lib1/CPack
       working-directory: ${{github.workspace}}/repo/lib1
@@ -168,7 +157,8 @@ jobs:
 
     - name: exe-and-lib2/Workflow
       working-directory: ${{github.workspace}}/repo/exe-and-lib2
-      run: cmake --workflow --preset "${{matrix.exe-lib2-workflow}}"
+      run: |
+        cmake --workflow --preset "${{matrix.exe-lib2-workflow}}"
 
     - name: exe-and-lib2/CPack
       working-directory: ${{github.workspace}}/repo/exe-and-lib2
@@ -181,6 +171,144 @@ jobs:
     - name: Run exe
       run: ${{github.workspace}}/repo/install/bin/exe
 
+###############################################################################
+# 'ninja-win' job
+###############################################################################
+
+  ninja-win:
+    strategy:
+      matrix:
+        # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#choosing-github-hosted-runners
+        runner-id: [windows-latest]
+        lib1-workflow: [static, shared]
+        exe-lib2-workflow: [static, shared]
+        # Specify Visual Studio release year. Multiple such list items can
+        # be added to try multiple VS versions. Not sure if different VS
+        # versions necessarily have a different version of MSVC or if they
+        # would all just use the same MSVC.
+        vs-version: [2022]
+        has-analysis: [false]
+
+        # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstrategymatrixinclude
+        exclude:
+          # Don't do (shared, static) CI jobs --if the others work then there's
+          # a good chance that one will too.
+          - lib1-workflow: shared
+            exe-lib2-workflow: static
+
+    env:
+      # Environment variables used by CMake.
+      # See: https://cmake.org/cmake/help/latest/manual/cmake-env-variables.7.html
+      CMAKE_GENERATOR: Ninja
+
+    runs-on: ${{matrix.runner-id}}
+    continue-on-error: ${{matrix.has-analysis}}
+
+    steps:
+    - name: Set environment
+      run: |
+        echo "VS_VCVARSALL=$env:ProgramFiles\Microsoft Visual Studio\${{matrix.vs-version}}\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" | `
+            Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+    - name: Install ninja
+      working-directory: ${{github.workspace}}
+      run: |
+        (new-object System.Net.WebClient).DownloadFile('https://github.com/ninja-build/ninja/releases/download/v1.11.1/ninja-win.zip','${{github.workspace}}\ninja-win.zip');
+        tar -xf ninja-win.zip;
+        echo "${{github.workspace}}" >> $GITHUB_PATH
+
+    - name: Packages setup
+      working-directory: ${{github.workspace}}
+      # We'll need to specify MSVC as the compiler to use on Windows, since
+      # CI setups obviously need to be reproductible and consistent. For
+      # example, before we did that here, CMake was choosing MinGW GCC as
+      # the compiler, which has a different name mangling scheme as MSVC. This
+      # caused linking errors when trying to link GTest (which is installed via
+      # vcpkg using the x64-windows triplet, which builds using MSVC) with the
+      # libraries built here with MinGW GCC.
+      #
+      # Setting MSVC as the compiler in non-"Visual Studio*" generators is
+      # non-trivial; it should be done by calling a specific script called
+      # 'vcvarsall.bat' deep inside the Visual Studio installation.
+      #
+      # However, that is a CMD batch file script, while the GitHub CI uses
+      # PowerShell, not CMD. So we have to use Invoke-BatchFile, which is an
+      # extension provided by the pscx community package:
+      # https://cmake.org/pipermail/cmake/2019-May/069461.html
+      #
+      # For pscx installation:
+      # https://stackoverflow.com/a/31845504/2252948
+      #
+      # Note that running 'Import-Module pscx' may require setting the
+      # PowerShell 'executionpolicy' (whatever that is):
+      # https://stackoverflow.com/a/18533754/2252948
+      run: |
+        Find-Package pscx -ProviderName PowerShellGet |                       `
+            Install-Package -Force -AllowClobber &&                           `
+        powershell Set-ExecutionPolicy RemoteSigned &&                        `
+        Import-Module pscx
+
+    - uses: actions/checkout@v3
+      with:
+        # The actions/checkout@v3 action clones into
+        # "${{github.workspace}}" by default, which wipes the ninja executable we just extracted.
+        path: repo
+        # Also clone submodules, recursively (like
+        # 'git submodule update --init --recursive')
+        submodules: recursive
+
+    - name: Setup Vcpkg
+      working-directory: ${{github.workspace}}/repo
+      run: |
+        cmd /c vcpkg\bootstrap-vcpkg.bat
+
+    - name: AdeClangFormat/Workflow
+      working-directory: ${{github.workspace}}/repo/AdeClangFormat
+      run: |
+        cmake --workflow --preset default
+
+    - name: AdeClangFormat/CPack
+      working-directory: ${{github.workspace}}/repo/AdeClangFormat
+      run: cpack -B build -G "NSIS64;WIX;External;STGZ;TGZ;ZIP" --config build/CPackConfig.cmake
+
+    - name: AdeClangFormat/Install
+      working-directory: ${{github.workspace}}/repo/AdeClangFormat
+      run: cmake --install build
+
+    - name: lib1/Workflow
+      working-directory: ${{github.workspace}}/repo/lib1
+      run: |
+        Invoke-BatchFile $env:VS_VCVARSALL x64 && `
+        cmake --workflow --preset "${{matrix.lib1-workflow}}"
+
+    - name: lib1/CPack
+      working-directory: ${{github.workspace}}/repo/lib1
+      run: cpack -B build -G "NSIS64;WIX;External;STGZ;TGZ;ZIP" --config build/CPackConfig.cmake
+
+    - name: lib1/Install
+      working-directory: ${{github.workspace}}/repo/lib1
+      run: cmake --install build
+
+    - name: exe-and-lib2/Workflow
+      working-directory: ${{github.workspace}}/repo/exe-and-lib2
+      run: |
+        Invoke-BatchFile $env:VS_VCVARSALL x64 && `
+        cmake --workflow --preset "${{matrix.exe-lib2-workflow}}"
+
+    - name: exe-and-lib2/CPack
+      working-directory: ${{github.workspace}}/repo/exe-and-lib2
+      run: cpack -B build -G "NSIS64;WIX;External;STGZ;TGZ;ZIP" --config build/CPackConfig.cmake
+
+    - name: exe-and-lib2/Install
+      working-directory: ${{github.workspace}}/repo/exe-and-lib2
+      run: cmake --install build
+
+    - name: Run exe
+      run: ${{github.workspace}}/repo/install/bin/exe
+
+###############################################################################
+# 'vs' job
+###############################################################################
   vs:
     strategy:
       matrix:
@@ -210,7 +338,7 @@ jobs:
         # 'git submodule update --init --recursive')
         submodules: recursive
 
-    - name: Windows Setup Vcpkg
+    - name: Setup Vcpkg
       working-directory: ${{github.workspace}}/repo
       run: |
         cmd /c vcpkg\bootstrap-vcpkg.bat
