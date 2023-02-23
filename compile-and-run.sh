@@ -104,7 +104,7 @@ check_vcpkg() {
 
 	export VCPKG_EXE="$VCPKG_DIR/vcpkg"
 	big_message "Assuming vcpkg executable is \"$VCPKG_EXE\" and running vcpkg bootstrap."
-	if [ "$OS" == GNU/Linux ] || ["$OS" == Darwin ]; then
+	if [ "$OS" == GNU/Linux ] || [ "$OS" == Darwin ]; then
 		local vcpkg_bootstrap="$VCPKG_DIR/bootstrap-vcpkg.sh"
 		"${vcpkg_bootstrap}"
 	elif [ "$OS" == Msys ]; then
