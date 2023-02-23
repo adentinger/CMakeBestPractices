@@ -7,7 +7,17 @@
 # Shamelessly taken from:
 # https://github.com/googleapis/google-cloud-cpp/blob/main/.clang-tidy
 
-Checks: >
+# Reasons for choices (can't add comments inside a YAML multiline string):
+#
+# - -modernize-use-trailing-return-type:
+#     No trailing return type check please! Who uses this verbose and
+#     unnatural C++ syntax when it's not required anyways?
+#
+# - -readability-identifier-length:
+#     We don't mind small identifiers. Though generally names should say more
+#     rather than less, there are plenty of cases (algorithms, tests, ...)
+#     where small identifiers are perfectly acceptable.
+Checks: |
   -*,
   abseil-*,
   bugprone-*,
