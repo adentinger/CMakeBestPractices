@@ -66,6 +66,9 @@
 			"hidden": true,
 			"execution": {
 				"jobs": 10
+			},
+			"output": {
+				"outputOnFailure": true
 			}
 		}
 	]
