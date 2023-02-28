@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-// #include <exception>
+#include <exception>
 #include <iostream>
 
 #include "lib2/hdr.h"
@@ -11,9 +11,21 @@
 
 int main() {
 	try {
-		const uint32_t fibo_n = 5000;
-		std::cout << "fibo_sum(5000) = " << lib2::fibo_sum(fibo_n) << "\n";
-	} catch (...) {
+		const uint32_t fibo_n = 93;
+		std::cout << "fibo_sum(93) = " << lib2::fibo_sum(fibo_n) << "\n";
+	}
+	catch (const std::exception& e) {
+		// Using std::cerr, or calling e.what(), may throw an exception.
+		try {
+			std::cerr << __FILE__ << "(" << __LINE__ << "): " << e.what()
+				<< std::endl;
+		}
+		catch (...) {
+			std::terminate();
+		}
+		std::terminate();
+	}
+	catch (...) {
 		std::terminate();
 	}
 	return 0;
