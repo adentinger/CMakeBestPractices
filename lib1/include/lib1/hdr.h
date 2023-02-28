@@ -9,7 +9,7 @@
 #include "lib1/defines.h"
 
 namespace lib1 {
-LIB1_SHRSYM std::size_t fibo(uint32_t n);
+LIB1_SHRSYM uint64_t fibo(uint32_t n);
 }
 
 #endif // !LIB1_HDR_H
