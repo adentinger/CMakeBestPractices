@@ -7,7 +7,37 @@ file(GLOB_RECURSE CXX_HEADERS_PRIVATE CONFIGURE_DEPENDS
   "src/*.h"
   "src/*.hpp")
 
-add_library(lib2 ${CXX_SOURCES})
+# This builds an 'object library', which is basically a collection of object
+# files. The 'lib2' library will link against it.
+#
+# There are three reasons for doing this despite making the rest of the
+# code below a little more complicated:
+#
+# 1) When building an executable, how would we run unit tests on the sources
+# of the executable unless we put them in a library such as an object library,
+# and then linked the unit test executable against that library?
+#
+# 2) When building a shared library, if the library exports only a part of its
+# symbols (as is the case by default with Windows DLLs, and is apparently
+# also possible with other compilers like GCC), then how would we run
+# unit tests on the symbols that are not exported if the unit test executable
+# is linking against that shared library? See this answer from a
+# well-known CMake maintainer:
+# https://discourse.cmake.org/t/unit-testing-internal-functions-of-a-dll/3805/2?u=anthonyd973
+#
+# 3) Again when building a shared library, DLLs on Windows need to be in the
+# same directory as the executable for the executable to find them at runtime.
+# If we linked the unit test executable against the DLL, the DLL wouldn't be
+# in the same directory as the test executable, so the test executable wouldn't
+# be able to run. Instead, we should build an object library and link the
+# test executable against that.
+add_library(lib2__objlib_internal OBJECT ${CXX_SOURCES})
+# See comments of lib2 below. We're going to have to export the object library
+# anyway, so let's create an alias for it too.
+add_library(lib2::lib2__objlib_internal ALIAS lib2__objlib_internal)
+set_target_properties(lib2__objlib_internal PROPERTIES LINKER_LANGUAGE CXX)
+
+add_library(lib2 extra/cpp/dummy.cpp)
 # Libraries built outside *this* CMake build (aka "external dependencies") will
 # link against this one prepended with the "lib2::" namespace. In order for
 # libraries built inside *this* CMake build (aka "internal dependencies") to
@@ -16,23 +46,31 @@ add_library(lib2 ${CXX_SOURCES})
 #
 # https://youtu.be/bsXLMQ6WgIk?t=3124
 add_library(lib2::lib2 ALIAS lib2)
+target_link_libraries(lib2 PUBLIC lib2__objlib_internal)
 
 find_package(lib1 1.0 REQUIRED CONFIG)
-target_link_libraries(lib2
+target_link_libraries(lib2__objlib_internal
   PUBLIC lib1::lib1)
 
 find_package(AdeClangFormat 2.0 CONFIG REQUIRED)
-ade_clang_format_targets(TARGETS lib2
+ade_clang_format_targets(TARGETS lib2__objlib_internal
   POSTFIX format)
 
-set_target_properties(lib2
+set_target_properties(lib2__objlib_internal
   PROPERTIES
   CXX_STANDARD 17
   CXX_STANDARD_REQUIRED ON)
 
+# The object library's type is obviously OBJECT_LIBRARY, never SHARED_LIBRARY,
+# so checking whether the final library is built as a static or a shared
+# library should be done on the final library, not its underlying object
+# library.
 get_target_property(LIB_TYPE lib2 TYPE)
 if(LIB_TYPE STREQUAL SHARED_LIBRARY)
   set(LIB_SHARED_MACRO "LIB2_SHARED")
+  # Shared libraries always build with position-independent code.
+  # No need to provide a cache option for this in this case.
+  set(lib2_BUILD_WITH_PIC ON)
 else()
   # Providing a CACHE option for this, since some users might want this.
   #
@@ -41,12 +79,25 @@ else()
   option(lib2_BUILD_WITH_PIC
 	"Whether to build this static library with position-independent code in case it is linked against by a shared library."
 	OFF)
+endif()
+
+if(lib2_BUILD_WITH_PIC)
+  # Yes, both the object library AND the final library need the same PIC
+  # setting, otherwise linking will fail on non-DLL platforms when
+  # building shared libraries:
+  #
+  # "relocation R_X86_64_PC32 against symbol
+  # `_ZTISt12domain_error@@GLIBCXX_3.4' can not be used when making a
+  # shared object; recompile with -fPIC"
   set_target_properties(lib2
+	PROPERTIES
+      POSITION_INDEPENDENT_CODE "${lib2_BUILD_WITH_PIC}")
+  set_target_properties(lib2__objlib_internal
 	PROPERTIES
       POSITION_INDEPENDENT_CODE "${lib2_BUILD_WITH_PIC}")
 endif()
 
-target_compile_definitions(lib2
+target_compile_definitions(lib2__objlib_internal
   PUBLIC
 	# Unquoted variable expansion; this is on purpose: if the variable is empty
 	# or undefined, we *actually* want this to expand to nothing.
@@ -59,7 +110,7 @@ target_compile_definitions(lib2
 	# we want headers to have __declspec(dllimport) when using the library.
     LIB2_EXPORT)
 
-target_sources(lib2
+target_sources(lib2__objlib_internal
   # The headers that are available to consumer targets and for compilation of
   # this library.
   # This also adds the correct include directory to whatever target is
@@ -120,7 +171,7 @@ set_target_properties(lib2
 
 set(PACKAGE_CMAKE_SCRIPTS_DIR lib/cmake/lib2)
 
-install(TARGETS lib2
+install(TARGETS lib2 lib2__objlib_internal
   EXPORT lib2Targets
   FILE_SET HEADERS
   DESTINATION include)
@@ -130,7 +181,7 @@ install(EXPORT lib2Targets
   NAMESPACE lib2::
   DESTINATION "${PACKAGE_CMAKE_SCRIPTS_DIR}")
 
-set(EXPORT_FILE "${PACKAGE_CMAKE_SCRIPTS_DIR}/lib1Targets.cmake")
+set(EXPORT_FILE "${PACKAGE_CMAKE_SCRIPTS_DIR}/lib2Targets.cmake")
 
 include(CMakePackageConfigHelpers)
 # Write a CMake script containing the version information & checking for
