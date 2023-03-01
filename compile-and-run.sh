@@ -137,6 +137,15 @@ check_vcpkg
 # likely).
 
 cd "${SCRIPT_DIR}"
+if [ ! -d vcpkg ]; then
+	# Do not run the git command here: it is frequent to produce tarballs of
+	# a repo's sources and then distribute the tarball. If we use a 'git'
+	# command here, source tarballs would not work because the extracted
+	# tarball is not a Git repo.
+	echo "vcpkg/ dir does not exist; did you clone this repos's submodules?" >&2
+	echo "Run: git submodule update --init --recursive" >&2
+	exit 1
+fi
 rm -rf {AdeClangFormat,lib1,exe-and-lib2}/{build,vcpkg_installed} install
 
 big_message "AdeClangFormat workflow ${ADECLANGFORMAT_WORKFLOW}"
