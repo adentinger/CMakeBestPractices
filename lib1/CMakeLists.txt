@@ -33,7 +33,7 @@ file(GLOB_RECURSE CXX_HEADERS_PRIVATE CONFIGURE_DEPENDS
   "src/*.hpp")
 
 # This builds an 'object library', which is basically a collection of object
-# files. The 'lib1' library will link against this one.
+# files. The 'lib1' library will link against it.
 #
 # There are three reasons for doing this despite making the rest of the
 # code below a little more complicated:
@@ -46,11 +46,11 @@ file(GLOB_RECURSE CXX_HEADERS_PRIVATE CONFIGURE_DEPENDS
 # symbols (as is the case by default with Windows DLLs, and is apparently
 # also possible with other compilers like GCC), then how would we run
 # unit tests on the symbols that are not exported if the unit test executable
-# was linking against a shared library? See this answer from a
+# is linking against that shared library? See this answer from a
 # well-known CMake maintainer:
 # https://discourse.cmake.org/t/unit-testing-internal-functions-of-a-dll/3805/2?u=anthonyd973
 #
-# 3) Again when building a shared library, on Windows DLLs need to be in the
+# 3) Again when building a shared library, DLLs on Windows need to be in the
 # same directory as the executable for the executable to find them at runtime.
 # If we linked the unit test executable against the DLL, the DLL wouldn't be
 # in the same directory as the test executable, so the test executable wouldn't
@@ -58,7 +58,7 @@ file(GLOB_RECURSE CXX_HEADERS_PRIVATE CONFIGURE_DEPENDS
 # test executable against that.
 add_library(lib1__objlib_internal OBJECT ${CXX_SOURCES})
 # See comments of lib1 below. We're going to have to export the object library
-# anway, so let's create an alias for it too.
+# anyway, so let's create an alias for it too.
 add_library(lib1::lib1__objlib_internal ALIAS lib1__objlib_internal)
 set_target_properties(lib1__objlib_internal PROPERTIES LINKER_LANGUAGE CXX)
 
@@ -94,7 +94,8 @@ get_target_property(LIB_TYPE lib1 TYPE)
 if (LIB_TYPE STREQUAL SHARED_LIBRARY)
   set(LIB_SHARED_MACRO "LIB1_SHARED")
   # Shared libraries always build with position-independent code.
-  set(LIB_USE_PIC ON)
+  # No need to provide a cache option for this in this case.
+  set(lib1_BUILD_WITH_PIC ON)
 else()
   # Providing a CACHE option for this, since some users might want this.
   #
@@ -103,13 +104,9 @@ else()
   option(lib1_BUILD_WITH_PIC
 	"Whether to build this static library with position-independent code in case it is linked against by a shared library."
 	OFF)
-  set_target_properties(lib1
-	PROPERTIES
-      POSITION_INDEPENDENT_CODE "${lib1_BUILD_WITH_PIC}")
-  set(LIB_USE_PIC "${lib1_BUILD_WITH_PIC}")
 endif()
 
-if(LIB_USE_PIC)
+if(lib1_BUILD_WITH_PIC)
   # Yes, both the object library AND the final library need the same PIC
   # setting, otherwise linking will fail on non-DLL platforms when
   # building shared libraries:
@@ -117,6 +114,9 @@ if(LIB_USE_PIC)
   # "relocation R_X86_64_PC32 against symbol
   # `_ZTISt12domain_error@@GLIBCXX_3.4' can not be used when making a
   # shared object; recompile with -fPIC"
+  set_target_properties(lib1
+	PROPERTIES
+      POSITION_INDEPENDENT_CODE "${lib1_BUILD_WITH_PIC}")
   set_target_properties(lib1__objlib_internal
 	PROPERTIES
       POSITION_INDEPENDENT_CODE "${lib1_BUILD_WITH_PIC}")
