@@ -30,7 +30,7 @@ CMAKE_GENERATOR=Ninja \
 
 ### Multi-config generators
 
-Note that, at the moment, multi-config generators (e.g. `Visual Studio *`, `XCode`, ...) do not work with `compile-and-run.sh`. If you want to compile this project using a multi-config generator, you will have to figure out and specify the CMake flags manually without using `compile-and-run.sh`. To do that, try a single-config generator (e.g. Ninja) and look at the cache variables in `cmake-gui` or `ccmake`, or just look at the generated `CMakeCache.txt` directly.
+Note that, at the moment, multi-config generators (e.g. `Visual Studio *`, `XCode`, ...) do not work with `compile-and-run.sh`. If you want to compile this project using a multi-config generator, you will have to figure out and specify the CMake flags manually without using `compile-and-run.sh`. To do that, have a look at this project's CI script (`.github/workflows/cmake.yml`), or try a single-config generator (e.g. Ninja) and look at the cache variables with `cmake-gui` or `ccmake` or just by looking at the generated `CMakeCache.txt` directly.
 
 This is because one of this project's goals is to try out new and shiny CMake stuff, so `compile-and-run.sh` uses CMake's `CMakePresets.json` file to specify configure, build and test presets. In a normal context, `CMakePresets.json` is meant to be used interactively, not through a script, but, well, we really want to try out the new and shiny, so we want to build through that.
 
