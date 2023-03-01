@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
 
-cmake_minimum_required(VERSION 3.23)
+cmake_minimum_required(VERSION 3.25)
 
 # This is required to be before the first project() call of the CMake build.
 set(CMAKE_TOOLCHAIN_FILE
@@ -32,7 +32,37 @@ file(GLOB_RECURSE CXX_HEADERS_PRIVATE CONFIGURE_DEPENDS
   "src/*.h"
   "src/*.hpp")
 
-add_library(lib1 ${CXX_SOURCES})
+# This builds an 'object library', which is basically a collection of object
+# files. The 'lib1' library will link against this one.
+#
+# There are three reasons for doing this despite making the rest of the
+# code below a little more complicated:
+#
+# 1) When building an executable, how would we run unit tests on the sources
+# of the executable unless we put them in a library such as an object library,
+# and then linked the unit test executable against that library?
+#
+# 2) When building a shared library, if the library exports only a part of its
+# symbols (as is the case by default with Windows DLLs, and is apparently
+# also possible with other compilers like GCC), then how would we run
+# unit tests on the symbols that are not exported if the unit test executable
+# was linking against a shared library? See this answer from a
+# well-known CMake maintainer:
+# https://discourse.cmake.org/t/unit-testing-internal-functions-of-a-dll/3805/2?u=anthonyd973
+#
+# 3) Again when building a shared library, on Windows DLLs need to be in the
+# same directory as the executable for the executable to find them at runtime.
+# If we linked the unit test executable against the DLL, the DLL wouldn't be
+# in the same directory as the test executable, so the test executable wouldn't
+# be able to run. Instead, we should build an object library and link the
+# test executable against that.
+add_library(lib1__objlib_internal OBJECT ${CXX_SOURCES})
+# See comments of lib1 below. We're going to have to export the object library
+# anway, so let's create an alias for it too.
+add_library(lib1::lib1__objlib_internal ALIAS lib1__objlib_internal)
+set_target_properties(lib1__objlib_internal PROPERTIES LINKER_LANGUAGE CXX)
+
+add_library(lib1 extra/cpp/dummy.cpp)
 # Libraries built outside *this* CMake build (aka "external dependencies") will
 # link against this one prepended with the "lib1::" namespace. In order for
 # libraries built inside *this* CMake build (aka "internal dependencies") to
@@ -42,21 +72,29 @@ add_library(lib1 ${CXX_SOURCES})
 # https://youtu.be/bsXLMQ6WgIk?t=3124
 #
 # Since this CMake build doesn't have any other library/executable, that means
-# doing this is useless, but this is just to keep things consistent no matter what.
+# doing this is useless, but this is just to keep things consistent no matter
+# what.
 add_library(lib1::lib1 ALIAS lib1)
+target_link_libraries(lib1 PUBLIC lib1__objlib_internal)
 
 find_package(AdeClangFormat 2.0 CONFIG REQUIRED)
-ade_clang_format_targets(TARGETS lib1
+ade_clang_format_targets(TARGETS lib1__objlib_internal
   POSTFIX format)
 
-set_target_properties(lib1
+set_target_properties(lib1__objlib_internal
   PROPERTIES
   CXX_STANDARD 17
   CXX_STANDARD_REQUIRED ON)
 
+# The object library's type is obviously OBJECT_LIBRARY, never SHARED_LIBRARY,
+# so checking whether the final library is built as a static or a shared
+# library should be done on the final library, not its underlying object
+# library.
 get_target_property(LIB_TYPE lib1 TYPE)
 if (LIB_TYPE STREQUAL SHARED_LIBRARY)
   set(LIB_SHARED_MACRO "LIB1_SHARED")
+  # Shared libraries always build with position-independent code.
+  set(LIB_USE_PIC ON)
 else()
   # Providing a CACHE option for this, since some users might want this.
   #
@@ -68,9 +106,23 @@ else()
   set_target_properties(lib1
 	PROPERTIES
       POSITION_INDEPENDENT_CODE "${lib1_BUILD_WITH_PIC}")
+  set(LIB_USE_PIC "${lib1_BUILD_WITH_PIC}")
 endif()
 
-target_compile_definitions(lib1
+if(LIB_USE_PIC)
+  # Yes, both the object library AND the final library need the same PIC
+  # setting, otherwise linking will fail on non-DLL platforms when
+  # building shared libraries:
+  #
+  # "relocation R_X86_64_PC32 against symbol
+  # `_ZTISt12domain_error@@GLIBCXX_3.4' can not be used when making a
+  # shared object; recompile with -fPIC"
+  set_target_properties(lib1__objlib_internal
+	PROPERTIES
+      POSITION_INDEPENDENT_CODE "${lib1_BUILD_WITH_PIC}")
+endif()
+
+target_compile_definitions(lib1__objlib_internal
   PUBLIC
     LIB1_MACRO=42
 	# Unquoted variable expansion; this is on purpose: if the variable is empty
@@ -84,7 +136,7 @@ target_compile_definitions(lib1
 	# we want headers to have __declspec(dllimport) when using the library.
     LIB1_EXPORT)
 
-target_sources(lib1
+target_sources(lib1__objlib_internal
   # The headers that are available to consumer targets and for compilation of
   # this library.
   # This also adds the correct include directory to whatever target is
@@ -108,7 +160,7 @@ target_sources(lib1
 
 set(PACKAGE_CMAKE_SCRIPTS_DIR lib/cmake/lib1)
 
-install(TARGETS lib1
+install(TARGETS lib1 lib1__objlib_internal
   EXPORT lib1Targets
   FILE_SET HEADERS
   DESTINATION include)
