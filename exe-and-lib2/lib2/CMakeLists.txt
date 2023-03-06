@@ -184,6 +184,10 @@ install(EXPORT lib2Targets
 set(EXPORT_FILE "${PACKAGE_CMAKE_SCRIPTS_DIR}/lib2Targets.cmake")
 
 include(CMakePackageConfigHelpers)
+configure_package_config_file(cmake/exelib2Config.cmake.in
+  "${CMAKE_CURRENT_BINARY_DIR}/exelib2Config.cmake"
+  INSTALL_DESTINATION "${PACKAGE_CMAKE_SCRIPTS_DIR}"
+  PATH_VARS EXPORT_FILE)
 # Write a CMake script containing the version information & checking for
 # this project. This is used in the find_package() call of the project that
 # uses this package to do version checking:
@@ -202,10 +206,6 @@ write_basic_package_version_file(exelib2ConfigVersion.cmake
   # newer version is not the one installed, or a "version-checking server" of
   # some kind that would do this same thing.
   COMPATIBILITY SameMinorVersion)
-configure_package_config_file(cmake/exelib2Config.cmake.in
-  "${CMAKE_CURRENT_BINARY_DIR}/exelib2Config.cmake"
-  INSTALL_DESTINATION "${PACKAGE_CMAKE_SCRIPTS_DIR}"
-  PATH_VARS EXPORT_FILE)
 
 install(FILES
   "${CMAKE_CURRENT_BINARY_DIR}/exelib2ConfigVersion.cmake"
