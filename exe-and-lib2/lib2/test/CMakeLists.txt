@@ -33,6 +33,22 @@ target_link_libraries(lib2_test
     GTest::gmock
     GTest::gmock_main)
 
+# The executable needs to have any DLLs in its directory in order to run, so
+# copy them. Note that this copies them to the *binary directory*, not the
+# final installation.
+#
+# TODO The GitHub actions don't have CMake 3.26 yet, which would allow the
+# command 'cmake -E copy -t <dir> <files>...' that supports the '<files>...'
+# being empty (such as on non-Win32).
+if (WIN32)
+  add_custom_command(
+	TARGET lib2_test POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E copy
+      $<TARGET_RUNTIME_DLLS:lib2_test> $<TARGET_FILE_DIR:lib2_test>
+	COMMAND_EXPAND_LISTS
+  )
+endif()
+
 include(GoogleTest)
 # Creates a task that will query the test executable (<exe> --gtest_list_tests)
 # to find what the tests are.
