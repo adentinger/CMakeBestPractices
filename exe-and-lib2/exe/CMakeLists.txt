@@ -56,28 +56,27 @@ ade_clang_format_targets(TARGETS exe
 install(TARGETS exe
   DESTINATION bin)
 
-if(WIN32)
-  # Providing a CACHE option for this, since this is a nice convenience that
-  # some users might want.
-  #
-  # Default is OFF, which means it's up to the user to make sure that the
-  # dependant DLLs are installed in the same directory as the executable. This
-  # is the default because that's what would be required on Unix-like systems
-  # as well, so keeping that OFF makes it nice and consistent.
-  option(exe_INSTALL_DEPENDANT_DLLS
-	"Whether to install any DLL that this executable depends on along with it."
-	OFF)
-else()
-  set(exe_INSTALL_DEPENDANT_DLLS OFF)
-endif()
+# Providing a CACHE option for this, since this is a nice convenience that
+# some users might want.
+#
+# Default is OFF, which means it's up to the user to make sure that the
+# dependant DLLs are installed in the same directory as the executable. This
+# is the default because that's what happens on Unix-like systems as well,
+# so keeping that OFF makes it nice and consistent.
+option(exe_INSTALL_DEPENDANT_DLLS
+  "If ON, install any DLL that this executable depends on along with it."
+  OFF)
 
 if (exe_INSTALL_DEPENDANT_DLLS)
   # On Windows, DLLs need to be in the same directory as the executable for it
   # to run. This is not a perfect solution because 1) this is inconsistent with
   # what happens on Unix-like systems (where the shared libraries would need to
-  # be installed in one of the directories specified in the RPATH), and 2) a
+  # be installed in one of the directories specified in the RPATH), 2) a
   # package manager like vcpkg would want to manage the dependencies themselves
-  # (that's what they are there for right?).
+  # (that's what they are there for right?), and 3) because it's possible that
+  # something else provides the same DLL file, so packaging the DLLs would mean
+  # that the DLLs that end up in the final installation tree would depend on
+  # installation order, which sound pretty bad.
   install(FILES $<TARGET_RUNTIME_DLLS:exe>
 	DESTINATION bin)
 endif()
