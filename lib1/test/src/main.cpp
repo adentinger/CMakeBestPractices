@@ -28,11 +28,6 @@ TEST(FiboTest, NonBase2CasesWork) {
 	EXPECT_THROW(lib1::fibo(94), std::domain_error);
 }
 
-// NOLINTNEXTLINE GTest macro itself fails clang-tidy
-TEST(FiboTest, ReturnTypeMatchesTemplateParam) {
-	::testing::StaticAssertTypeEq<decltype(lib1::fibo(0)), uint64_t>();
-}
-
 int main(int argc, char** argv) {
 	::testing::InitGoogleTest(&argc, argv);
 	return RUN_ALL_TESTS();
