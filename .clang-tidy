@@ -17,7 +17,7 @@
 #     We don't mind small identifiers. Though generally names should say more
 #     rather than less, there are plenty of cases (algorithms, tests, ...)
 #     where small identifiers are perfectly acceptable.
-Checks: |
+Checks: >
   -*,
   abseil-*,
   bugprone-*,

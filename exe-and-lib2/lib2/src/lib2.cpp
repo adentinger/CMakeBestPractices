@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-#include <inttypes.h>  // NOLINT(modernize-deprecated-headers) Just "uint<N>_t".
+#include <inttypes.h>  // NOLINT(modernize-deprecated-headers) Just "uint<N>_t"
 
 #include <algorithm>
 #include <iostream>
@@ -20,7 +20,7 @@ namespace lib2 {
  * @brief Computes the sum of fibonacci sequence values for fibo(0) to
  * fibo(n) exclusive.
  */
-std::size_t fibo_sum(uint32_t n) {
+uint64_t fibo_sum(uint32_t n) {
 	// Super inefficient implementation in O(n^2) calls to lib1::fibo(), but
 	// efficiency isn't the purepose of this project; it's mostly the CMake
 	// config that is.
