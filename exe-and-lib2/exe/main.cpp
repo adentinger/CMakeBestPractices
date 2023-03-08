@@ -5,14 +5,16 @@
 
 #include "lib2/hdr.h"
 
+#include "exe/dummy_fibo_sum.hpp"
+
 #if !defined(LIB1_MACRO) || LIB1_MACRO != 42
 #	error "!defined(LIB1_MACRO)"
 #endif  // !LIB1_MACRO
 
 int main() {
 	try {
-		const uint32_t fibo_n = 93;
-		std::cout << "fibo_sum(93) = " << lib2::fibo_sum(fibo_n) << "\n";
+		auto val = exe::dummy_fibo_sum();
+		std::cout << "fibo_sum(" << val.term << ") = " << val.value << "\n";
 	}
 	catch (const std::exception& e) {
 		// Using std::cerr, or calling e.what(), may throw an exception.

@@ -1,4 +1,4 @@
-#include <inttypes.h>  // NOLINT(modernize-deprecated-headers) Just "uint<N>_t".
+#include <inttypes.h>  // NOLINT(modernize-deprecated-headers) Just "uint<N>_t"
 
 #include <gtest/gtest.h>
 

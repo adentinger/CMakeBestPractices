@@ -26,7 +26,7 @@ target_link_libraries(exe_test
   # since nothing can link against an executable, so let's just put everything
   # PRIVATE.
   PRIVATE
-    lib2::lib2
+    exe::exe__objlib_internal
     # The installation logs of vcpkg mentioned to use these libraries.
     GTest::gtest
     GTest::gtest_main

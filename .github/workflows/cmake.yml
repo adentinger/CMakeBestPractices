@@ -219,13 +219,13 @@ jobs:
 
     - name: Packages setup
       working-directory: ${{github.workspace}}
-      # We'll need to specify MSVC as the compiler to use on Windows, since
-      # CI setups obviously need to be reproductible and consistent. For
-      # example, before we did that here, CMake was choosing MinGW GCC as
-      # the compiler, which has a different name mangling scheme as MSVC. This
-      # caused linking errors when trying to link GTest (which is installed via
-      # vcpkg using the x64-windows triplet, which builds using MSVC) with the
-      # libraries built here with MinGW GCC.
+      # We'll need to explicitly specify MSVC as the compiler to use on
+      # Windows, since CI setups obviously need to be reproductible and
+      # consistent. For example, before we did that here, CMake was choosing
+      # MinGW GCC as the compiler, which has a different name mangling scheme
+      # as MSVC. This caused linking errors when trying to link GTest (which
+      # is installed via vcpkg using the x64-windows triplet, which builds
+      # using MSVC) with the libraries built here with MinGW GCC.
       #
       # Setting MSVC as the compiler in non-"Visual Studio*" generators is
       # non-trivial; it should be done by calling a specific script called
