@@ -144,7 +144,8 @@ target_sources(lib1__objlib_internal
   # This will work even if the headers have spaces in their names/paths.
   # This also works if there are no headers.
   PUBLIC
-    FILE_SET HEADERS
+    FILE_SET public_headers
+    TYPE HEADERS
 	# "include/" is the include directory to use for the headers in this
 	# file set. This also means that the files will be installed without an
 	# initial "include" directory at the begining.
@@ -162,7 +163,7 @@ set(PACKAGE_CMAKE_SCRIPTS_DIR lib/cmake/lib1)
 
 install(TARGETS lib1 lib1__objlib_internal
   EXPORT lib1Targets
-  FILE_SET HEADERS
+  FILE_SET public_headers
   DESTINATION include)
 install(EXPORT lib1Targets
   # Why to have "::" is described here:
