@@ -4,12 +4,15 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" 2>/dev/null && pwd)"
 
 if [ -z "${ADECLANGFORMAT_WORKFLOW+x}" ]; then
+	echo ADECLANGFORMAT_WORKFLOW not defined, defaulting to \"default\"
 	ADECLANGFORMAT_WORKFLOW=default
 fi
-if [ -z "${LIB1_WORKFLOW+x}" ]; then
-	LIB1_WORKFLOW=shared
+if [ -z "${PRJ1_WORKFLOW+x}" ]; then
+	echo PRJ1_WORKFLOW not defined, defaulting to \"shared\"
+	PRJ1_WORKFLOW=shared
 fi
 if [ -z "${LIB2EXE_WORKFLOW+x}" ]; then
+	echo LIB2EXE_WORKFLOW not defined, defaulting to \"shared\"
 	LIB2EXE_WORKFLOW=shared
 fi
 
@@ -146,15 +149,15 @@ if [ ! -d vcpkg ]; then
 	echo "Run: git submodule update --init --recursive" >&2
 	exit 1
 fi
-rm -rf {AdeClangFormat,lib1,exe-and-lib2}/{build,vcpkg_installed} install
+rm -rf {AdeClangFormat,prj1,exe-and-lib2}/{build,vcpkg_installed} install
 
 big_message "AdeClangFormat workflow ${ADECLANGFORMAT_WORKFLOW}"
 cd "${SCRIPT_DIR}"/AdeClangFormat
 "${CMAKE_CMD}" --workflow --preset "${ADECLANGFORMAT_WORKFLOW}"
 "${CMAKE_CMD}" --install build --config "${CMAKE_CONFIG_TYPE}"
-big_message "lib1 workflow ${LIB1_WORKFLOW}"
-cd "${SCRIPT_DIR}"/lib1
-"${CMAKE_CMD}" --workflow --preset "${LIB1_WORKFLOW}"
+big_message "prj1 workflow ${PRJ1_WORKFLOW}"
+cd "${SCRIPT_DIR}"/prj1
+"${CMAKE_CMD}" --workflow --preset "${PRJ1_WORKFLOW}"
 "${CMAKE_CMD}" --install build --config "${CMAKE_CONFIG_TYPE}"
 big_message "exe-and-lib2 workflow ${LIB2EXE_WORKFLOW}"
 cd "${SCRIPT_DIR}"/exe-and-lib2
