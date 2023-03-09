@@ -48,9 +48,9 @@ add_library(lib2 extra/cpp/dummy.cpp)
 add_library(lib2::lib2 ALIAS lib2)
 target_link_libraries(lib2 PUBLIC lib2__objlib_internal)
 
-find_package(lib1 1.0 REQUIRED CONFIG)
+find_package(prj1 1.0 REQUIRED CONFIG)
 target_link_libraries(lib2__objlib_internal
-  PUBLIC lib1::lib1)
+  PUBLIC prj1::lib1)
 
 find_package(AdeClangFormat 2.0 CONFIG REQUIRED)
 ade_clang_format_targets(TARGETS lib2__objlib_internal

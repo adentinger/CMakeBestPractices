@@ -7,7 +7,7 @@ set(CMAKE_TOOLCHAIN_FILE
   "${CMAKE_CURRENT_SOURCE_DIR}/../vcpkg/scripts/buildsystems/vcpkg.cmake"
   CACHE STRING "Vcpkg toolchain file.")
 
-project(lib1
+project(prj1
   VERSION 1.0
   LANGUAGES CXX
   HOMEPAGE_URL "https://github.com/AnthonyD973/CMakeBestPracticesTests"
@@ -59,12 +59,12 @@ file(GLOB_RECURSE CXX_HEADERS_PRIVATE CONFIGURE_DEPENDS
 add_library(lib1__objlib_internal OBJECT ${CXX_SOURCES})
 # See comments of lib1 below. We're going to have to export the object library
 # anyway, so let's create an alias for it too.
-add_library(lib1::lib1__objlib_internal ALIAS lib1__objlib_internal)
+add_library(prj1::lib1__objlib_internal ALIAS lib1__objlib_internal)
 set_target_properties(lib1__objlib_internal PROPERTIES LINKER_LANGUAGE CXX)
 
 add_library(lib1 extra/cpp/dummy.cpp)
 # Libraries built outside *this* CMake build (aka "external dependencies") will
-# link against this one prepended with the "lib1::" namespace. In order for
+# link against this one prepended with the "prj1::" namespace. In order for
 # libraries built inside *this* CMake build (aka "internal dependencies") to
 # have their dependencies look exactly the same as external dependencies, let's
 # create an alias target that looks exactly like the external target.
@@ -74,7 +74,7 @@ add_library(lib1 extra/cpp/dummy.cpp)
 # Since this CMake build doesn't have any other library/executable, that means
 # doing this is useless, but this is just to keep things consistent no matter
 # what.
-add_library(lib1::lib1 ALIAS lib1)
+add_library(prj1::lib1 ALIAS lib1)
 target_link_libraries(lib1 PUBLIC lib1__objlib_internal)
 
 find_package(AdeClangFormat 2.0 CONFIG REQUIRED)
@@ -159,30 +159,30 @@ target_sources(lib1__objlib_internal
     BASE_DIRS src
     FILES ${CXX_HEADERS_PRIVATE})
 
-set(PACKAGE_CMAKE_SCRIPTS_DIR lib/cmake/lib1)
+set(PACKAGE_CMAKE_SCRIPTS_DIR lib/cmake/prj1)
 
 install(TARGETS lib1 lib1__objlib_internal
-  EXPORT lib1Targets
+  EXPORT prj1Targets
   FILE_SET public_headers
   DESTINATION include)
-install(EXPORT lib1Targets
+install(EXPORT prj1Targets
   # Why to have "::" is described here:
   # https://youtu.be/bsXLMQ6WgIk?t=1578
-  NAMESPACE lib1::
+  NAMESPACE prj1::
   DESTINATION "${PACKAGE_CMAKE_SCRIPTS_DIR}")
 
-set(EXPORT_FILE "${PACKAGE_CMAKE_SCRIPTS_DIR}/lib1Targets.cmake")
+set(EXPORT_FILE "${PACKAGE_CMAKE_SCRIPTS_DIR}/prj1Targets.cmake")
 
 include(CMakePackageConfigHelpers)
-configure_package_config_file(cmake/lib1Config.cmake.in
-  "${CMAKE_CURRENT_BINARY_DIR}/lib1Config.cmake"
+configure_package_config_file(cmake/prj1Config.cmake.in
+  "${CMAKE_CURRENT_BINARY_DIR}/prj1Config.cmake"
   INSTALL_DESTINATION "${PACKAGE_CMAKE_SCRIPTS_DIR}"
   PATH_VARS EXPORT_FILE)
 # Write a CMake script containing the version information & checking for
 # this project. This is used in the find_package() call of the project that
 # uses this package to do version checking:
 # https://cmake.org/cmake/help/latest/command/find_package.html#config-mode-version-selection
-write_basic_package_version_file(lib1ConfigVersion.cmake
+write_basic_package_version_file(prj1ConfigVersion.cmake
   VERSION ${PROJECT_VERSION}
   # Define the version compatibility checking policy.
   #
@@ -198,8 +198,8 @@ write_basic_package_version_file(lib1ConfigVersion.cmake
   COMPATIBILITY SameMinorVersion)
 
 install(FILES
-  "${CMAKE_CURRENT_BINARY_DIR}/lib1ConfigVersion.cmake"
-  "${CMAKE_CURRENT_BINARY_DIR}/lib1Config.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/prj1ConfigVersion.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/prj1Config.cmake"
   DESTINATION "${PACKAGE_CMAKE_SCRIPTS_DIR}")
 
 # Needed by WIX .msi installers. This is not a special CMake variable; it is
