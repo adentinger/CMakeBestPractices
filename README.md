@@ -13,7 +13,7 @@ In general, here is how to use this repo:
 CMAKE_GENERATOR=<Specify Generator> \
 	CMAKE_BUILD_TYPE=<Specify build type> \
 	CMAKE_DIR=<path to CMake's dir if cmake is not in PATH; the CMake executable is "${CMAKE_DIR}/bin/cmake"> \
-	LIB1_WORKFLOW=<Speficy workflow preset to use non-default value> \
+	PRJ1_WORKFLOW=<Speficy workflow preset to use non-default value> \
 	LIB2EXE_WORKFLOW=<Speficy workflow preset to use non-default value> \
 	./compile-and-run.sh
 ```
@@ -24,7 +24,7 @@ For example:
 # The "*-dev" workflows require clang-tidy and clang-format available in PATH.
 CMAKE_GENERATOR=Ninja \
 	CMAKE_BUILD_TYPE=Release \
-	LIB1_WORKFLOW=shared-dev \
+	PRJ1_WORKFLOW=shared-dev \
 	./compile-and-run.sh
 ```
 

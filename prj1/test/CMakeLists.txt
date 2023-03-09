@@ -26,7 +26,7 @@ target_link_libraries(lib1_test
   # since nothing can link against an executable, so let's just put everything
   # PRIVATE.
   PRIVATE
-    lib1::lib1__objlib_internal
+    prj1::lib1__objlib_internal
     # The installation logs of vcpkg mentioned to use these libraries.
     GTest::gtest
     GTest::gtest_main
