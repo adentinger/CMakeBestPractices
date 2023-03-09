@@ -11,11 +11,11 @@ In general, here is how to use this repo:
 
 ```sh
 CMAKE_GENERATOR=<Specify Generator> \
-	CMAKE_BUILD_TYPE=<Specify build type> \
-	CMAKE_DIR=<path to CMake's dir if cmake is not in PATH; the CMake executable is "${CMAKE_DIR}/bin/cmake"> \
-	PRJ1_WORKFLOW=<Speficy workflow preset to use non-default value> \
-	LIB2EXE_WORKFLOW=<Speficy workflow preset to use non-default value> \
-	./compile-and-run.sh
+CMAKE_BUILD_TYPE=<Specify build type> \
+CMAKE_DIR=<path to CMake's dir if cmake is not in PATH; the CMake executable is "${CMAKE_DIR}/bin/cmake"> \
+PRJ1_WORKFLOW=<Specify workflow preset to use non-default value> \
+PRJ2_WORKFLOW=<Specify workflow preset to use non-default value> \
+./compile-and-run.sh
 ```
 
 For example:
@@ -23,9 +23,9 @@ For example:
 ```sh
 # The "*-dev" workflows require clang-tidy and clang-format available in PATH.
 CMAKE_GENERATOR=Ninja \
-	CMAKE_BUILD_TYPE=Release \
-	PRJ1_WORKFLOW=shared-dev \
-	./compile-and-run.sh
+CMAKE_BUILD_TYPE=Release \
+PRJ1_WORKFLOW=shared-dev \
+./compile-and-run.sh
 ```
 
 ### Multi-config generators

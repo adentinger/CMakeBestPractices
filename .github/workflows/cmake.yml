@@ -28,7 +28,7 @@ jobs:
         # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#choosing-github-hosted-runners
         runner-id: [ubuntu-latest, macos-latest]
         prj1-workflow: [static, shared]
-        exe-lib2-workflow: [static, shared]
+        prj2-workflow: [static, shared]
         has-analysis: [false]
 
         # Remove the configuration "ubuntu-latest, static, static", and replace
@@ -48,19 +48,19 @@ jobs:
         exclude:
           - runner-id: ubuntu-latest
             prj1-workflow: static
-            exe-lib2-workflow: static
+            prj2-workflow: static
             has-analysis: false
 
           # Don't do (shared, static) CI jobs --if the others work then there's
           # a good chance that one will too.
           - prj1-workflow: shared
-            exe-lib2-workflow: static
+            prj2-workflow: static
 
         # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstrategymatrixinclude
         include:
           - runner-id: ubuntu-latest
             prj1-workflow: static-dev
-            exe-lib2-workflow: static-dev
+            prj2-workflow: static-dev
             has-analysis: true
 
           # Use different CPack generators depending on the runner.
@@ -155,17 +155,17 @@ jobs:
       working-directory: ${{github.workspace}}/repo/prj1
       run: cmake --install build
 
-    - name: exe-and-lib2/Workflow
-      working-directory: ${{github.workspace}}/repo/exe-and-lib2
+    - name: prj2/Workflow
+      working-directory: ${{github.workspace}}/repo/prj2
       run: |
-        cmake --workflow --preset "${{matrix.exe-lib2-workflow}}"
+        cmake --workflow --preset "${{matrix.prj2-workflow}}"
 
-    - name: exe-and-lib2/CPack
-      working-directory: ${{github.workspace}}/repo/exe-and-lib2
+    - name: prj2/CPack
+      working-directory: ${{github.workspace}}/repo/prj2
       run: cpack -B build -G "${{matrix.cpack-generators}}" --config build/CPackConfig.cmake
 
-    - name: exe-and-lib2/Install
-      working-directory: ${{github.workspace}}/repo/exe-and-lib2
+    - name: prj2/Install
+      working-directory: ${{github.workspace}}/repo/prj2
       run: cmake --install build
 
     - name: Run exe
@@ -181,7 +181,7 @@ jobs:
         # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#choosing-github-hosted-runners
         runner-id: [windows-latest]
         prj1-workflow: [static, shared]
-        exe-lib2-workflow: [static, shared]
+        prj2-workflow: [static, shared]
         # Specify Visual Studio release year. Multiple such list items can
         # be added to try multiple VS versions. Not sure if different VS
         # versions necessarily have a different version of MSVC or if they
@@ -194,7 +194,7 @@ jobs:
           # Don't do (shared, static) CI jobs --if the others work then there's
           # a good chance that one will too.
           - prj1-workflow: shared
-            exe-lib2-workflow: static
+            prj2-workflow: static
 
     env:
       # Environment variables used by CMake.
@@ -289,18 +289,18 @@ jobs:
       working-directory: ${{github.workspace}}/repo/prj1
       run: cmake --install build
 
-    - name: exe-and-lib2/Workflow
-      working-directory: ${{github.workspace}}/repo/exe-and-lib2
+    - name: prj2/Workflow
+      working-directory: ${{github.workspace}}/repo/prj2
       run: |
-        Invoke-BatchFile $env:VS_VCVARSALL x64 && `
-        cmake --workflow --preset "${{matrix.exe-lib2-workflow}}"
+        Invoke-BatchFile $env:VS_VCVARSALL x64 &&                             `
+        cmake --workflow --preset "${{matrix.prj2-workflow}}"
 
-    - name: exe-and-lib2/CPack
-      working-directory: ${{github.workspace}}/repo/exe-and-lib2
+    - name: prj2/CPack
+      working-directory: ${{github.workspace}}/repo/prj2
       run: cpack -B build -G "NSIS64;WIX;External;STGZ;TGZ;ZIP" --config build/CPackConfig.cmake
 
-    - name: exe-and-lib2/Install
-      working-directory: ${{github.workspace}}/repo/exe-and-lib2
+    - name: prj2/Install
+      working-directory: ${{github.workspace}}/repo/prj2
       run: cmake --install build
 
     - name: Run exe
@@ -314,13 +314,13 @@ jobs:
       matrix:
         generator: ["Visual Studio 17 2022"]
         prj1-build-shared-libs: [ON, OFF]
-        exe-lib2-build-shared-libs: [ON, OFF]
+        prj2-build-shared-libs: [ON, OFF]
 
         exclude:
           # Don't do (shared, static) CI jobs --if the others work then there's
           # a good chance that one will too.
           - prj1-build-shared-libs: ON
-            exe-lib2-build-shared-libs: OFF
+            prj2-build-shared-libs: OFF
 
     runs-on: windows-latest
 
@@ -369,19 +369,19 @@ jobs:
       working-directory: ${{github.workspace}}/repo/prj1
       run: cmake --install build --config "${env:CMAKE_BUILD_TYPE}"
 
-    - name: exe-and-lib2/Workflow
-      working-directory: ${{github.workspace}}/repo/exe-and-lib2
+    - name: prj2/Workflow
+      working-directory: ${{github.workspace}}/repo/prj2
       run: |
         cmake -S . -B build                                                   `
             -DCMAKE_INSTALL_PREFIX="${{github.workspace}}/repo/install"       `
-            -DBUILD_SHARED_LIBS="${{matrix.exe-lib2-build-shared-libs}}"      `
+            -DBUILD_SHARED_LIBS="${{matrix.prj2-build-shared-libs}}"          `
             -DCMAKE_EXPORT_COMPILE_COMMANDS=ON                                `
             -Dlib2_BUILD_WITH_PIC=ON &&                                       `
         cmake --build build --config "${env:CMAKE_BUILD_TYPE}" -j10 &&        `
         ctest --test-dir build --build-config "${env:CMAKE_BUILD_TYPE}" -j10
 
-    - name: exe-and-lib2/Install
-      working-directory: ${{github.workspace}}/repo/exe-and-lib2
+    - name: prj2/Install
+      working-directory: ${{github.workspace}}/repo/prj2
       run: cmake --install build --config "${env:CMAKE_BUILD_TYPE}"
 
     - name: Run exe
