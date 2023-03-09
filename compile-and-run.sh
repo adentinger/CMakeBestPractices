@@ -11,9 +11,9 @@ if [ -z "${PRJ1_WORKFLOW+x}" ]; then
 	echo PRJ1_WORKFLOW not defined, defaulting to \"shared\"
 	PRJ1_WORKFLOW=shared
 fi
-if [ -z "${LIB2EXE_WORKFLOW+x}" ]; then
-	echo LIB2EXE_WORKFLOW not defined, defaulting to \"shared\"
-	LIB2EXE_WORKFLOW=shared
+if [ -z "${PRJ2_WORKFLOW+x}" ]; then
+	echo PRJ2_WORKFLOW not defined, defaulting to \"shared\"
+	PRJ2_WORKFLOW=shared
 fi
 
 big_message() {
@@ -149,7 +149,7 @@ if [ ! -d vcpkg ]; then
 	echo "Run: git submodule update --init --recursive" >&2
 	exit 1
 fi
-rm -rf {AdeClangFormat,prj1,exe-and-lib2}/{build,vcpkg_installed} install
+rm -rf {AdeClangFormat,prj1,prj2}/{build,vcpkg_installed} install
 
 big_message "AdeClangFormat workflow ${ADECLANGFORMAT_WORKFLOW}"
 cd "${SCRIPT_DIR}"/AdeClangFormat
@@ -159,9 +159,9 @@ big_message "prj1 workflow ${PRJ1_WORKFLOW}"
 cd "${SCRIPT_DIR}"/prj1
 "${CMAKE_CMD}" --workflow --preset "${PRJ1_WORKFLOW}"
 "${CMAKE_CMD}" --install build --config "${CMAKE_CONFIG_TYPE}"
-big_message "exe-and-lib2 workflow ${LIB2EXE_WORKFLOW}"
-cd "${SCRIPT_DIR}"/exe-and-lib2
-"${CMAKE_CMD}" --workflow --preset "${LIB2EXE_WORKFLOW}"
+big_message "prj2 workflow ${PRJ2_WORKFLOW}"
+cd "${SCRIPT_DIR}"/prj2
+"${CMAKE_CMD}" --workflow --preset "${PRJ2_WORKFLOW}"
 "${CMAKE_CMD}" --install build --config "${CMAKE_CONFIG_TYPE}"
 big_message "Running executable"
 cd "${SCRIPT_DIR}"

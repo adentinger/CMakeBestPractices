@@ -37,7 +37,7 @@ file(GLOB_RECURSE CXX_HEADERS_PRIVATE CONFIGURE_DEPENDS
 add_library(exe__objlib_internal OBJECT ${CXX_SOURCES})
 # See comments of exe below. We're going to have to export the object library
 # anyway, so let's create an alias for it too.
-add_library(exe::exe__objlib_internal ALIAS exe__objlib_internal)
+add_library(prj2::exe__objlib_internal ALIAS exe__objlib_internal)
 set_target_properties(exe__objlib_internal PROPERTIES LINKER_LANGUAGE CXX)
 
 # If we want to write tests for the sources that make up the executable, we
@@ -58,7 +58,7 @@ set_target_properties(exe__objlib_internal PROPERTIES LINKER_LANGUAGE CXX)
 # complains about it.
 add_executable(exe main.cpp)
 target_link_libraries(exe PUBLIC exe__objlib_internal)
-target_link_libraries(exe__objlib_internal PUBLIC lib2::lib2)
+target_link_libraries(exe__objlib_internal PUBLIC prj2::lib2)
 
 set_target_properties(exe__objlib_internal
   PROPERTIES
