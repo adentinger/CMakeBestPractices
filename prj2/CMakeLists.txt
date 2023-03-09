@@ -7,7 +7,7 @@ set(CMAKE_TOOLCHAIN_FILE
   "${CMAKE_CURRENT_SOURCE_DIR}/../vcpkg/scripts/buildsystems/vcpkg.cmake"
   CACHE STRING "Vcpkg toolchain file.")
 
-project(exe
+project(prj2
   VERSION 1.0
   LANGUAGES CXX
   HOMEPAGE_URL "https://github.com/AnthonyD973/CMakeBestPracticesTests"

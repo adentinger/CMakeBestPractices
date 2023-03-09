@@ -34,18 +34,18 @@ file(GLOB_RECURSE CXX_HEADERS_PRIVATE CONFIGURE_DEPENDS
 add_library(lib2__objlib_internal OBJECT ${CXX_SOURCES})
 # See comments of lib2 below. We're going to have to export the object library
 # anyway, so let's create an alias for it too.
-add_library(lib2::lib2__objlib_internal ALIAS lib2__objlib_internal)
+add_library(prj2::lib2__objlib_internal ALIAS lib2__objlib_internal)
 set_target_properties(lib2__objlib_internal PROPERTIES LINKER_LANGUAGE CXX)
 
 add_library(lib2 extra/cpp/dummy.cpp)
 # Libraries built outside *this* CMake build (aka "external dependencies") will
-# link against this one prepended with the "lib2::" namespace. In order for
+# link against this one prepended with the "prj2::" namespace. In order for
 # libraries built inside *this* CMake build (aka "internal dependencies") to
 # have their dependencies look exactly the same as external dependencies, let's
 # create an alias target that looks exactly like the external target.
 #
 # https://youtu.be/bsXLMQ6WgIk?t=3124
-add_library(lib2::lib2 ALIAS lib2)
+add_library(prj2::lib2 ALIAS lib2)
 target_link_libraries(lib2 PUBLIC lib2__objlib_internal)
 
 find_package(prj1 1.0 REQUIRED CONFIG)
@@ -157,7 +157,7 @@ elseif(WIN32)
   # DLL platforms don't support RPATH.
   set(LIB2_INSTALL_RPATH "")
 else()
-  get_target_property(LIB_SHARED lib2::lib2 TYPE)
+  get_target_property(LIB_SHARED prj2::lib2 TYPE)
   if ("${LIB_SHARED}" STREQUAL SHARED_LIBRARY)
 	message(FATAL_ERROR
 	  "Unsupported target platform ${CMAKE_SYSTEM_NAME} for linking against "
@@ -170,30 +170,30 @@ set_target_properties(lib2
   PROPERTIES
   INSTALL_RPATH "${LIB2_INSTALL_RPATH}")
 
-set(PACKAGE_CMAKE_SCRIPTS_DIR lib/cmake/lib2)
+set(PACKAGE_CMAKE_SCRIPTS_DIR lib/cmake/prj2)
 
 install(TARGETS lib2 lib2__objlib_internal
-  EXPORT lib2Targets
+  EXPORT prj2Targets
   FILE_SET public_headers
   DESTINATION include)
-install(EXPORT lib2Targets
+install(EXPORT prj2Targets
   # Why to have "::" is described here:
   # https://youtu.be/bsXLMQ6WgIk?t=1578
-  NAMESPACE lib2::
+  NAMESPACE prj2::
   DESTINATION "${PACKAGE_CMAKE_SCRIPTS_DIR}")
 
-set(EXPORT_FILE "${PACKAGE_CMAKE_SCRIPTS_DIR}/lib2Targets.cmake")
+set(EXPORT_FILE "${PACKAGE_CMAKE_SCRIPTS_DIR}/prj2Targets.cmake")
 
 include(CMakePackageConfigHelpers)
-configure_package_config_file(cmake/exelib2Config.cmake.in
-  "${CMAKE_CURRENT_BINARY_DIR}/exelib2Config.cmake"
+configure_package_config_file(cmake/prj2Config.cmake.in
+  "${CMAKE_CURRENT_BINARY_DIR}/prj2Config.cmake"
   INSTALL_DESTINATION "${PACKAGE_CMAKE_SCRIPTS_DIR}"
   PATH_VARS EXPORT_FILE)
 # Write a CMake script containing the version information & checking for
 # this project. This is used in the find_package() call of the project that
 # uses this package to do version checking:
 # https://cmake.org/cmake/help/latest/command/find_package.html#config-mode-version-selection
-write_basic_package_version_file(exelib2ConfigVersion.cmake
+write_basic_package_version_file(prj2ConfigVersion.cmake
   VERSION ${PROJECT_VERSION}
   # Define the version compatibility checking policy.
   #
@@ -209,8 +209,8 @@ write_basic_package_version_file(exelib2ConfigVersion.cmake
   COMPATIBILITY SameMinorVersion)
 
 install(FILES
-  "${CMAKE_CURRENT_BINARY_DIR}/exelib2ConfigVersion.cmake"
-  "${CMAKE_CURRENT_BINARY_DIR}/exelib2Config.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/prj2ConfigVersion.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/prj2Config.cmake"
   DESTINATION "${PACKAGE_CMAKE_SCRIPTS_DIR}")
 
 add_subdirectory(test)

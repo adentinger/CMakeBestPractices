@@ -12,8 +12,8 @@ file(GLOB_RECURSE CXX_HEADERS_PRIVATE CONFIGURE_DEPENDS
 # we should always enable regardless of whether the project has tests or not so
 # that 'ctest' correctly returns 0 (if there are no tests, that means all tests
 # passed).
-add_executable(exe_test ${CXX_SOURCES})
-target_sources(exe_test
+add_executable(lib2_test ${CXX_SOURCES})
+target_sources(lib2_test
   PRIVATE
     FILE_SET private_headers
 	TYPE HEADERS
@@ -21,12 +21,12 @@ target_sources(exe_test
 	FILES ${CXX_HEADERS_PRIVATE})
 
 find_package(GTest CONFIG REQUIRED)
-target_link_libraries(exe_test
+target_link_libraries(lib2_test
   # PUBLIC vs PRIVATE vs INTERFACE doesn't really matter for an executable
   # since nothing can link against an executable, so let's just put everything
   # PRIVATE.
   PRIVATE
-    exe::exe__objlib_internal
+    prj2::lib2__objlib_internal
     # The installation logs of vcpkg mentioned to use these libraries.
     GTest::gtest
     GTest::gtest_main
@@ -42,9 +42,9 @@ target_link_libraries(exe_test
 # being empty (such as on non-Win32).
 if (WIN32)
   add_custom_command(
-	TARGET exe_test POST_BUILD
+	TARGET lib2_test POST_BUILD
 	COMMAND ${CMAKE_COMMAND} -E copy
-      $<TARGET_RUNTIME_DLLS:exe_test> $<TARGET_FILE_DIR:exe_test>
+      $<TARGET_RUNTIME_DLLS:lib2_test> $<TARGET_FILE_DIR:lib2_test>
 	COMMAND_EXPAND_LISTS
   )
 endif()
@@ -63,5 +63,5 @@ include(GoogleTest)
 # invokes the TEST() macro through another macro).
 #
 # See: https://cmake.org/cmake/help/latest/module/GoogleTest.html#command:gtest_discover_tests
-gtest_discover_tests(exe_test)
+gtest_discover_tests(lib2_test)
 
