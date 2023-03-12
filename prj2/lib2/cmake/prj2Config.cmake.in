@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MIT
 include(CMakeFindDependencyMacro)
 @PACKAGE_INIT@
 find_dependency(prj1 1.0)

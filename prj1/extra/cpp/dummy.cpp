@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 // This file is intentionally empty.
 //
 // According to this...

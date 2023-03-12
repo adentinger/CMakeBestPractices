@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MIT
 include(CMakeFindDependencyMacro)
 @PACKAGE_INIT@
 # This package has no dependencies.
