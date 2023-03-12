@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 #include "exe/dummy_fibo_sum.hpp"
 
 #include "lib2/hdr.h"

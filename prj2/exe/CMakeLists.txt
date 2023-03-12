@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: MIT
+
 file(GLOB_RECURSE CXX_SOURCES CONFIGURE_DEPENDS
   "src/*.cpp")
 # Technically an executable can't have public headers because you can't
