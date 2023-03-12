@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: MIT
+
 # A YAML file for the clangd tool that implements C++ LSP:
 # https://clangd.llvm.org/
 
