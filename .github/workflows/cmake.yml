@@ -8,14 +8,8 @@ on:
     branches: [ "main" ]
 
 env:
-  # Environment variables used by CMake.
-  # See: https://cmake.org/cmake/help/latest/manual/cmake-env-variables.7.html
-  #
-  # For multi-config generators (e.g. "Visual Studio *"), the CMAKE_BUILD_TYPE
-  # environement variable does nothing; we'll specify
-  # --config "${CMAKE_BUILD_TYPE}" to the commands instead, so you can still
-  # use this environement variable for them.
-  CMAKE_BUILD_TYPE: Release
+  PRJ1_CONFIG: Release
+  PRJ2_CONFIG: Release
   VERBOSE: ON
 
 jobs:
@@ -28,8 +22,8 @@ jobs:
       matrix:
         # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#choosing-github-hosted-runners
         runner-id: [ubuntu-latest, macos-latest]
-        prj1-workflow: [static, shared]
-        prj2-workflow: [static, shared]
+        prj1-configure-preset: [static, shared]
+        prj2-configure-preset: [static, shared]
         has-analysis: [false]
 
         # Remove the configuration "ubuntu-latest, static, static", and replace
@@ -45,23 +39,23 @@ jobs:
         # regardless of static checkers), and 4) means we don't *have* to setup
         # the analysis tools for all CI runners.
 
-        # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstrategymatrixinclude
+        # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstrategymatrixexclude
         exclude:
           - runner-id: ubuntu-latest
-            prj1-workflow: static
-            prj2-workflow: static
+            prj1-configure-preset: static
+            prj2-configure-preset: static
             has-analysis: false
 
           # Don't do (shared, static) CI jobs --if the others work then there's
           # a good chance that one will too.
-          - prj1-workflow: shared
-            prj2-workflow: static
+          - prj1-configure-preset: shared
+            prj2-configure-preset: static
 
         # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstrategymatrixinclude
         include:
           - runner-id: ubuntu-latest
-            prj1-workflow: static-dev
-            prj2-workflow: static-dev
+            prj1-configure-preset: static-dev
+            prj2-configure-preset: static-dev
             has-analysis: true
 
           # Use different CPack generators depending on the runner.
@@ -74,6 +68,9 @@ jobs:
       # Environment variables used by CMake.
       # See: https://cmake.org/cmake/help/latest/manual/cmake-env-variables.7.html
       CMAKE_GENERATOR: Ninja
+      PRJ1_CONFIGURE_PRESET: ${{matrix.prj1-configure-preset}}
+      PRJ2_CONFIGURE_PRESET: ${{matrix.prj2-configure-preset}}
+      CPACK_GENERATORS: ${{matrix.cpack-generators}}
 
     runs-on: ${{matrix.runner-id}}
     continue-on-error: ${{matrix.has-analysis}}
@@ -125,52 +122,10 @@ jobs:
         # 'git submodule update --init --recursive')
         submodules: recursive
 
-    - name: Setup Vcpkg
+    - name: Build and run
       working-directory: ${{github.workspace}}/repo
       run: |
-        ./vcpkg/bootstrap-vcpkg.sh
-
-    - name: AdeClangFormat/Workflow
-      working-directory: ${{github.workspace}}/repo/AdeClangFormat
-      run: |
-        cmake --workflow --preset default
-
-    - name: AdeClangFormat/CPack
-      working-directory: ${{github.workspace}}/repo/AdeClangFormat
-      run: cpack -B build -G "${{matrix.cpack-generators}}" --config build/CPackConfig.cmake
-
-    - name: AdeClangFormat/Install
-      working-directory: ${{github.workspace}}/repo/AdeClangFormat
-      run: cmake --install build
-
-    - name: prj1/Workflow
-      working-directory: ${{github.workspace}}/repo/prj1
-      run: |
-        cmake --workflow --preset "${{matrix.prj1-workflow}}"
-
-    - name: prj1/CPack
-      working-directory: ${{github.workspace}}/repo/prj1
-      run: cpack -B build -G "${{matrix.cpack-generators}}" --config build/CPackConfig.cmake
-
-    - name: prj1/Install
-      working-directory: ${{github.workspace}}/repo/prj1
-      run: cmake --install build
-
-    - name: prj2/Workflow
-      working-directory: ${{github.workspace}}/repo/prj2
-      run: |
-        cmake --workflow --preset "${{matrix.prj2-workflow}}"
-
-    - name: prj2/CPack
-      working-directory: ${{github.workspace}}/repo/prj2
-      run: cpack -B build -G "${{matrix.cpack-generators}}" --config build/CPackConfig.cmake
-
-    - name: prj2/Install
-      working-directory: ${{github.workspace}}/repo/prj2
-      run: cmake --install build
-
-    - name: Run exe
-      run: ${{github.workspace}}/repo/install/bin/exe
+        ./build-and-run.sh
 
 ###############################################################################
 # 'ninja-win' job
@@ -181,8 +136,8 @@ jobs:
       matrix:
         # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#choosing-github-hosted-runners
         runner-id: [windows-latest]
-        prj1-workflow: [static, shared]
-        prj2-workflow: [static, shared]
+        prj1-configure-preset: [static, shared]
+        prj2-configure-preset: [static, shared]
         # Specify Visual Studio release year. Multiple such list items can
         # be added to try multiple VS versions. Not sure if different VS
         # versions necessarily have a different version of MSVC or if they
@@ -190,17 +145,20 @@ jobs:
         vs-version: [2022]
         has-analysis: [false]
 
-        # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstrategymatrixinclude
+        # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstrategymatrixexclude
         exclude:
           # Don't do (shared, static) CI jobs --if the others work then there's
           # a good chance that one will too.
-          - prj1-workflow: shared
-            prj2-workflow: static
+          - prj1-configure-preset: shared
+            prj2-configure-preset: static
 
     env:
       # Environment variables used by CMake.
       # See: https://cmake.org/cmake/help/latest/manual/cmake-env-variables.7.html
       CMAKE_GENERATOR: Ninja
+      PRJ1_CONFIGURE_PRESET: ${{matrix.prj1-configure-preset}}
+      PRJ2_CONFIGURE_PRESET: ${{matrix.prj2-configure-preset}}
+      CPACK_GENERATORS: NSIS64;WIX;External;STGZ;TGZ;ZIP
 
     runs-on: ${{matrix.runner-id}}
     continue-on-error: ${{matrix.has-analysis}}
@@ -266,46 +224,62 @@ jobs:
     - name: AdeClangFormat/Workflow
       working-directory: ${{github.workspace}}/repo/AdeClangFormat
       run: |
-        cmake --workflow --preset default
+        $env:CMAKE_BUILD_TYPE="Release" &&                                    `
+        cmake --preset default &&                                             `
+        cmake --build build --config Release -j10 &&                          `
+        ctest --test-dir build --build-config Release -j10
 
     - name: AdeClangFormat/CPack
       working-directory: ${{github.workspace}}/repo/AdeClangFormat
-      run: cpack -B build -G "NSIS64;WIX;External;STGZ;TGZ;ZIP" --config build/CPackConfig.cmake
+      run: |
+        cpack -B build -G $env:CPACK_GENERATORS --config build/CPackConfig.cmake
 
     - name: AdeClangFormat/Install
       working-directory: ${{github.workspace}}/repo/AdeClangFormat
-      run: cmake --install build
+      run: |
+        cmake --install build --config Release
 
     - name: prj1/Workflow
       working-directory: ${{github.workspace}}/repo/prj1
       run: |
-        Invoke-BatchFile $env:VS_VCVARSALL x64 && `
-        cmake --workflow --preset "${{matrix.prj1-workflow}}"
+        Invoke-BatchFile $env:VS_VCVARSALL x64 &&                             `
+        [Environment]::SetEnvironmentVariable("CMAKE_BUILD_TYPE", $env:PRJ1_CONFIG) && `
+        cmake --preset $env:PRJ1_CONFIGURE_PRESET &&                          `
+        cmake --build build --config $env:PRJ1_CONFIG -j10 &&                 `
+        ctest --test-dir build --build-config $env:PRJ1_CONFIG -j10
 
     - name: prj1/CPack
       working-directory: ${{github.workspace}}/repo/prj1
-      run: cpack -B build -G "NSIS64;WIX;External;STGZ;TGZ;ZIP" --config build/CPackConfig.cmake
+      run: |
+        cpack -B build -G $env:CPACK_GENERATORS --config build/CPackConfig.cmake
 
     - name: prj1/Install
       working-directory: ${{github.workspace}}/repo/prj1
-      run: cmake --install build
+      run: |
+        cmake --install build --config $env:PRJ1_CONFIG
 
     - name: prj2/Workflow
       working-directory: ${{github.workspace}}/repo/prj2
       run: |
         Invoke-BatchFile $env:VS_VCVARSALL x64 &&                             `
-        cmake --workflow --preset "${{matrix.prj2-workflow}}"
+        [Environment]::SetEnvironmentVariable("CMAKE_BUILD_TYPE", $env:PRJ2_CONFIG) && `
+        cmake --preset $env:PRJ2_CONFIGURE_PRESET &&                          `
+        cmake --build build --config $env:PRJ2_CONFIG -j10 &&                 `
+        ctest --test-dir build --build-config $env:PRJ2_CONFIG -j10
 
     - name: prj2/CPack
       working-directory: ${{github.workspace}}/repo/prj2
-      run: cpack -B build -G "NSIS64;WIX;External;STGZ;TGZ;ZIP" --config build/CPackConfig.cmake
+      run: |
+        cpack -B build -G $env:CPACK_GENERATORS --config build/CPackConfig.cmake
 
     - name: prj2/Install
       working-directory: ${{github.workspace}}/repo/prj2
-      run: cmake --install build
+      run: |
+        cmake --install build --config $env:PRJ2_CONFIG
 
     - name: Run exe
-      run: ${{github.workspace}}/repo/install/bin/exe
+      run: |
+        ${{github.workspace}}/repo/install/bin/exe
 
 ###############################################################################
 # 'vs' job
@@ -314,14 +288,15 @@ jobs:
     strategy:
       matrix:
         generator: ["Visual Studio 17 2022"]
-        prj1-build-shared-libs: [ON, OFF]
-        prj2-build-shared-libs: [ON, OFF]
+        prj1-configure-preset: [static, shared]
+        prj2-configure-preset: [static, shared]
 
+        # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstrategymatrixexclude
         exclude:
           # Don't do (shared, static) CI jobs --if the others work then there's
           # a good chance that one will too.
-          - prj1-build-shared-libs: ON
-            prj2-build-shared-libs: OFF
+          - prj1-configure-preset: shared
+            prj2-configure-preset: static
 
     runs-on: windows-latest
 
@@ -329,6 +304,9 @@ jobs:
       # Environment variables used by CMake.
       # See: https://cmake.org/cmake/help/latest/manual/cmake-env-variables.7.html
       CMAKE_GENERATOR: ${{matrix.generator}}
+      PRJ1_CONFIGURE_PRESET: ${{matrix.prj1-configure-preset}}
+      PRJ2_CONFIGURE_PRESET: ${{matrix.prj2-configure-preset}}
+      CPACK_GENERATORS: NSIS64;WIX;External;STGZ;TGZ;ZIP
 
     steps:
     - uses: actions/checkout@v3
@@ -347,44 +325,52 @@ jobs:
     - name: AdeClangFormat/Workflow
       working-directory: ${{github.workspace}}/repo/AdeClangFormat
       run: |
-        cmake -S . -B build &&                                                `
-        cmake --build build --config "${env:CMAKE_BUILD_TYPE}" -j10 &&        `
-        ctest --test-dir build --build-config "${env:CMAKE_BUILD_TYPE}" -j10
+        $env:CMAKE_BUILD_TYPE="Release" &&                                    `
+        cmake --preset default &&                                             `
+        cmake --build build --config Release -j10 &&                          `
+        ctest --test-dir build --build-config Release -j10
+
+    - name: AdeClangFormat/CPack
+      working-directory: ${{github.workspace}}/repo/AdeClangFormat
+      run: |
+        cpack -B build -G $env:CPACK_GENERATORS --config build/CPackConfig.cmake
 
     - name: AdeClangFormat/Install
       working-directory: ${{github.workspace}}/repo/AdeClangFormat
-      run: cmake --install build --config "${env:CMAKE_BUILD_TYPE}"
+      run: |
+        cmake --install build --config Release
 
     - name: prj1/Workflow
       working-directory: ${{github.workspace}}/repo/prj1
       run: |
-        cmake -S . -B build                                                   `
-            -DCMAKE_INSTALL_PREFIX="${{github.workspace}}/repo/install"       `
-            -DBUILD_SHARED_LIBS="${{matrix.prj1-build-shared-libs}}"          `
-            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON                                `
-            -Dprj1_BUILD_WITH_PIC=ON &&                                       `
-        cmake --build build --config "${env:CMAKE_BUILD_TYPE}" -j10 &&        `
-        ctest --test-dir build --build-config "${env:CMAKE_BUILD_TYPE}" -j10
+        [Environment]::SetEnvironmentVariable("CMAKE_BUILD_TYPE", $env:PRJ1_CONFIG) && `
+        cmake --preset $env:PRJ1_CONFIGURE_PRESET &&                          `
+        cmake --build build --config $env:PRJ1_CONFIG -j10 &&                 `
+        ctest --test-dir build --build-config $env:PRJ1_CONFIG -j10
 
     - name: prj1/Install
       working-directory: ${{github.workspace}}/repo/prj1
-      run: cmake --install build --config "${env:CMAKE_BUILD_TYPE}"
+      run: cmake --install build --config $env:PRJ1_CONFIG
 
     - name: prj2/Workflow
       working-directory: ${{github.workspace}}/repo/prj2
       run: |
-        cmake -S . -B build                                                   `
-            -DCMAKE_INSTALL_PREFIX="${{github.workspace}}/repo/install"       `
-            -DBUILD_SHARED_LIBS="${{matrix.prj2-build-shared-libs}}"          `
-            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON                                `
-            -Dlib2_BUILD_WITH_PIC=ON &&                                       `
-        cmake --build build --config "${env:CMAKE_BUILD_TYPE}" -j10 &&        `
-        ctest --test-dir build --build-config "${env:CMAKE_BUILD_TYPE}" -j10
+        [Environment]::SetEnvironmentVariable("CMAKE_BUILD_TYPE", $env:PRJ2_CONFIG) && `
+        cmake --preset $env:PRJ2_CONFIGURE_PRESET &&                          `
+        cmake --build build --config $env:PRJ2_CONFIG -j10 &&                 `
+        ctest --test-dir build --build-config $env:PRJ2_CONFIG -j10
+
+    - name: prj2/CPack
+      working-directory: ${{github.workspace}}/repo/prj2
+      run: |
+        cpack -B build -G $env:CPACK_GENERATORS --config build/CPackConfig.cmake
 
     - name: prj2/Install
       working-directory: ${{github.workspace}}/repo/prj2
-      run: cmake --install build --config "${env:CMAKE_BUILD_TYPE}"
+      run: |
+        cmake --install build --config $env:PRJ2_CONFIG
 
     - name: Run exe
-      run: ${{github.workspace}}/repo/install/bin/exe
+      run: |
+        ${{github.workspace}}/repo/install/bin/exe
 
