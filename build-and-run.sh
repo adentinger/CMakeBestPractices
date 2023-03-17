@@ -13,7 +13,6 @@ set_system_info
 set_environment
 
 set_cmake
-big_message "Assuming cmake command is \"${CMAKE_CMD}\""
 check_cmake_version
 
 check_vcpkg
