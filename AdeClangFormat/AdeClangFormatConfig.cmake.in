@@ -12,30 +12,44 @@
 include(CMakeFindDependencyMacro)
 
 # Internal function; do not use.
-function(__ade_clang_format_target tgt tgt_clang_format command_or_empty main_target_or_empty)
-  if(NOT TARGET "${tgt}")
-	message(FATAL_ERROR "Target \"${tgt}\" does not exist")
-  endif()
-
-  if(TARGET "${tgt_clang_format}")
-	message(FATAL_ERROR
-	  "Cannot create target \"${tgt_clang_format}\" for clang-format: A "
-	  "target with the same name already exists. Use the "
-	  "ADE_CLANG_FORMAT_MAIN_TARGET CMake variable to specify a different"
-	  "target.")
-  endif()
-
+#
+# @param tgt The target whose sources to run clang-format for.
+#
+# @param format_check_tgt The target that will run the clang-format check for
+# the specified target's sources.
+#
+# @param command_or_empty The specified clang-format command to run. A few
+# flags will be appended on top of them. If empty, then no command is added is
+# done.
+#
+# @param check_main_target The target to add the created check target as a
+# dependency of. Helpful to be able to run clang-format checks on all targets
+# of the CMake build.
+#
+# @param target_depends Whether building the target "tgt" should depend on the
+# check being done.
+function(__ade_clang_format_check_target
+	tgt
+	format_check_tgt
+	command_or_empty
+	check_main_target
+	target_depends)
   get_target_property(tgt_sources "${tgt}" SOURCES)
+  get_target_property(tgt_source_dir "${tgt}" SOURCE_DIR)
 
-  message(VERBOSE "Creating target ${tgt_clang_format}.")
+  message(VERBOSE "Creating check target ${format_check_tgt}.")
   if(NOT "${tgt_sources}" STREQUAL "" AND
 	  NOT "${command_or_empty}" STREQUAL "")
-	add_custom_target("${tgt_clang_format}"
-	  COMMENT "Running clang-format for target ${tgt}..."
-	  COMMAND ${command_or_empty} -i ${tgt_sources})
-  elseif(NOT "${tgt_sources}" STREQUAL "")
-	add_custom_target("${tgt_clang_format}"
-	  COMMAND echo "Not running clang-format for target ${tgt}: No sources")
+	add_custom_target("${format_check_tgt}"
+	  COMMENT "Running clang-format check for target ${tgt}..."
+	  WORKING_DIRECTORY "${tgt_source_dir}"
+	  COMMAND ${command_or_empty} -n --Werror ${tgt_sources})
+  elseif("${tgt_sources}" STREQUAL "")
+	# This case has to be handled separately, since running clang-format with
+	# no sources causes clang-format to take the source through stdin.
+	add_custom_target("${format_check_tgt}"
+	  WORKING_DIRECTORY "${tgt_source_dir}"
+	  COMMAND echo "Not running clang-format check for target ${tgt}: No sources")
   else()
 	# If no command is specified, then this target should do nothing. The
 	# reasons for this choice:
@@ -59,20 +73,89 @@ function(__ade_clang_format_target tgt tgt_clang_format command_or_empty main_ta
 	# 2) To remain consistent with CMake's clang-tidy integration, where if you
 	# don't define the CMAKE_<lang>_CLANG_TIDY variable nor the
 	# <lang>_CLANG_TIDY target property, then clang-tidy is not run.
-	add_custom_target("${tgt_clang_format}"
-	  COMMAND echo "Not running clang-format for target ${tgt}: no command specified.")
+	add_custom_target("${format_check_tgt}"
+	  WORKING_DIRECTORY "${tgt_source_dir}"
+	  COMMAND echo "Not running clang-format check for target ${tgt}: No command specified.")
   endif()
 
-  if(NOT "${main_target_or_empty}" STREQUAL "")
-	if (NOT TARGET "${main_target_or_empty}")
-	  add_custom_target("${main_target_or_empty}"
-		COMMENT "Running clang-format sub-targets.")
-	  message(VERBOSE "Creating target ${main_target_or_empty} and adding ${tgt_clang_format} as a dependency.")
+  if(NOT "${check_main_target}" STREQUAL "")
+	if (NOT TARGET "${check_main_target}")
+	  message(VERBOSE "Creating check target ${check_main_target} and adding ${format_check_tgt} as a dependency.")
+	  add_custom_target("${check_main_target}"
+		COMMENT "Running clang-format check sub-targets."
+		WORKING_DIRECTORY "${tgt_source_dir}")
 	else()
-	  	  message(VERBOSE "Adding ${tgt_clang_format} as a dependency of ${main_target_or_empty}.")
+	  	  message(VERBOSE "Adding ${format_check_tgt} as a dependency of ${check_main_target}.")
 	endif()
-	add_dependencies("${main_target_or_empty}" "${tgt_clang_format}")
+	add_dependencies("${check_main_target}" "${format_check_tgt}")
   endif()
+
+  if(target_depends)
+	message(VERBOSE "Adding ${format_check_tgt} as a dependency of ${tgt}.")
+	add_dependencies("${tgt}" "${format_check_tgt}")
+  endif()
+endfunction()
+
+# Internal function; do not use.
+#
+# @param tgt The target whose sources to run clang-format for.
+#
+# @param format_fix_tgt The target that will run clang-format for the
+# specified target.
+#
+# @param command_or_empty The specified clang-format command to run. A few
+# flags will be appended on top of them. If empty, then the target is created
+# but is a no-op.
+#
+# @param fix_main_target The target to add the created check target as a
+# dependency of. Helpful to be able to run clang-format checks on all targets
+# of the CMake build.
+function(__ade_clang_format_fix_target
+	tgt
+	format_fix_tgt
+	command_or_empty
+	fix_main_target)
+  if(TARGET "${format_fix_tgt}")
+	message(FATAL_ERROR
+	  "Cannot create fix target \"${format_fix_tgt}\" for clang-format: A "
+	  "target with the same name already exists. Use the "
+	  "POSTFIX keyword of ade_clang_format_targets() to specify a different "
+	  "target.")
+  endif()
+
+  get_target_property(tgt_sources "${tgt}" SOURCES)
+  get_target_property(tgt_source_dir "${tgt}" SOURCE_DIR)
+
+  message(VERBOSE "Creating fix target ${format_fix_tgt}.")
+  if(NOT "${tgt_sources}" STREQUAL "" AND
+	  NOT "${command_or_empty}" STREQUAL "")
+	add_custom_target("${format_fix_tgt}"
+	  COMMENT "Running clang-format fix for target ${tgt}..."
+	  WORKING_DIRECTORY "${tgt_source_dir}"
+	  COMMAND ${command_or_empty} -i ${tgt_sources})
+  elseif("${tgt_sources}" STREQUAL "")
+	# This case has to be handled separately, since running clang-format with
+	# no sources causes clang-format to take the source through stdin.
+	add_custom_target("${format_fix_tgt}"
+	  WORKING_DIRECTORY "${tgt_source_dir}"
+	  COMMAND echo "Not running clang-format fix for target ${tgt}: No sources")
+  else()
+	# If no command is specified, then this target should do nothing, for the
+	# same reasons as above.
+	add_custom_target("${format_fix_tgt}"
+	  WORKING_DIRECTORY "${tgt_source_dir}"
+	  COMMAND echo "Not running clang-format fix for target ${tgt}: No command specified.")
+  endif()
+
+  if(NOT TARGET "${fix_main_target}")
+	add_custom_target("${fix_main_target}"
+	  COMMENT "Running clang-format fix sub-targets."
+	  WORKING_DIRECTORY "${tgt_source_dir}")
+	message(VERBOSE "Creating main fix target ${fix_main_target} and adding ${format_fix_tgt} as a dependency.")
+  else()
+	message(VERBOSE "Adding ${format_fix_tgt} as a dependency of ${fix_main_target}.")
+  endif()
+  add_dependencies("${fix_main_target}" "${format_fix_tgt}")
 endfunction()
 
 function(ade_clang_format_targets)
@@ -135,11 +218,11 @@ function(ade_clang_format_targets)
   cmake_parse_arguments(
 	parsed                # Magic var prefix
 
-	""                    # Options
+	"TARGET_NO_DEPENDS"      # Options
 
 	# Here we want an actual single argument containing semicolons, since this
 	# is what cmake_parse_arguments() expects as this argument.
-	"MAIN_TARGET;POSTFIX" # Single-value keywords
+	"FIX_MAIN_TARGET;FIX_POSTFIX;CHECK_MAIN_TARGET;CHECK_POSTFIX" # Single-value keywords
 
 	# Same here
 	"TARGETS;COMMAND"     # Multi-value keywords
@@ -158,8 +241,38 @@ function(ade_clang_format_targets)
 	message(FATAL_ERROR "TARGETS keyword missing.")
   endif()
 
-  if(NOT DEFINED parsed_POSTFIX)
-	message(FATAL_ERROR "POSTFIX keyword missing.")
+  if(parsed_TARGET_NO_DEPENDS OR DEFINED ADE_TARGET_NO_DEPENDS)
+	set(TARGET_DEPENDS OFF)
+  else()
+	set(TARGET_DEPENDS ON)
+  endif()
+
+  if(DEFINED parsed_CHECK_POSTFIX)
+	set(CHECK_POSTFIX "${parsed_FIX_POSTFIX}")
+  else()
+	set(CHECK_POSTFIX "-formatcheck")
+  endif()
+
+  if(DEFINED parsed_CHECK_MAIN_TARGET)
+	set(CHECK_MAIN_TARGET ${parsed_CHECK_MAIN_TARGET})
+  elseif(DEFINED ADE_CLANG_FORMAT_MAIN_TARGET)
+	set(CHECK_MAIN_TARGET ${ADE_CLANG_FORMAT_MAIN_TARGET})
+  else()
+	set(CHECK_MAIN_TARGET formatcheck)
+  endif()
+
+  if(DEFINED parsed_FIX_POSTFIX)
+	set(FIX_POSTFIX "${parsed_FIX_POSTFIX}")
+  else()
+	set(FIX_POSTFIX "-formatfix")
+  endif()
+
+  if(DEFINED parsed_FIX_MAIN_TARGET)
+	set(FIX_MAIN_TARGET ${parsed_FIX_MAIN_TARGET})
+  elseif(DEFINED ADE_CLANG_FORMAT_MAIN_TARGET)
+	set(FIX_MAIN_TARGET ${ADE_CLANG_FORMAT_MAIN_TARGET})
+  else()
+	set(FIX_MAIN_TARGET formatfix)
   endif()
 
   if(DEFINED parsed_COMMAND)
@@ -175,22 +288,26 @@ function(ade_clang_format_targets)
 	set(COMMAND_OR_EMPTY)
   endif()
 
-  if(DEFINED parsed_MAIN_TARGET)
-	set(MAIN_TARGET ${parsed_MAIN_TARGET})
-  elseif(DEFINED ADE_CLANG_FORMAT_MAIN_TARGET)
-	set(MAIN_TARGET ${ADE_CLANG_FORMAT_MAIN_TARGET})
-  else()
-	set(MAIN_TARGET clang-format)
-  endif()
-
   foreach(tgt IN LISTS parsed_TARGETS)
-	set(clang_format_tgt "${tgt}-${parsed_POSTFIX}")
+	set(format_check_tgt "${tgt}${CHECK_POSTFIX}")
+	set(format_fix_tgt "${tgt}${FIX_POSTFIX}")
 
-	__ade_clang_format_target(
+	if(NOT TARGET "${tgt}")
+	  message(FATAL_ERROR "Target \"${tgt}\" does not exist")
+	endif()
+
+	__ade_clang_format_check_target(
 	  "${tgt}"
-	  "${clang_format_tgt}"
+	  "${format_check_tgt}"
 	  "${COMMAND_OR_EMPTY}"
-	  "${MAIN_TARGET}")
+	  "${CHECK_MAIN_TARGET}"
+	  "${TARGET_DEPENDS}")
+
+	__ade_clang_format_fix_target(
+	  "${tgt}"
+	  "${format_fix_tgt}"
+	  "${COMMAND_OR_EMPTY}"
+	  "${FIX_MAIN_TARGET}")
   endforeach()
 endfunction()
 

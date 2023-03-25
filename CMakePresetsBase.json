@@ -29,6 +29,10 @@
 				"ADE_CLANG_FORMAT": {
 					"type": "STRING",
 					"value": "clang-format;--style=file:${sourceDir}/../.clang-format"
+				},
+				"CMAKE_MESSAGE_LOG_LEVEL": {
+					"type": "STRING",
+					"value": "VERBOSE"
 				}
 			}
 		},

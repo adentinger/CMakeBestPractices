@@ -122,6 +122,20 @@ jobs:
         # 'git submodule update --init --recursive')
         submodules: recursive
 
+    - name: clang-format check on prj1
+      if: matrix.has-analysis
+      uses: jidicula/clang-format-action@f62da5e3d3a2d88ff364771d9d938773a618ab5e
+      with:
+        clang-format-version: 15
+        check-path: prj1
+
+    - name: clang-format check on prj2
+      if: matrix.has-analysis
+      uses: jidicula/clang-format-action@f62da5e3d3a2d88ff364771d9d938773a618ab5e
+      with:
+        clang-format-version: 15
+        check-path: prj2
+
     - name: Build and run
       working-directory: ${{github.workspace}}/repo
       run: |
