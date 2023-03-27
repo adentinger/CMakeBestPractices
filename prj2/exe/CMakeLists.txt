@@ -116,7 +116,7 @@ set_target_properties(exe
   PROPERTIES
   INSTALL_RPATH "${EXE_INSTALL_RPATH}")
 
-find_package(AdeClangFormat 3.0 CONFIG REQUIRED)
+find_package(AdeClangFormat 1.0 CONFIG REQUIRED)
 ade_clang_format_targets(TARGETS
   exe
   exe__objlib_internal)
