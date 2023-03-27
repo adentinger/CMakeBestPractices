@@ -3,7 +3,7 @@
 cmake_minimum_required(VERSION 3.25)
 
 project(AdeClangFormat
-  VERSION 3.0
+  VERSION 1.0
   LANGUAGES NONE
   DESCRIPTION "Simple clang-format integration into CMake."
   HOMEPAGE_URL "https://github.com/AnthonyD973/CMakeBestPracticesTests")

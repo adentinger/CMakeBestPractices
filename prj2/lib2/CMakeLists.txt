@@ -54,7 +54,7 @@ find_package(prj1 1.0 REQUIRED CONFIG)
 target_link_libraries(lib2__objlib_internal
   PUBLIC prj1::lib1)
 
-find_package(AdeClangFormat 3.0 CONFIG REQUIRED)
+find_package(AdeClangFormat 1.0 CONFIG REQUIRED)
 ade_clang_format_targets(TARGETS
   lib2
   lib2__objlib_internal)
