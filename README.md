@@ -2,7 +2,7 @@
 
 CMake project that leverages "modern CMake" to produce a build system and dev environement that would be suitable for a fairly scalable open-source or closed-source project.
 
-This is based off of resources such as these (in order of importance):
+This is based off of resources such as these (in decreasing order of importance):
 - [C++Now 2017 - "Effective CMake"](https://youtu.be/bsXLMQ6WgIk)
 - [CppCon 2018 - "Don't Package Your Libraries, Write Packagable Libraries! (Part 1)"](https://youtu.be/sBP17HQAQjk)
 - [CppCon 2019 - "Don't Package Your Libraries, Write Packagable Libraries! (Part 2)"](https://youtu.be/_5weX5mx8hc)
