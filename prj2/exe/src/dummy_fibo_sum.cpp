@@ -18,5 +18,4 @@ dummy_fibo_sum_value dummy_fibo_sum() {
 	return ret;
 }
 
-} // namespace exe
-
+}  // namespace exe

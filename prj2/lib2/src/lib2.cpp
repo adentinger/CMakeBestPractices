@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
 
-#include <inttypes.h>  // NOLINT Just "uint<N>_t"
-
 #include <algorithm>
+#include <inttypes.h>  // NOLINT Just "uint<N>_t"
 #include <iostream>
 #include <numeric>
 #include <vector>
 
 #include "lib1/hdr.h"
+
 #include "lib2/hdr.h"
 
 #if !defined(LIB1_MACRO) || LIB1_MACRO != 42
