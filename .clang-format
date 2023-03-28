@@ -24,8 +24,8 @@ AccessModifierOffset: -4
 # realize that a tad more is also fine.
 ColumnLimit: 80
 
-# Last line of file should be empty.
-InsertNewlineAtEOF: true
+# Last line of file should not be empty.
+InsertNewlineAtEOF: false
 
 # "int& foo", not "int &foo"
 DerivePointerAlignment: false
@@ -65,6 +65,30 @@ IntegerLiteralSeparator:
   Binary: 8
   Decimal: 3
   Hex: 8
+
+# Braces similar to Stroustrup style, but don't break after function
+# definitions.
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterCaseLabel:      false
+  AfterClass:          false
+  AfterControlStatement: Never
+  AfterEnum:           false
+  AfterFunction:       false
+  AfterNamespace:      false
+  AfterStruct:         false
+  AfterUnion:          false
+  AfterExternBlock:    false
+  BeforeCatch:         true
+  BeforeElse:          true
+  BeforeLambdaBody:    false
+  # Applies to do-while loops.
+  BeforeWhile:         false
+  IndentBraces:        false
+  SplitEmptyFunction:  false
+  SplitEmptyRecord:    false
+  # Namespaces should generally not be empty, so if they are break the body.
+  SplitEmptyNamespace: true
 
 # Class inheritance bases are one per line, with any comma being aligned with
 # the colon of the first base.
