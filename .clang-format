@@ -4,6 +4,9 @@
 
 BasedOnStyle: Google
 
+# The C++ standard version to consider
+Standard: c++17
+
 IndentWidth: 4
 
 # Every developer's heated debate question! I prefer spaces, but work uses
