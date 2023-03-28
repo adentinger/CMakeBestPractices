@@ -24,9 +24,6 @@ AccessModifierOffset: -4
 # realize that a tad more is also fine.
 ColumnLimit: 80
 
-# Last line of file should not be empty.
-InsertNewlineAtEOF: false
-
 # "int& foo", not "int &foo"
 DerivePointerAlignment: false
 PointerAlignment: Left
