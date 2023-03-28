@@ -40,7 +40,9 @@ add_library(exe__objlib_internal OBJECT ${CXX_SOURCES})
 # See comments of exe below. We're going to have to export the object library
 # anyway, so let's create an alias for it too.
 add_library(prj2::exe__objlib_internal ALIAS exe__objlib_internal)
-set_target_properties(exe__objlib_internal PROPERTIES LINKER_LANGUAGE CXX)
+set_target_properties(exe__objlib_internal
+  PROPERTIES
+    LINKER_LANGUAGE CXX)
 
 # If we want to write tests for the sources that make up the executable, we
 # need to put the executable's sources inside a library as explained above.
@@ -62,10 +64,14 @@ add_executable(exe main.cpp)
 target_link_libraries(exe PUBLIC exe__objlib_internal)
 target_link_libraries(exe__objlib_internal PUBLIC prj2::lib2)
 
+set_target_properties(exe
+  PROPERTIES
+    CXX_STANDARD 17
+    CXX_STANDARD_REQUIRED ON)
 set_target_properties(exe__objlib_internal
   PROPERTIES
-  CXX_STANDARD 17
-  CXX_STANDARD_REQUIRED ON)
+    CXX_STANDARD 17
+    CXX_STANDARD_REQUIRED ON)
 
 target_sources(exe__objlib_internal
   PUBLIC
