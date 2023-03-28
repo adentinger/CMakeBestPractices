@@ -21,8 +21,8 @@ AccessModifierOffset: -4
 # realize that a tad more is also fine.
 ColumnLimit: 80
 
-# Requires clang-format 16, which isn't out yet...
-# InsertNewlineAtEOF: true
+# Last line of file should be empty.
+InsertNewlineAtEOF: true
 
 # "int& foo", not "int &foo"
 DerivePointerAlignment: false
@@ -56,11 +56,12 @@ FixNamespaceComments: true
 # Name says what this is...
 KeepEmptyLinesAtTheStartOfBlocks: false
 
-# Requires clang-format 16, which isn't out yet...
-# IntegerLiteralSeparator:
-#   Binary: 8
-#   Decimal: 3
-#   Hex: 4
+# Adds quote separators to integer literals. This is only valid starting in
+# C++14.
+IntegerLiteralSeparator:
+  Binary: 8
+  Decimal: 3
+  Hex: 8
 
 # Class inheritance bases are one per line, with any comma being aligned with
 # the colon of the first base.
