@@ -220,7 +220,7 @@ function(ade_clang_format_targets)
 
 	# Here we want an actual single argument containing semicolons, since this
 	# is what cmake_parse_arguments() expects as this argument.
-	"BUILD_DEPENDS;BUILD_NO_DEPENDS" # Options
+	"BUILD_DEPENDS;NO_BUILD_DEPENDS" # Options
 
 	# Same here
 	"FIX_MAIN_TARGET;FIX_POSTFIX;CHECK_MAIN_TARGET;CHECK_POSTFIX" # Single-value keywords
@@ -242,13 +242,13 @@ function(ade_clang_format_targets)
 	message(FATAL_ERROR "TARGETS keyword missing.")
   endif()
 
-  # Parse & sanitize BUILD_DEPENDS and BUILD_NO_DEPENDS
-  if(parsed_BUILD_NO_DEPENDS OR parsed_BUILD_DEPENDS)
-	if(parsed_BUILD_NO_DEPENDS AND parsed_BUILD_DEPENDS)
+  # Parse & sanitize BUILD_DEPENDS and NO_BUILD_DEPENDS
+  if(parsed_NO_BUILD_DEPENDS OR parsed_BUILD_DEPENDS)
+	if(parsed_NO_BUILD_DEPENDS AND parsed_BUILD_DEPENDS)
 	  message(FATAL_ERROR
-		"Both BUILD_DEPENDS and BUILD_NO_DEPENDS were specified to ade_clang_format_targets().")
+		"Both BUILD_DEPENDS and NO_BUILD_DEPENDS were specified to ade_clang_format_targets().")
 	endif()
-	if(parsed_BUILD_NO_DEPENDS)
+	if(parsed_NO_BUILD_DEPENDS)
 	  set(BUILD_DEPENDS OFF)
 	else()
 	  set(BUILD_DEPENDS ON)
