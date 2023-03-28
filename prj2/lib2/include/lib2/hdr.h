@@ -3,7 +3,7 @@
 #ifndef LIB2_HDR_H
 #define LIB2_HDR_H
 
-#include <inttypes.h> // NOLINT(modernize-deprecated-headers) Just "uint<N>_t"
+#include <inttypes.h>  // NOLINT Just "uint<N>_t"
 
 #include "lib2/defines.h"
 
