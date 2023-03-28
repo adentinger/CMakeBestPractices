@@ -23,6 +23,12 @@ enable_testing()
 # https://youtu.be/bsXLMQ6WgIk?t=2809
 set(CMAKE_DEBUG_POSTFIX -d)
 
+# Always good to specify a default, even if we're going to set these properties
+# on all targets. Not all compilers have the same default C++ version, and we
+# obviously want to avoid discrepancies as much as possible.
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 file(GLOB_RECURSE CXX_SOURCES CONFIGURE_DEPENDS
   "src/*.cpp")
 file(GLOB_RECURSE CXX_HEADERS_PUBLIC CONFIGURE_DEPENDS
@@ -82,10 +88,14 @@ ade_clang_format_targets(TARGETS
   lib1
   lib1__objlib_internal)
 
+set_target_properties(lib1
+  PROPERTIES
+    CXX_STANDARD 17
+    CXX_STANDARD_REQUIRED ON)
 set_target_properties(lib1__objlib_internal
   PROPERTIES
-  CXX_STANDARD 17
-  CXX_STANDARD_REQUIRED ON)
+    CXX_STANDARD 17
+    CXX_STANDARD_REQUIRED ON)
 
 # The object library's type is obviously OBJECT_LIBRARY, never SHARED_LIBRARY,
 # so checking whether the final library is built as a static or a shared
