@@ -296,8 +296,8 @@ function(ade_clang_format_targets)
   else()
 	message(VERBOSE
 	  "ade_clang_format_targets(): COMMAND keyword missing and "
-	  "ADE_CLANG_FORMAT is undefined; clang-format will not be run on "
-	  "specified target(s) \"${parsed_TARGETS}\".")
+	  "ADE_CLANG_FORMAT is undefined; created clang-format targets will be a "
+	  "no-op.")
 
 	set(COMMAND_OR_EMPTY)
   endif()
