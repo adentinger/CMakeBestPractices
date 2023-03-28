@@ -61,10 +61,13 @@ KeepEmptyLinesAtTheStartOfBlocks: false
 
 # Adds quote separators to integer literals. This is only valid starting in
 # C++14.
-IntegerLiteralSeparator:
-  Binary: 8
-  Decimal: 3
-  Hex: 8
+# Not adding this at the moment because it causes AppleClang errors:
+# https://developer.apple.com/forums/thread/727253
+#
+# IntegerLiteralSeparator:
+#   Binary: 8
+#   Decimal: 3
+#   Hex: 8
 
 # Braces similar to Stroustrup style, but don't break after function
 # definitions.
