@@ -37,7 +37,9 @@ add_library(lib2__objlib_internal OBJECT ${CXX_SOURCES})
 # See comments of lib2 below. We're going to have to export the object library
 # anyway, so let's create an alias for it too.
 add_library(prj2::lib2__objlib_internal ALIAS lib2__objlib_internal)
-set_target_properties(lib2__objlib_internal PROPERTIES LINKER_LANGUAGE CXX)
+set_target_properties(lib2__objlib_internal
+  PROPERTIES
+    LINKER_LANGUAGE CXX)
 
 add_library(lib2 extra/cpp/dummy.cpp)
 # Libraries built outside *this* CMake build (aka "external dependencies") will
@@ -59,10 +61,14 @@ ade_clang_format_targets(TARGETS
   lib2
   lib2__objlib_internal)
 
+set_target_properties(lib2
+  PROPERTIES
+    CXX_STANDARD 17
+    CXX_STANDARD_REQUIRED ON)
 set_target_properties(lib2__objlib_internal
   PROPERTIES
-  CXX_STANDARD 17
-  CXX_STANDARD_REQUIRED ON)
+    CXX_STANDARD 17
+    CXX_STANDARD_REQUIRED ON)
 
 # The object library's type is obviously OBJECT_LIBRARY, never SHARED_LIBRARY,
 # so checking whether the final library is built as a static or a shared

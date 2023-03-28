@@ -21,6 +21,10 @@ target_sources(lib2_test
 	TYPE HEADERS
 	BASE_DIRS src
 	FILES ${CXX_HEADERS_PRIVATE})
+set_target_properties(lib2_test
+  PROPERTIES
+    CXX_STANDARD 17
+    CXX_STANDARD_REQUIRED ON)
 
 find_package(AdeClangFormat 1.0 CONFIG REQUIRED)
 ade_clang_format_targets(TARGETS lib2_test)

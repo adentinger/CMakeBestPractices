@@ -23,6 +23,12 @@ enable_testing()
 # https://youtu.be/bsXLMQ6WgIk?t=2809
 set(CMAKE_DEBUG_POSTFIX -d)
 
+# Always good to specify a default, even if we're going to set these properties
+# on all targets. Not all compilers have the same default C++ version, and we
+# obviously want to avoid discrepancies as much as possible.
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 add_subdirectory(lib2)
 add_subdirectory(exe)
 
