@@ -22,6 +22,9 @@ target_sources(lib2_test
 	BASE_DIRS src
 	FILES ${CXX_HEADERS_PRIVATE})
 
+find_package(AdeClangFormat 1.0 CONFIG REQUIRED)
+ade_clang_format_targets(TARGETS lib2_test)
+
 find_package(GTest CONFIG REQUIRED)
 target_link_libraries(lib2_test
   # PUBLIC vs PRIVATE vs INTERFACE doesn't really matter for an executable
