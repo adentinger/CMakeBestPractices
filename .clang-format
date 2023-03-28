@@ -87,7 +87,29 @@ AlignEscapedNewlines: Right
 # "IncludeCategories" defines the #include categories.
 IncludeBlocks: Regroup
 IncludeCategories:
-  # Nothing
+  - Regex: '^["<]lib1/'
+    Priority: 3000
+  - Regex: '^["<]lib2/'
+    Priority: 4000
+  - Regex: '^["<]exe/'
+    Priority: 5000
+  # For the Guideline Support Library:
+  # https://github.com/microsoft/GSL
+  - Regex: '^["<]gsl/'
+    Priority: 1000
+  - Regex: '^["<]gtest/'
+    Priority: 1100
+  - Regex: '^["<]gmock/'
+    Priority: 1200
+  # Headers included with angle brackets and which are not matched above should
+  # be first after the main header because these tend to be system headers.
+  - Regex: '^<'
+    Priority: 100
+  # Headers included with double quotes and which are not matched above should
+  # be first after the main header to keep them close to the headers of the
+  # preceding rule.
+  - Regex: '^"'
+    Priority: 101
 SortIncludes: CaseSensitive
 
 # Regex defining comments that should not be changed (e.g. moved to separate

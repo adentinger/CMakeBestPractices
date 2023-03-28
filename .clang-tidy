@@ -51,7 +51,7 @@ WarningsAsErrors: "*"
 # Headers to report linting error on. Since we specify a custom header filter,
 # the linting errors may be reported multiple times if the header is included
 # from multiple .cpp files.
-HeaderFilterRegex: "^lib(1|2)/.*\\.h$"
+HeaderFilterRegex: "^(exe|lib(1|2))/.*\\.(h|hpp|hxx)$"
 
 CheckOptions:
   - { key: readability-identifier-naming.NamespaceCase,                 value: lower_case }
