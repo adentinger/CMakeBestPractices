@@ -3,7 +3,7 @@
 #ifndef EXE_DUMMYFOOSUM_HPP_
 #define EXE_DUMMYFOOSUM_HPP_
 
-#include <inttypes.h> // NOLINT(modernize-deprecated-headers) Just "uint<N>_t"
+#include <inttypes.h>  // NOLINT Just "uint<N>_t"
 
 namespace exe {
 
