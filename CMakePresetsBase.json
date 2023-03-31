@@ -30,6 +30,10 @@
 					"type": "STRING",
 					"value": "clang-format;--style=file:${sourceDir}/../.clang-format"
 				},
+				"ADE_CLANG_FORMAT_BUILD_DEPENDS": {
+					"type": "BOOL",
+					"value": "ON"
+				},
 				"CMAKE_MESSAGE_LOG_LEVEL": {
 					"type": "STRING",
 					"value": "VERBOSE"

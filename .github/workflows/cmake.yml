@@ -224,9 +224,9 @@ jobs:
     - name: AdeClangFormat/Workflow
       working-directory: ${{github.workspace}}/repo/AdeClangFormat
       run: |
-        $env:CMAKE_BUILD_TYPE="Release" &&                                    `
-        cmake --preset default &&                                             `
-        cmake --build build --config Release -j10 &&                          `
+        $env:CMAKE_BUILD_TYPE="Release" &&                                           `
+        cmake -S . -B build --install-prefix "${{github.workspace}}/repo/install" && `
+        cmake --build build --config Release -j10 &&                                 `
         ctest --test-dir build --build-config Release -j10
 
     - name: AdeClangFormat/CPack
@@ -325,9 +325,9 @@ jobs:
     - name: AdeClangFormat/Workflow
       working-directory: ${{github.workspace}}/repo/AdeClangFormat
       run: |
-        $env:CMAKE_BUILD_TYPE="Release" &&                                    `
-        cmake --preset default &&                                             `
-        cmake --build build --config Release -j10 &&                          `
+        $env:CMAKE_BUILD_TYPE="Release" &&                                           `
+        cmake -S . -B build --install-prefix "${{github.workspace}}/repo/install" && `
+        cmake --build build --config Release -j10 &&                                 `
         ctest --test-dir build --build-config Release -j10
 
     - name: AdeClangFormat/CPack
