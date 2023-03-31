@@ -112,7 +112,6 @@ set_environment() {
 	# The output of AdeClangFormat is the same regardless of the preset and
 	# config/build-type, so just always pick the same one.
 	ADECLANGFORMAT_CONFIG=Release
-	ADECLANGFORMAT_CONFIGURE_PRESET=default
 	if [ -z "${PRJ1_CONFIG+x}" ]; then
 		echo PRJ1_CONFIG not defined, defaulting to \"Release\"
 		PRJ1_CONFIG=Release
