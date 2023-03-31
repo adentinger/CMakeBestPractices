@@ -25,7 +25,7 @@ clean
 big_message "AdeClangFormat build"
 run_or_print cd "${SOURCE_ROOT_DIR}"/AdeClangFormat
 run_or_print export CMAKE_BUILD_TYPE="${ADECLANGFORMAT_CONFIG}"
-run_or_print "${CMAKE_CMD}" --preset "${ADECLANGFORMAT_CONFIGURE_PRESET}"
+run_or_print "${CMAKE_CMD}" -S . -B build --install-prefix "${SOURCE_ROOT_DIR}/install"
 run_or_print "${CMAKE_CMD}" --build build --config "${ADECLANGFORMAT_CONFIG}" -j10
 run_or_print "${CTEST_CMD}" --test-dir build --build-config "${ADECLANGFORMAT_CONFIG}" -j10
 run_or_print "${CMAKE_CMD}" --install build --config "${ADECLANGFORMAT_CONFIG}"
