@@ -1,4 +1,4 @@
-# CMake Best Practices Tests
+# CMake Dev/CI/CD environment
 
 CMake project that leverages "modern CMake" to produce a build system and dev environement that would be suitable for a fairly scalable open-source or closed-source project.
 
