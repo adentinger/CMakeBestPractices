@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "lib1/hdr.h"
+#include "lib1/private/private-header.hpp"
 
 namespace lib1 {
 

@@ -9,6 +9,7 @@
 #include "lib1/hdr.h"
 
 #include "lib2/hdr.h"
+#include "lib2/private/private-header.hpp"
 
 #if !defined(LIB1_MACRO) || LIB1_MACRO != 42
 #	error "!defined(LIB1_MACRO)"
