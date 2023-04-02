@@ -75,8 +75,6 @@ The environment follows an opinionated source tree hierarchy. The sources of bot
 ```
 <lib or exe name>
 ├── CMakeLists.txt  # Main CMakeLists.txt for the library/executable
-├── cmake
-│   └── <lib name>.cmake.in  # The config-file package source of the library
 ├── include
 │   └── <lib name>
 │       └── <public headers>  # Headers needed to build the library and needed
