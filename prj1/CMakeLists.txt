@@ -69,11 +69,12 @@ add_library(prj1::lib1__objlib_internal ALIAS lib1__objlib_internal)
 set_target_properties(lib1__objlib_internal PROPERTIES LINKER_LANGUAGE CXX)
 
 add_library(lib1 extra/cpp/dummy.cpp)
-# Libraries built outside *this* CMake build (aka "external dependencies") will
-# link against this one prepended with the "prj1::" namespace. In order for
-# libraries built inside *this* CMake build (aka "internal dependencies") to
-# have their dependencies look exactly the same as external dependencies, let's
-# create an alias target that looks exactly like the external target.
+# Libraries/exes built outside *this* CMake build (aka "external dependencies")
+# will link against this one prepended with the "prj1::" namespace. In order
+# for libraries/exes built inside *this* CMake build (aka "internal
+# dependencies") to have their dependencies look exactly the same as external
+# dependencies, let's create an alias target that looks exactly like the
+# external target.
 #
 # https://youtu.be/bsXLMQ6WgIk?t=3124
 #
@@ -170,12 +171,23 @@ target_sources(lib1__objlib_internal
     BASE_DIRS src
     FILES ${CXX_HEADERS_PRIVATE})
 
-set(PACKAGE_CMAKE_SCRIPTS_DIR lib/cmake/prj1)
-
 install(TARGETS lib1 lib1__objlib_internal
   EXPORT prj1Targets
   FILE_SET public_headers
+  COMPONENT lib1
   DESTINATION include)
+
+set(PACKAGE_CMAKE_SCRIPTS_DIR lib/cmake/prj1)
+# Creation/installation of the CMake targets description script, which
+# propagates to library/executable consumers the needed dependency
+# and meta information on these targets (include dirs to add,
+# flags to compile with, other libraries that are depended on, target
+# properties, ...).
+#
+# Note that we must do this in the top-level CMakeLists.txt, because we can
+# only specify install(EXPORT) once per CMake targets description script, and
+# in our case we've decided to have a single such script containing the
+# description of all installed targets.
 install(EXPORT prj1Targets
   # Why to have "::" is described here:
   # https://youtu.be/bsXLMQ6WgIk?t=1578

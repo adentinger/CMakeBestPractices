@@ -32,6 +32,54 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_subdirectory(lib2)
 add_subdirectory(exe)
 
+set(PACKAGE_CMAKE_SCRIPTS_DIR lib/cmake/prj2)
+# Creation/installation of the CMake targets description script, which
+# propagates to library/executable consumers the needed dependency
+# and meta information on these targets (include dirs to add,
+# flags to compile with, other libraries that are depended on, target
+# properties, ...).
+#
+# Note that we must do this in the top-level CMakeLists.txt, because we can
+# only specify install(EXPORT) once per CMake targets description script, and
+# in our case we've decided to have a single such script containing the
+# description of all installed targets.
+install(EXPORT prj2Targets
+  # Why to have "::" is described here:
+  # https://youtu.be/bsXLMQ6WgIk?t=1578
+  NAMESPACE prj2::
+  DESTINATION "${PACKAGE_CMAKE_SCRIPTS_DIR}")
+
+set(EXPORT_FILE "${PACKAGE_CMAKE_SCRIPTS_DIR}/prj2Targets.cmake")
+
+include(CMakePackageConfigHelpers)
+configure_package_config_file(cmake/prj2Config.cmake.in
+  "${CMAKE_CURRENT_BINARY_DIR}/prj2Config.cmake"
+  INSTALL_DESTINATION "${PACKAGE_CMAKE_SCRIPTS_DIR}"
+  PATH_VARS EXPORT_FILE)
+# Write a CMake script containing the version information & checking for
+# this project. This is used in the find_package() call of the project that
+# uses this package to do version checking:
+# https://cmake.org/cmake/help/latest/command/find_package.html#config-mode-version-selection
+write_basic_package_version_file(prj2ConfigVersion.cmake
+  VERSION ${PROJECT_VERSION}
+  # Define the version compatibility checking policy.
+  #
+  # Obviously, in a project this should be decided once and ideally only
+  # once, since changing this policy (or at least, making it less restrictive
+  # than it has once been) would otherwise be a compatibility break in the very
+  # thing that checks compatibility. Breaking compatibility of this policy is
+  # something, we suppose, could only be possible when introducing an extra
+  # level of indirection that provides the consistency, such as a package
+  # manager that already knows about newer versions of the package even if that
+  # newer version is not the one installed, or a "version-checking server" of
+  # some kind that would do this same thing.
+  COMPATIBILITY SameMinorVersion)
+
+install(FILES
+  "${CMAKE_CURRENT_BINARY_DIR}/prj2ConfigVersion.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/prj2Config.cmake"
+  DESTINATION "${PACKAGE_CMAKE_SCRIPTS_DIR}")
+
 # Needed by WIX .msi installers. This is not a special CMake variable; it is
 # used below.
 set(CPACK_PROJECT_GUID "e39da514-9a5b-438f-b2fc-49a3872018e8")
