@@ -46,18 +46,15 @@ target_link_libraries(exe_test
 # The executable needs to have any DLLs in its directory in order to run, so
 # copy them. Note that this copies them to the *binary directory*, not the
 # final installation.
-#
-# TODO The GitHub actions don't have CMake 3.26 yet, which would allow the
-# command 'cmake -E copy -t <dir> <files>...' that supports the '<files>...'
-# being empty (such as on non-Win32).
-if (WIN32)
-  add_custom_command(
-	TARGET exe_test POST_BUILD
-	COMMAND ${CMAKE_COMMAND} -E copy
-      $<TARGET_RUNTIME_DLLS:exe_test> $<TARGET_FILE_DIR:exe_test>
-	COMMAND_EXPAND_LISTS
-  )
-endif()
+add_custom_command(
+  TARGET exe_test POST_BUILD
+  # Using the CMake 3.26 'copy -t', which supports copying no files. It was
+  # added specifically to support copying DLLs:
+  # https://gitlab.kitware.com/cmake/cmake/-/issues/23543
+  COMMAND ${CMAKE_COMMAND} -E copy -t
+    $<TARGET_FILE_DIR:exe_test> $<TARGET_RUNTIME_DLLS:exe_test>
+  COMMAND_EXPAND_LISTS
+)
 
 include(GoogleTest)
 # Creates a task that will query the test executable (<exe> --gtest_list_tests)
