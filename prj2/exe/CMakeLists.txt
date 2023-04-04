@@ -61,6 +61,15 @@ set_target_properties(exe__objlib_internal
 # get installed, which wouldn't necessarily be detected right away until a user
 # complains about it.
 add_executable(exe main.cpp)
+# Libraries/exes built outside *this* CMake build (aka "external dependencies")
+# will link against this one prepended with the "prj2::" namespace. In order
+# for libraries/exes built inside *this* CMake build (aka "internal
+# dependencies") to have their dependencies look exactly the same as external
+# dependencies, let's create an alias target that looks exactly like the
+# external target.
+#
+# https://youtu.be/bsXLMQ6WgIk?t=3124
+add_executable(prj2::exe ALIAS exe)
 target_link_libraries(exe PUBLIC exe__objlib_internal)
 target_link_libraries(exe__objlib_internal PUBLIC prj2::lib2)
 
@@ -127,9 +136,6 @@ ade_clang_format_targets(TARGETS
   exe
   exe__objlib_internal)
 
-install(TARGETS exe
-  DESTINATION bin)
-
 # Providing a CACHE option for this, since this is a nice convenience that
 # some users might want.
 #
@@ -154,6 +160,12 @@ if (exe_INSTALL_DEPENDANT_DLLS)
   install(FILES $<TARGET_RUNTIME_DLLS:exe>
 	DESTINATION bin)
 endif()
+
+install(TARGETS exe
+  EXPORT prj2Targets
+  # https://youtu.be/IZXNsim9TWI?t=2475
+  COMPONENT exe
+  DESTINATION bin)
 
 add_subdirectory(test)
 

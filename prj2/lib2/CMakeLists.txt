@@ -42,11 +42,12 @@ set_target_properties(lib2__objlib_internal
     LINKER_LANGUAGE CXX)
 
 add_library(lib2 extra/cpp/dummy.cpp)
-# Libraries built outside *this* CMake build (aka "external dependencies") will
-# link against this one prepended with the "prj2::" namespace. In order for
-# libraries built inside *this* CMake build (aka "internal dependencies") to
-# have their dependencies look exactly the same as external dependencies, let's
-# create an alias target that looks exactly like the external target.
+# Libraries/exes built outside *this* CMake build (aka "external dependencies")
+# will link against this one prepended with the "prj2::" namespace. In order
+# for libraries/exes built inside *this* CMake build (aka "internal
+# dependencies") to have their dependencies look exactly the same as external
+# dependencies, let's create an alias target that looks exactly like the
+# external target.
 #
 # https://youtu.be/bsXLMQ6WgIk?t=3124
 add_library(prj2::lib2 ALIAS lib2)
@@ -179,48 +180,12 @@ set_target_properties(lib2
   PROPERTIES
   INSTALL_RPATH "${LIB2_INSTALL_RPATH}")
 
-set(PACKAGE_CMAKE_SCRIPTS_DIR lib/cmake/prj2)
-
 install(TARGETS lib2 lib2__objlib_internal
   EXPORT prj2Targets
   FILE_SET public_headers
+  # https://youtu.be/IZXNsim9TWI?t=2475
+  COMPONENT lib2
   DESTINATION include)
-install(EXPORT prj2Targets
-  # Why to have "::" is described here:
-  # https://youtu.be/bsXLMQ6WgIk?t=1578
-  NAMESPACE prj2::
-  DESTINATION "${PACKAGE_CMAKE_SCRIPTS_DIR}")
-
-set(EXPORT_FILE "${PACKAGE_CMAKE_SCRIPTS_DIR}/prj2Targets.cmake")
-
-include(CMakePackageConfigHelpers)
-configure_package_config_file(cmake/prj2Config.cmake.in
-  "${CMAKE_CURRENT_BINARY_DIR}/prj2Config.cmake"
-  INSTALL_DESTINATION "${PACKAGE_CMAKE_SCRIPTS_DIR}"
-  PATH_VARS EXPORT_FILE)
-# Write a CMake script containing the version information & checking for
-# this project. This is used in the find_package() call of the project that
-# uses this package to do version checking:
-# https://cmake.org/cmake/help/latest/command/find_package.html#config-mode-version-selection
-write_basic_package_version_file(prj2ConfigVersion.cmake
-  VERSION ${PROJECT_VERSION}
-  # Define the version compatibility checking policy.
-  #
-  # Obviously, in a project this should be decided once and ideally only
-  # once, since changing this policy (or at least, making it less restrictive
-  # than it has once been) would otherwise be a compatibility break in the very
-  # thing that checks compatibility. Breaking compatibility of this policy is
-  # something, we suppose, could only be possible when introducing an extra
-  # level of indirection that provides the consistency, such as a package
-  # manager that already knows about newer versions of the package even if that
-  # newer version is not the one installed, or a "version-checking server" of
-  # some kind that would do this same thing.
-  COMPATIBILITY SameMinorVersion)
-
-install(FILES
-  "${CMAKE_CURRENT_BINARY_DIR}/prj2ConfigVersion.cmake"
-  "${CMAKE_CURRENT_BINARY_DIR}/prj2Config.cmake"
-  DESTINATION "${PACKAGE_CMAKE_SCRIPTS_DIR}")
 
 add_subdirectory(test)
 
