@@ -348,6 +348,11 @@ jobs:
         cmake --build build --config $env:PRJ1_CONFIG -j10 &&                 `
         ctest --test-dir build --build-config $env:PRJ1_CONFIG -j10
 
+    - name: prj1/CPack
+      working-directory: ${{github.workspace}}/repo/prj1
+      run: |
+        cpack -B build -G $env:CPACK_GENERATORS --config build/CPackConfig.cmake
+
     - name: prj1/Install
       working-directory: ${{github.workspace}}/repo/prj1
       run: cmake --install build --config $env:PRJ1_CONFIG
