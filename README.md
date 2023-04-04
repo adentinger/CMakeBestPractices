@@ -23,7 +23,7 @@ sudo apt install clang-format-16 clang-tidy-16
 ```
 
 - Actual dependencies:
-    - CMake >= 3.25. If such a version is not available on your system, you can [download/install it here](https://cmake.org/download/).
+    - CMake >= 3.26. If such a version is not available on your system, you can [download/install it here](https://cmake.org/download/).
     - A generator supported by CMake (such as `ninja` or `make`).
     - (Optional) `clang-tidy` and `clang-format` version >= 16. Only needed by the `static-dev` and `shared-dev` configure presets.
 
