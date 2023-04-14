@@ -3,7 +3,9 @@ name: CMake
 
 on:
   push:
-    branches: [ "main" ]
+    # branches: [ "main" ]
+    tags:
+      - "testv*.**"
   pull_request:
     branches: [ "main" ]
 
@@ -53,16 +55,21 @@ jobs:
 
         # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstrategymatrixinclude
         include:
-          - runner-id: ubuntu-latest
-            prj1-configure-preset: static-dev
-            prj2-configure-preset: static-dev
-            has-analysis: true
-
-          # Use different CPack generators depending on the runner.
+          # Use different CPack generators depending on the runner, and a
+          # different GitHub artifact name for the artifact(s) resulting from
+          # the current job, if any.
           - runner-id: ubuntu-latest
             cpack-generators: "DEB;RPM;External;STGZ;TGZ;ZIP"
           - runner-id: macos-latest
             cpack-generators: "DragNDrop;productbuild;External;STGZ;TGZ;ZIP"
+
+          - runner-id: ubuntu-latest
+            prj1-configure-preset: static-dev
+            prj2-configure-preset: static-dev
+            has-analysis: true
+            # This should be the same value as for "runner-id: ubuntu-latest"
+            # above.
+            cpack-generators: "DEB;RPM;External;STGZ;TGZ;ZIP"
 
     env:
       # Environment variables used by CMake.
@@ -127,10 +134,41 @@ jobs:
       run: |
         ./build-and-run.sh
 
+    - name: Tar files for artifact
+      working-directory: ${{github.workspace}}/repo
+      if: |
+        github.event_name == 'push' &&
+        github.ref_type == 'tag' &&
+        (matrix.prj1-configure-preset == 'static' || matrix.prj1-configure-preset == 'static-dev') &&
+        (matrix.prj2-configure-preset == 'static' || matrix.prj2-configure-preset == 'static-dev')
+      # Unfortunately on MacOS the actions/upload-artifact action takes nearly
+      # three hours to upload directories at the moment, so tar the files and
+      # upload the tar instead:
+      # https://github.com/adentinger/CMakeBestPractices/actions/runs/4711063227/jobs/8355203404
+      #
+      # Reason for '--no-xattrs': https://stackoverflow.com/a/53190789/2252948
+      run: |
+        tar -czf release-packages-${{matrix.runner-id}}.tar.gz                \
+            --verbose --no-xattrs                                             \
+            --exclude='_CPack_Packages' prj1/packages/ prj2/packages/
+
+    - name: Upload artifacts for release
+      uses: actions/upload-artifact@v3
+      # Release is only when the workflow was triggered by pushing a tag
+      if: |
+        github.event_name == 'push' &&
+        github.ref_type == 'tag' &&
+        (matrix.prj1-configure-preset == 'static' || matrix.prj1-configure-preset == 'static-dev') &&
+        (matrix.prj2-configure-preset == 'static' || matrix.prj2-configure-preset == 'static-dev')
+      with:
+        name: release-packages-${{matrix.runner-id}}
+        path: ${{github.workspace}}/repo/release-packages-${{matrix.runner-id}}.tar.gz
+        retention-days: 7
+        if-no-files-found: error
+
 ###############################################################################
 # 'ninja-win' job
 ###############################################################################
-
   ninja-win:
     strategy:
       matrix:
@@ -229,11 +267,6 @@ jobs:
         cmake --build build --config Release -j10 &&                                 `
         ctest --test-dir build --build-config Release -j10
 
-    - name: AdeClangFormat/CPack
-      working-directory: ${{github.workspace}}/repo/AdeClangFormat
-      run: |
-        cpack -B build -G $env:CPACK_GENERATORS --config build/CPackConfig.cmake
-
     - name: AdeClangFormat/Install
       working-directory: ${{github.workspace}}/repo/AdeClangFormat
       run: |
@@ -251,7 +284,8 @@ jobs:
     - name: prj1/CPack
       working-directory: ${{github.workspace}}/repo/prj1
       run: |
-        cpack -B build -G $env:CPACK_GENERATORS --config build/CPackConfig.cmake
+        cpack -G $env:CPACK_GENERATORS -C $env:PRJ1_CONFIG `
+          --config build/CPackConfig.cmake
 
     - name: prj1/Install
       working-directory: ${{github.workspace}}/repo/prj1
@@ -270,7 +304,8 @@ jobs:
     - name: prj2/CPack
       working-directory: ${{github.workspace}}/repo/prj2
       run: |
-        cpack -B build -G $env:CPACK_GENERATORS --config build/CPackConfig.cmake
+        cpack -G $env:CPACK_GENERATORS -C $env:PRJ2_CONFIG `
+          --config build/CPackConfig.cmake
 
     - name: prj2/Install
       working-directory: ${{github.workspace}}/repo/prj2
@@ -280,6 +315,29 @@ jobs:
     - name: Run exe
       run: |
         ${{github.workspace}}/repo/install/bin/exe
+
+    - name: Upload artifacts for release
+      uses: actions/upload-artifact@v3
+      # Release is only when the workflow was triggered by pushing a tag
+      if: |
+        github.event_name == 'push' &&
+        github.ref_type == 'tag' &&
+        (matrix.prj1-configure-preset == 'static' || matrix.prj1-configure-preset == 'static-dev') &&
+        (matrix.prj2-configure-preset == 'static' || matrix.prj2-configure-preset == 'static-dev')
+      with:
+        name: release-packages-${{matrix.runner-id}}
+        # Upload of directory is slow only on MacOS but fine on Windows, so use
+        # that instead of the 'tar' command of the *nix runners. Trying
+        # to run the same 'tar' command as the *nix runners causes very
+        # strange CI errors like:
+        # "tar.exe: hocolatey\lib\maven\??????????????????????x: Couldn't visit directory: No such file or directory"
+        path: |
+          ${{github.workspace}}/repo/prj1/packages
+          ${{github.workspace}}/repo/prj2/packages
+          !${{github.workspace}}/repo/prj1/packages/_CPack_Packages
+          !${{github.workspace}}/repo/prj2/packages/_CPack_Packages
+        retention-days: 7
+        if-no-files-found: error
 
 ###############################################################################
 # 'vs' job
@@ -330,11 +388,6 @@ jobs:
         cmake --build build --config Release -j10 &&                                 `
         ctest --test-dir build --build-config Release -j10
 
-    - name: AdeClangFormat/CPack
-      working-directory: ${{github.workspace}}/repo/AdeClangFormat
-      run: |
-        cpack -B build -G $env:CPACK_GENERATORS --config build/CPackConfig.cmake
-
     - name: AdeClangFormat/Install
       working-directory: ${{github.workspace}}/repo/AdeClangFormat
       run: |
@@ -351,7 +404,8 @@ jobs:
     - name: prj1/CPack
       working-directory: ${{github.workspace}}/repo/prj1
       run: |
-        cpack -B build -G $env:CPACK_GENERATORS --config build/CPackConfig.cmake
+        cpack -G $env:CPACK_GENERATORS -C $env:PRJ1_CONFIG `
+          --config build/CPackConfig.cmake
 
     - name: prj1/Install
       working-directory: ${{github.workspace}}/repo/prj1
@@ -368,7 +422,8 @@ jobs:
     - name: prj2/CPack
       working-directory: ${{github.workspace}}/repo/prj2
       run: |
-        cpack -B build -G $env:CPACK_GENERATORS --config build/CPackConfig.cmake
+        cpack -G $env:CPACK_GENERATORS -C $env:PRJ2_CONFIG `
+          --config build/CPackConfig.cmake
 
     - name: prj2/Install
       working-directory: ${{github.workspace}}/repo/prj2
@@ -379,3 +434,61 @@ jobs:
       run: |
         ${{github.workspace}}/repo/install/bin/exe
 
+###############################################################################
+# 'release' job
+###############################################################################
+  release:
+    needs: [ninja-nix, ninja-win, vs]
+    runs-on: ubuntu-latest
+    if: |
+        github.event_name == 'push' &&
+        github.ref_type == 'tag'
+    permissions:
+      # Need to authorize the job to create the release.
+      contents: write
+
+    steps:
+    # Download all uploaded artifacts for this workflow.
+    - name: Download artifacts
+      uses: actions/download-artifact@v3
+      with:
+        path: artifacts
+
+    - name: List contents
+      run: |
+        ls -l artifacts;       \
+        echo ---------------;  \
+        find artifacts -type f
+
+    - name: Un-tar & copy assets
+      # Note that this will put all the files packaged by CPack to the same
+      # directory, which is obviously a problem if two invocations of
+      # CPack create files with the same basename. However, the default name
+      # chosen by CPack ensures that, for our purposes, this doesn't happen:
+      # https://cmake.org/cmake/help/latest/module/CPack.html#variable:CPACK_PACKAGE_FILE_NAME
+      run: |
+        mkdir assets && \
+        for artifact_dir in $(find artifacts -mindepth 1 -maxdepth 1 -type d); do \
+          num_tarballed_artifacts_in_dir="$(find "$artifact_dir" -mindepth 1 -maxdepth 1 -type f -name '*.tar.gz' | wc -l)"; \
+          if [ "$num_tarballed_artifacts_in_dir" -eq 1 ]; then \
+            is_tarballed_artifact=1 \
+            tarfile="$(find "$artifact_dir" -mindepth 1 -maxdepth 1 -type f -name '*.tar.gz')"; \
+          elif [ "$num_tarballed_artifacts_in_dir" -eq 0 ]; then \
+            is_tarballed_artifact=0; \
+          else \
+            echo "num_tarballed_artifacts_in_dir not 0 or 1; is $num_tarballed_artifacts_in_dir." >&1; \
+            exit 1; \
+          fi \
+
+          if [ "$is_tarballed_artifact" != 0 ]; then \
+            tar -xzf "${tarfile}" -C assets --verbose || exit 1; \
+          else \
+            cp -r "$artifact_dir" assets || exit 1; \
+          fi \
+        done
+
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          assets/**

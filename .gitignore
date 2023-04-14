@@ -2,6 +2,8 @@
 
 install/
 build/
+# We specify the place where cpack will ouptut packages to be this dir.
+packages/
 
 # Directory created by vcpkg in manifest mode (using vcpkg.json).
 vcpkg_installed/
