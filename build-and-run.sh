@@ -37,6 +37,9 @@ run_or_print "${CMAKE_CMD}" --preset "${PRJ1_CONFIGURE_PRESET}"
 run_or_print "${CMAKE_CMD}" --build build --config "${PRJ1_CONFIG}" -j10
 run_or_print "${CTEST_CMD}" --test-dir build --build-config "${PRJ1_CONFIG}" -j10
 run_or_print "${CMAKE_CMD}" --install build --config "${PRJ1_CONFIG}"
+if [ ! -z "${CPACK_GENERATORS+x}" ]; then
+	run_or_print "${CPACK_CMD}" -G $CPACK_GENERATORS -C "${PRJ1_CONFIG}" --config build/CPackConfig.cmake
+fi
 
 big_message "prj2 workflow ${PRJ2_WORKFLOW}"
 run_or_print cd "${SOURCE_ROOT_DIR}"/prj2
@@ -45,6 +48,9 @@ run_or_print "${CMAKE_CMD}" --preset "${PRJ2_CONFIGURE_PRESET}"
 run_or_print "${CMAKE_CMD}" --build build --config "${PRJ2_CONFIG}" -j10
 run_or_print "${CTEST_CMD}" --test-dir build --build-config "${PRJ2_CONFIG}" -j10
 run_or_print "${CMAKE_CMD}" --install build --config "${PRJ2_CONFIG}"
+if [ ! -z "${CPACK_GENERATORS+x}" ]; then
+	run_or_print "${CPACK_CMD}" -G $CPACK_GENERATORS -C "${PRJ2_CONFIG}" --config build/CPackConfig.cmake
+fi
 
 big_message "Running executable"
 run_or_print cd "${SOURCE_ROOT_DIR}"
