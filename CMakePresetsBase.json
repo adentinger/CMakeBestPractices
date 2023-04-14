@@ -14,6 +14,10 @@
 				"CMAKE_EXPORT_COMPILE_COMMANDS": {
 					"type": "BOOL",
 					"value": "ON"
+				},
+				"CPACK_PACKAGE_DIRECTORY": {
+					"type": "PATH",
+					"value": "${sourceDir}/packages"
 				}
 			}
 		},

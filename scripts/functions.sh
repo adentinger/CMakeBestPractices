@@ -128,6 +128,9 @@ set_environment() {
 		echo PRJ2_CONFIGURE_PRESET not defined, defaulting to \"shared\"
 		PRJ2_CONFIGURE_PRESET=shared
 	fi
+	if [ -z "${CPACK_GENERATORS+x}" ]; then
+		echo CPACK_GENERATORS not defined, cpack won\'t be called
+	fi
 	if [ -z "${CMAKE_DIR+x}" ]; then
 		echo "CMAKE_DIR: not specified."
 	fi
