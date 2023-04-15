@@ -3,18 +3,10 @@
 We've all been there: we've seen a C/C++ project grow to a point where the overly simple initial build system could no longer cope with gradually increasing requirements, forcing someone to go and spend a long time digging through arcane build magic, introducing bugs and linking errors down the line, and completely changing the build workflow. Something along the lines of:
 
 - "Up until now, we only had static libraries, but now we want to also support shared libraries, which are completely different between Windows and *nix."
-- "We learned about C/C++ tools like C/C++ package managers and static analyzers a while ago, but we don't know how they could fit in our workflow."
+- "We learned about tools like C/C++ package managers and static analyzers a while ago, but we don't know how they could fit in our workflow."
 - "We want to support BYOD, but our build system is full of hardcoded paths and flags and only works with `apt-get`, and only on Ubuntu 22.04, so the setup is a tad sensitive."
 
-This CMake project mimics a superproject (i.e., a project that contains multiple sub-projects) composed of two CMake sub-projects that support a number of useful features out of the box. It should be simple (relatively speaking!) to start a CMake C/C++ project with this environment, or to refer back to this project's structure for inspiration, and it is highly (overly?) documented. At the moment, this repo is best used either as a loose reference point, or as a rough starting point for a CMake C/C++ project or superproject that will grow over time.
-
-The environment suggested in this repo, while containing some unique content (especially pertaining to shared libraries and `clang-format`), is generally guided by the principles and best practices of resources such as these (in decreasing order of importance):
-- [C++Now 2017 - "Effective CMake"](https://youtu.be/bsXLMQ6WgIk)
-- [CppCon 2018 - "Don't Package Your Libraries, Write Packagable Libraries!"](https://youtu.be/sBP17HQAQjk)
-- [CppCon 2019 - "Don't Package Your Libraries, Write Packagable Libraries! (Part 2)"](https://youtu.be/_5weX5mx8hc)
-- [CppCon 2021 - "Modern CMake Modules"](https://youtu.be/IZXNsim9TWI)
-
-💡 There's always something to improve and learn in a dev environement; suggestions and contributions welcome!
+This repo mimics a superproject (i.e., a project that contains multiple sub-projects) composed of two CMake sub-projects that support a number of useful features out of the box. It is highly (overly?) documented. At the moment, this repo is best used either as a loose reference point, or as a rough starting point for a CMake C/C++ project or superproject that will grow over time.
 
 ## Description of environment
 
