@@ -1,8 +1,16 @@
-# CMake Dev/CI/CD environment
+# CMake Best Practices
 
-A CMake superproject that leverages "modern CMake" to produce a build system and dev/CI/CD environement that would be suitable for a fairly scalable open-source or closed-source project.
+A CMake superproject that leverages "modern CMake" to produce a build system and dev/CI/CD environement that would be suitable for a fairly scalable open-source or closed-source project. It is composed of two CMake projects, `prj1` and `prj2`, with `prj2`'s targets depending on `prj1`'s.
 
-**For a thorough description of the rationale and features of this repo's environment, see [this file](doc/rationale.md).**
+This repo aims at providing a reference point for solving common build system and dev environment concerns and issues. See [the rationale explanations](doc/rationale.md) for more details. It is highly (overly?) documented. While it does contain some unique content (especially pertaining to shared libraries and `clang-format`), this repo is generally guided by the principles and best practices of resources such as these (in decreasing order of importance):
+- [C++Now 2017 - "Effective CMake"](https://youtu.be/bsXLMQ6WgIk)
+- [CppCon 2018 - "Don't Package Your Libraries, Write Packagable Libraries!"](https://youtu.be/sBP17HQAQjk)
+- [CppCon 2019 - "Don't Package Your Libraries, Write Packagable Libraries! (Part 2)"](https://youtu.be/_5weX5mx8hc)
+- [CppCon 2021 - "Modern CMake Modules"](https://youtu.be/IZXNsim9TWI)
+
+💡 There's always something to improve and learn in a dev environement; suggestions and contributions welcome!
+
+**For a more thorough description of the rationale and features of this repo's build system and environment, see [this file](doc/rationale.md).**
 
 ## Building
 
@@ -49,9 +57,9 @@ The built binaries will then be available under `install/`.
 
 ### The robust way
 
-*NOTE: This section corresponds to how a real project would explain how to integrate the build of that project into a larger build, such as a developer integrating the project into a larger one, or a package maintiner adding the project to a package manager (pacman, apt, vcpkg, pip3, ...).*
+*NOTE: This section corresponds to how a real project would explain how to integrate the build of that project into a larger build, such as a developer integrating the project into a larger one, or a package maintiner adding the project to a package manager (pacman, apt, vcpkg, pip3, ...). Because this is a superproject, the orchestration of both CMake builds is done by another tool, in this case the `build-and-run.sh` script. In a single-build situation, that script would be undesirable and should be replaced by a single `CMakePresets.json` file.*
 
-Run `./build-and-run --dry-run` to get the cmake commands that would be run in a non-dry run, as well as a list of environment variables that control the behavior of the build. For example:
+Run `./build-and-run.sh --dry-run` to get the cmake commands that would be run in a non-dry run, as well as a list of environment variables that control the behavior of the build. For example:
 
 ```sh
 # The "*-dev" presets require clang-tidy and clang-format available in PATH.
