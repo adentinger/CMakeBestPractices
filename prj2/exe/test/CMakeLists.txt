@@ -28,7 +28,7 @@ set_target_properties(exe_test
     CXX_STANDARD_REQUIRED ON)
 
 find_package(AdeClangFormat 1.0 CONFIG REQUIRED)
-ade_clang_format_targets(TARGETS exe_test)
+ade_clang_format_git_targets(TARGETS exe_test)
 
 find_package(GTest CONFIG REQUIRED)
 target_link_libraries(exe_test

@@ -26,8 +26,8 @@ set_target_properties(lib2_test
     CXX_STANDARD 17
     CXX_STANDARD_REQUIRED ON)
 
-find_package(AdeClangFormat 1.0 CONFIG REQUIRED)
-ade_clang_format_targets(TARGETS lib2_test)
+find_package(AdeClangFormat 1.1 CONFIG REQUIRED)
+ade_clang_format_git_targets(TARGETS lib2_test)
 
 find_package(GTest CONFIG REQUIRED)
 target_link_libraries(lib2_test
@@ -70,4 +70,3 @@ include(GoogleTest)
 #
 # See: https://cmake.org/cmake/help/latest/module/GoogleTest.html#command:gtest_discover_tests
 gtest_discover_tests(lib2_test)
-

@@ -30,9 +30,17 @@
 					"type": "STRING",
 					"value": "clang-tidy;--config-file=${sourceDir}/../.clang-tidy"
 				},
-				"ADE_CLANG_FORMAT": {
+				"ADE_CLANG_FORMAT_PLAIN": {
 					"type": "STRING",
 					"value": "clang-format;--style=file:${sourceDir}/../.clang-format"
+				},
+				"ADE_CLANG_FORMAT_GIT": {
+					"type": "STRING",
+					"value": "git;clang-format;--style=file:${sourceDir}/../.clang-format"
+				},
+				"ADE_CLANG_FORMAT_GIT_REF_COMMIT": {
+					"type": "STRING",
+					"value": "origin/main"
 				},
 				"CMAKE_MESSAGE_LOG_LEVEL": {
 					"type": "STRING",

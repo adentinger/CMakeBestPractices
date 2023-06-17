@@ -132,7 +132,7 @@ set_target_properties(exe
   INSTALL_RPATH "${EXE_INSTALL_RPATH}")
 
 find_package(AdeClangFormat 1.0 CONFIG REQUIRED)
-ade_clang_format_targets(TARGETS
+ade_clang_format_git_targets(TARGETS
   exe
   exe__objlib_internal)
 
