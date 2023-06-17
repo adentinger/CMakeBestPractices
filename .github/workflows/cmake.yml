@@ -91,6 +91,13 @@ jobs:
         unzip ninja-linux.zip && rm ninja-linux.zip && \
         echo "${{github.workspace}}" >> $GITHUB_PATH
 
+    - name: Ubuntu clang-tidy && clang-format setup
+      working-directory: ${{github.workspace}}
+      if: matrix.runner-id == 'ubuntu-latest'
+      run: |
+        sudo apt-get install -y clang-tidy clang-format &&
+        echo matrix.has-analysis: ${{matrix.has-analysis}} matrix.runner-id: ${{matrix.runner-id}}
+
     - name: MacOS install ninja
       if: matrix.runner-id == 'macos-latest'
       working-directory: ${{github.workspace}}
@@ -106,28 +113,25 @@ jobs:
         # Needed by vcpkg install
         brew install pkg-config
 
-    - name: MacOS clang-tidy && clang-format setup
-      if: matrix.runner-id == 'macos-latest' && matrix.has-analysis == 'true'
-      working-directory: ${{github.workspace}}
-      # https://stackoverflow.com/a/53380855/2252948
-      run: |
-        brew install llvm &&                                  \
-        echo "LLVM Brew prefix: $(brew --prefix llvm)" &&     \
-        echo "ls -l $(brew --prefix llvm):" &&                \
-        ls -l "$(brew --prefix llvm)" &&                      \
-        echo "ls -l $(brew --prefix llvm)/bin:" &&            \
-        ls -l "$(brew --prefix llvm)/bin" &&                  \
-        echo "Adding $(brew --prefix llvm)/bin to PATH" &&    \
-        echo "$(brew --prefix llvm)/bin" >> $GITHUB_PATH
-
     - uses: actions/checkout@v3
       with:
         # The actions/checkout@v3 action clones into
-        # "${{github.workspace}}" by default, which wipes the ninja executable we just extracted.
+        # "${{github.workspace}}" by default, which wipes the ninja executable
+        # we just extracted.
         path: repo
         # Also clone submodules, recursively (like
         # 'git submodule update --init --recursive')
         submodules: recursive
+
+    - name: Ubuntu get git remote data
+      working-directory: ${{github.workspace}}/repo
+      if: matrix.runner-id == 'ubuntu-latest' && matrix.has-analysis
+      # 'git fetch --all' is a fix for the error:
+      # "error: 'origin/<name>' is not a commit"
+      # See:
+      # https://stackoverflow.com/a/55406283/2252948
+      run: |
+        git fetch --all
 
     - name: Build and run
       working-directory: ${{github.workspace}}/repo
