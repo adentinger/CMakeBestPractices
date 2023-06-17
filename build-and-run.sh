@@ -55,4 +55,3 @@ fi
 big_message "Running executable"
 run_or_print cd "${SOURCE_ROOT_DIR}"
 run_or_print ./install/bin/exe
-
