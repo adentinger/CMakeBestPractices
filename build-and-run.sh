@@ -17,7 +17,7 @@ check_cmake_version
 
 check_vcpkg
 # Nothing to do to install vcpkg packages; the packages will be installed
-# as part of the CMake build (I suppose as part of running the vcpkg toolchain
+# as part of the CMake build (likely as part of running the vcpkg toolchain
 # file).
 
 clean

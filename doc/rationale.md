@@ -53,7 +53,6 @@ NOTE: Because this is a superproject, the orchestration of both CMake builds is 
 
 ```bash
 cd repo-dir && \
-./vcpkg/bootstrap-vcpkg.sh && \
 cmake -S . -B build --preset <configure-preset-name> && \
 cmake --build build -j10 && \
 ctest --test-dir build -j10 && \
