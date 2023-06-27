@@ -95,8 +95,7 @@ jobs:
       working-directory: ${{github.workspace}}
       if: matrix.runner-id == 'ubuntu-latest'
       run: |
-        sudo apt-get install -y clang-tidy clang-format &&
-        echo matrix.has-analysis: ${{matrix.has-analysis}} matrix.runner-id: ${{matrix.runner-id}}
+        sudo apt-get install -y clang-tidy clang-format
 
     - name: MacOS install ninja
       if: matrix.runner-id == 'macos-latest'
