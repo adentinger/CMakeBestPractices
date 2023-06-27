@@ -254,11 +254,6 @@ jobs:
         # 'git submodule update --init --recursive')
         submodules: recursive
 
-    - name: Setup Vcpkg
-      working-directory: ${{github.workspace}}/repo
-      run: |
-        cmd /c vcpkg\bootstrap-vcpkg.bat
-
     - name: AdeClangFormat/Workflow
       working-directory: ${{github.workspace}}/repo/AdeClangFormat
       run: |
@@ -374,11 +369,6 @@ jobs:
         # Also clone submodules, recursively (like
         # 'git submodule update --init --recursive')
         submodules: recursive
-
-    - name: Setup Vcpkg
-      working-directory: ${{github.workspace}}/repo
-      run: |
-        cmd /c vcpkg\bootstrap-vcpkg.bat
 
     - name: AdeClangFormat/Workflow
       working-directory: ${{github.workspace}}/repo/AdeClangFormat

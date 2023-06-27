@@ -202,25 +202,7 @@ check_vcpkg() {
 
 	export VCPKG_EXE="$VCPKG_DIR/vcpkg"
 
-	echo "Assuming vcpkg executable is \"$VCPKG_EXE\" and running vcpkg bootstrap."
-	if [ "$OS" == GNU/Linux ] || [ "$OS" == Darwin ]; then
-		local vcpkg_bootstrap="$VCPKG_DIR/bootstrap-vcpkg.sh"
-		run_or_print "${vcpkg_bootstrap}"
-	elif [ "$OS" == Msys ]; then
-		local vcpkg_bootstrap="$VCPKG_DIR/bootstrap-vcpkg.bat"
-		# 'cmd /c <cmd>' but since we're on an Msys shell, we need to add an
-		# extra '/' to '/c' so that the shell understands we aren't passing a
-		# file path that needs to be transformed into backslashes.
-		run_or_print cmd //c "${vcpkg_bootstrap}"
-	else
-		echo "Unexpected platform \"$OS\"." >&2
-		exit 1
-	fi
-
-	if [ "$IS_DRY_RUN" == 0 ] && ! "${VCPKG_EXE}" version; then
-		echo "vcpkg executable does not exist or does not work." >&2
-		exit 1
-	fi
+	echo "Assuming vcpkg executable is \"$VCPKG_EXE\"."
 
 	if [ ! -d vcpkg ]; then
 		# Do not run the git command here: it is frequent to produce tarballs
