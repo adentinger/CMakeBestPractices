@@ -134,6 +134,10 @@ set_environment() {
 	if [ -z "${CMAKE_DIR+x}" ]; then
 		echo "CMAKE_DIR: not specified."
 	fi
+	if [ -z "${ADE_CLANG_FORMAT_GIT_REF_COMMIT+x}" ]; then
+		echo ADE_CLANG_FORMAT_GIT_REF_COMMIT not defined, defaulting to \"origin/main\"
+		export ADE_CLANG_FORMAT_GIT_REF_COMMIT=origin/main
+	fi
 
 	if [ "${VCPKG_DIR+x}" == "" ]; then
 		export VCPKG_DIR="${SCRIPT_DIR}/vcpkg"
