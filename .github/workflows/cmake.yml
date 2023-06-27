@@ -128,10 +128,29 @@ jobs:
       if: matrix.runner-id == 'ubuntu-latest' && matrix.has-analysis
       # 'git fetch --all' is a fix for the error:
       # "error: 'origin/<name>' is not a commit"
-      # See:
-      # https://stackoverflow.com/a/55406283/2252948
+      #
+      # See: https://stackoverflow.com/a/55406283/2252948
       run: |
         git fetch --all
+
+    - name: Set dependent environment variables
+      working-directory: ${{github.workspace}}/repo
+      # Sets the environment variables whose value can only be determined
+      # during workflow execution, not while writing this YAML file.
+      #
+      # GITHUB_BASE_REF is a local ref name (e.g. 'develop'), not a remote
+      # ref name (like 'origin/develop'). Since we're not checking out the
+      # base ref branch, no local branch is created, so we'll prepend
+      # GITHUB_BASE_REF with the remote's name to refer to the remote ref.
+      run: |
+        remotes=($(git remote)); \
+        if [ "${#remotes[@]}" != 1 ] || [ "${remotes[0]}" == "" ]; then \
+          echo "Error: Number of Git remotes != 1" >&2; \
+          exit 1; \
+        fi; \
+        remote="${remotes[0]}" && \
+        echo "Remote is $remote" && \
+        echo "ADE_CLANG_FORMAT_GIT_REF_COMMIT=$remote/$GITHUB_BASE_REF" >> "$GITHUB_ENV"
 
     - name: Build and run
       working-directory: ${{github.workspace}}/repo
