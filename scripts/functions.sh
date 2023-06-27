@@ -178,7 +178,6 @@ set_cmake() {
 # The CMakePresets.json files check the CMake version, however cmake itself
 # does not support the presets file until CMake 3.19.
 check_cmake_version() {
-	CMAKE_CMD=cmake
 	local min_major=3
 	local min_minor=19
 
