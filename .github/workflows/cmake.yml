@@ -142,14 +142,19 @@ jobs:
       # base ref branch, no local branch is created, so we'll prepend
       # GITHUB_BASE_REF with the remote's name to refer to the remote ref.
       run: |
-        remotes=($(git remote)); \
+        remotes=($(git remote)) && \
         if [ "${#remotes[@]}" != 1 ] || [ "${remotes[0]}" == "" ]; then \
           echo "Error: Number of Git remotes != 1" >&2; \
           exit 1; \
-        fi; \
+        fi && \
         remote="${remotes[0]}" && \
         echo "Remote is $remote" && \
-        echo "ADE_CLANG_FORMAT_GIT_REF_COMMIT=$remote/$GITHUB_BASE_REF" >> "$GITHUB_ENV"
+        if [ -z "${GITHUB_BASE_REF+x}" ]; then \
+          ref="$remote/$GITHUB_HEAD_REF"; \
+        else \
+          ref="$remote/$GITHUB_BASE_REF"; \
+        fi && \
+        echo "ADE_CLANG_FORMAT_GIT_REF_COMMIT=$ref" >> "$GITHUB_ENV"
 
     - name: Build and run
       working-directory: ${{github.workspace}}/repo
