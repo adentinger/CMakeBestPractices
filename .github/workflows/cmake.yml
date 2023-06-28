@@ -150,10 +150,11 @@ jobs:
         remote="${remotes[0]}" && \
         echo "Remote is $remote" && \
         if [ -z "${GITHUB_BASE_REF+x}" ]; then \
-          ref="$remote/$GITHUB_HEAD_REF"; \
+          ref="$remote/$GITHUB_REF_NAME"; \
         else \
           ref="$remote/$GITHUB_BASE_REF"; \
         fi && \
+        echo "ADE_CLANG_FORMAT_GIT_REF_COMMIT=$ref" && \
         echo "ADE_CLANG_FORMAT_GIT_REF_COMMIT=$ref" >> "$GITHUB_ENV"
 
     - name: Build and run
