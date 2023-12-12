@@ -102,11 +102,22 @@ class Paths:
 			.format(self.cmake_exe, self.ctest_exe, self.cpack_exe, \
 				self.vcpkg_dir)
 
+def check_cmake_version(params: Params, paths: Paths) -> None:
+	MIN_MAJOR=3
+	MIN_MINOR=19
+
+	output = run_or_print_cmd([str(paths.cmake_exe), "--version"], params, \
+		check=True, \
+		text=True, \
+		stdout=subprocess.PIPE).stdout
+	if output != None:
+		print("output: {}".format(output))
+
 def run():
 	params = parse_args()
 	set_envvars(params)
 	paths = Paths(params)
-	print(paths)
+	check_cmake_version(params, paths)
 
 if __name__ == "__main__":
 	run()
