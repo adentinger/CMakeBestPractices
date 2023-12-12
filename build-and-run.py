@@ -3,6 +3,8 @@
 import argparse
 import inspect
 import os
+import re
+import subprocess
 import sys
 
 from pathlib import Path
@@ -23,6 +25,22 @@ def parse_args(args: list[str] = None) -> Params:
 		dest="dry_run")
 	namespace = parser.parse_args() if args == None else parser.parse_args(args)
 	return Params(namespace)
+
+def run_or_print_cmd(cmd: list[str], params: Params, **kwargs: dict[str, str]):
+	"""
+	Depending on whether we are in a dry run or not, either calls
+	subprocess.run() with given kwargs and returns the returned
+	subprocess.CompletedProcess, or simply prints 'cmd' and returns None.
+	"""
+	if params.dry_run:
+		whitespaces = re.compile("\s")
+		cmd_escaped = \
+			[arg if whitespaces.search(arg) == None else '"{}"'.format(arg) \
+				for arg in cmd]
+		print('-- Would run: {}'.format(" ".join(cmd_escaped)))
+		return None
+	else:
+		return subprocess.run(cmd, **kwargs)
 
 def set_envvars(params: Params) -> None:
 	# The output of AdeClangFormat is the same regardless of the preset and
