@@ -3,6 +3,7 @@
 import argparse
 import inspect
 import os
+import sys
 
 from pathlib import Path
 
@@ -52,9 +53,42 @@ def set_envvars(params: Params) -> None:
 		print('VCPKG_DIR not set, setting it to "{}".'.format(VCPKG_DIR))
 		os.environ["VCPKG_DIR"] = VCPKG_DIR
 
+class Paths:
+	def __init__(self, params: Params, environ: list[str] = os.environ) -> None:
+		# Yes, code above just set these envvar, but we really do need *both*
+		# this data member and the envvars, since the CMake executable will use
+		# these envvars.
+		env_cmake_dir = environ.get("CMAKE_DIR")
+		cmake_dir_for_concat = env_cmake_dir + "/" if env_cmake_dir != None else ""
+		IS_WINDOWS = sys.platform == "win32"
+		cmake_exe_path = "{}{}{}".format( \
+			cmake_dir_for_concat,         \
+			"cmake",                      \
+			".exe" if IS_WINDOWS else "")
+		ctest_exe_path = "{}{}{}".format( \
+			cmake_dir_for_concat,         \
+			"ctest",                      \
+			".exe" if IS_WINDOWS else "")
+		cpack_exe_path = "{}{}{}".format( \
+			cmake_dir_for_concat,         \
+			"cpack",                      \
+			".exe" if IS_WINDOWS else "")
+
+		self.cmake_exe = Path(cmake_exe_path)
+		self.ctest_exe = Path(ctest_exe_path)
+		self.cpack_exe = Path(cpack_exe_path)
+		self.vcpkg_dir = Path(environ["VCPKG_DIR"])
+
+	def __str__(self) -> str:
+		return "cmake_exe: {}, ctest_exe: {}, cpack_exe: {}, vcpkg_dir: {}" \
+			.format(self.cmake_exe, self.ctest_exe, self.cpack_exe, \
+				self.vcpkg_dir)
+
 def run():
 	params = parse_args()
 	set_envvars(params)
+	paths = Paths(params)
+	print(paths)
 
 if __name__ == "__main__":
 	run()
