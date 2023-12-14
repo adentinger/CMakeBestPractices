@@ -13,7 +13,7 @@ MAIN_SCRIPT_DIR: Path = Path(inspect.stack()[-1][1]).parent.resolve()
 
 class Params:
 	def __init__(self, namespace: argparse.Namespace) -> None:
-		self.dry_run = namespace.dry_run
+		self.is_dry_run = namespace.dry_run
 
 def parse_args(args: list[str] = None) -> Params:
 	parser = argparse.ArgumentParser( \
@@ -32,7 +32,7 @@ def run_or_print_cmd(cmd: list[str], params: Params, **kwargs: dict[str, str]):
 	subprocess.run() with given kwargs and returns the returned
 	subprocess.CompletedProcess, or simply prints 'cmd' and returns None.
 	"""
-	if params.dry_run:
+	if params.is_dry_run:
 		whitespaces = re.compile("\s")
 		cmd_escaped = \
 			[arg if whitespaces.search(arg) == None else '"{}"'.format(arg) \
@@ -102,22 +102,48 @@ class Paths:
 			.format(self.cmake_exe, self.ctest_exe, self.cpack_exe, \
 				self.vcpkg_dir)
 
-def check_cmake_version(params: Params, paths: Paths) -> None:
+def check_cmake_version_has_presets(params: Params, paths: Paths) -> None:
+	"""Checks that the version of CMake supports presets."""
 	MIN_MAJOR=3
 	MIN_MINOR=19
 
-	output = run_or_print_cmd([str(paths.cmake_exe), "--version"], params, \
+	output = run_or_print_cmd([str(paths.cmake_exe), "--version"], \
+		params, \
 		check=True, \
 		text=True, \
-		stdout=subprocess.PIPE).stdout
-	if output != None:
-		print("output: {}".format(output))
+		stdout=subprocess.PIPE)
+	first_line = output.stdout.splitlines()[0]
+	ver_regex = re.compile(
+		"(?P<major>\\d+)\\.(?P<minor>\\d+)\\.(?P<build>\\d+)"
+		"(-(?P<patch>.*))?")
+	match = ver_regex.search(first_line)
+	if match == None:
+		raise RuntimeError("[BUG] could not match CMake version number.")
+	major = match["major"]
+	minor = match["minor"]
+
+	major_int = int(major)
+	minor_int = int(minor)
+
+	matches_minimum = major_int > MIN_MAJOR or major_int == MIN_MAJOR and \
+		minor_int >= MIN_MINOR
+	if not matches_minimum:
+		raise RuntimeError(
+			"CMake version is less than minimum required ({} < {}.{}).".format(
+				match[0],
+				MIN_MAJOR,
+				MIN_MINOR))
+	print("CMake version OK ({} >= {}.{})".format(
+		match[0],
+		MIN_MAJOR,
+		MIN_MINOR))
 
 def run():
 	params = parse_args()
 	set_envvars(params)
 	paths = Paths(params)
-	check_cmake_version(params, paths)
+	if not params.is_dry_run:
+		check_cmake_version_has_presets(params, paths)
 
 if __name__ == "__main__":
 	run()
