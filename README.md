@@ -43,23 +43,23 @@ Here's how to build the project:
 # environment variables to be used by CMake, such as CMAKE_GENERATOR or VERBOSE.
 # See: https://cmake.org/cmake/help/latest/manual/cmake-env-variables.7.html
 CMAKE_GENERATOR=<Specify Generator> \
-./build-and-run.sh
+python3 superbuild.py
 ```
 
 For example:
 
 ```sh
 CMAKE_GENERATOR=Ninja \
-./build-and-run.sh
+python3 superbuild.py
 ```
 
 The built binaries will then be available under `install/`.
 
 ### The robust way
 
-*NOTE: This section corresponds to how a real project would explain how to integrate the build of that project into a larger build, such as a developer integrating the project into a larger one, or a package maintiner adding the project to a package manager (pacman, apt, vcpkg, pip3, ...). Because this is a superproject, the orchestration of both CMake builds is done by another tool, in this case the `build-and-run.sh` script. In a single-build situation, that script would be undesirable and should be replaced by a single `CMakePresets.json` file.*
+*NOTE: This section corresponds to how a real project would explain how to integrate the build of that project into a larger build, such as a developer integrating the project into a larger one, or a package maintiner adding the project to a package manager (pacman, apt, vcpkg, pip3, ...). Because this is a superproject, the orchestration of both CMake builds is done by another tool, in this case the `superbuild.py` script. In a single-build situation, that script would be undesirable and should be replaced by a single `CMakePresets.json` file.*
 
-Run `./build-and-run.sh --dry-run` to get the cmake commands that would be run in a non-dry run, as well as a list of environment variables that control the behavior of the build. For example:
+Run `python3 superbuild.py --dry-run` to get the cmake commands that would be run in a non-dry run, as well as a list of environment variables that control the behavior of the build. For example:
 
 ```sh
 # The "*-dev" presets require clang-tidy and clang-format available in PATH.
@@ -74,5 +74,5 @@ PRJ2_CONFIGURE_PRESET=static-dev \
 PRJ1_CONFIG=Debug \
 CMAKE_GENERATOR="Visual Studio 17 2022" \
 VERBOSE=1 \
-./build-and-run.sh --dry-run
+python3 superbuild.py --dry-run
 ```

@@ -19,7 +19,7 @@ class Params:
 
 def parse_args(args: list[str] = None) -> Params:
 	parser = argparse.ArgumentParser( \
-		prog="build-and-run.py",      \
+		prog="superbuild.py",         \
 		description="Superproject orchestrator script.")
 	parser.add_argument("-n", "--dry-run",      \
 		action="store_true",                    \
