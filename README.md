@@ -57,7 +57,7 @@ The built binaries will then be available under `install/`.
 
 ### The robust way
 
-*NOTE: This section corresponds to how a real project would explain how to integrate the build of that project into a larger build, such as a developer integrating the project into a larger one, or a package maintiner adding the project to a package manager (pacman, apt, vcpkg, pip3, ...). Because this is a superproject, the orchestration of both CMake builds is done by another tool, in this case the `superbuild.py` script. In a single-build situation, that script would be undesirable and should be replaced by a single `CMakePresets.json` file.*
+*NOTE: This section corresponds to how a real project would explain how to integrate the build of that project into a larger build, such as a developer integrating the project into a larger one, or a package maintiner adding the project to a package manager (pacman, apt, vcpkg, pip3, ...). Because this is a superproject, the orchestration of both CMake builds is done by another tool, in this case the `superbuild.py` script. Inside a single project however, like in `prj1` or `prj2`, there is no need for such orchestration.*
 
 Run `python3 superbuild.py --dry-run` to get the cmake commands that would be run in a non-dry run, as well as a list of environment variables that control the behavior of the build. For example:
 
