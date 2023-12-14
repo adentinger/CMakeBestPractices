@@ -27,7 +27,7 @@ def parse_args(args: list[str] = None) -> Params:
 	namespace = parser.parse_args() if args == None else parser.parse_args(args)
 	return Params(namespace)
 
-def run_or_print_cmd(cmd: list[str], params: Params, **kwargs: dict[str, str]):
+def run_or_print_cmd(params: Params, cmd: list[str], **kwargs: dict[str, str]):
 	"""
 	Depending on whether we are in a dry run or not, either calls
 	subprocess.run() with given kwargs and returns the returned
@@ -43,11 +43,27 @@ def run_or_print_cmd(cmd: list[str], params: Params, **kwargs: dict[str, str]):
 	else:
 		return subprocess.run(cmd, **kwargs)
 
-def set_envvars(params: Params) -> None:
-	# The output of AdeClangFormat is the same regardless of the preset and
-	# config/build-type, so just always pick the same one.
-	os.environ["ADECLANGFORMAT_CONFIG"] = "Release"
+def chdir_or_print(params: Params, dir: str) -> None:
+	"""
+	Depending on whether we are in a dry run or not, either changes directory,
+	or prints that it would do so.
+	"""
+	if not params.is_dry_run:
+		os.chdir(dir)
+	else:
+		print("-- Would chdir to {}".format(dir))
 
+def set_envvar_or_print(params: Params, envvar: str, value: str) -> None:
+	"""
+	Depending on whether we are in a dry run or not, either sets envvar,
+	or prints that it would do so.
+	"""
+	if not params.is_dry_run:
+		os.environ[envvar] = value
+	else:
+		print('-- Would set envvar {}="{}"'.format(envvar, value))
+
+def set_envvars(params: Params) -> None:
 	if not "PRJ1_CONFIG" in os.environ:
 		print('PRJ1_CONFIG not defined, defaulting to "Release"')
 		os.environ["PRJ1_CONFIG"] = "Release"
@@ -116,12 +132,11 @@ def check_cmake_version_has_presets(params: Params, paths: Paths) -> None:
 	MIN_MAJOR=3
 	MIN_MINOR=19
 
-	output = run_or_print_cmd([str(paths.cmake_exe), "--version"], \
-		params, \
+	output = run_or_print_cmd(params, [str(paths.cmake_exe), "--version"], \
 		check=True, \
 		text=True, \
-		stdout=subprocess.PIPE)
-	first_line = output.stdout.splitlines()[0]
+		stdout=subprocess.PIPE).stdout
+	first_line = output.splitlines()[0]
 	ver_regex = re.compile(
 		"(?P<major>\\d+)\\.(?P<minor>\\d+)\\.(?P<build>\\d+)"
 		"(-(?P<patch>.*))?")
@@ -164,6 +179,42 @@ def clean(params: Params, paths: Paths) -> None:
 		shutil.rmtree(paths.prj2_dir.joinpath("build"), ignore_errors=True)
 		shutil.rmtree(paths.install_dir, ignore_errors=True)
 
+def build_ade_clang_format(params: Params, paths: Paths) -> None:
+	chdir_or_print(params, paths.ade_clang_format_dir)
+	# The output of AdeClangFormat is the same regardless of the preset and
+	# config/build-type, so just always pick the same one.
+	build_config = "Release"
+	set_envvar_or_print(params, "CMAKE_BUILD_TYPE", build_config)
+
+	run_or_print_cmd(params, [str(paths.cmake_exe), "-S", ".", "-B", "build", "--install-prefix", str(paths.install_dir)])
+	run_or_print_cmd(params, [str(paths.cmake_exe), "--build", "build", "--config", build_config, "-j10"])
+	run_or_print_cmd(params, [str(paths.ctest_exe), "--test-dir", "build", "--build-config", build_config, "-j10"])
+	run_or_print_cmd(params, [str(paths.cmake_exe), "--install", "build", "--config", build_config])
+
+def build_prj1(params: Params, paths: Paths) -> None:
+	chdir_or_print(params, paths.prj1_dir)
+	build_config = os.environ["PRJ1_CONFIG"]
+	set_envvar_or_print(params, "CMAKE_BUILD_TYPE", build_config)
+
+	run_or_print_cmd(params, [str(paths.cmake_exe), "-S", ".", "-B", "build", "--install-prefix", str(paths.install_dir)])
+	run_or_print_cmd(params, [str(paths.cmake_exe), "--build", "build", "--config", build_config, "-j10"])
+	run_or_print_cmd(params, [str(paths.ctest_exe), "--test-dir", "build", "--build-config", build_config, "-j10"])
+	run_or_print_cmd(params, [str(paths.cmake_exe), "--install", "build", "--config", build_config])
+	if "CPACK_GENERATORS" in os.environ:
+		run_or_print_cmd(params, [str(paths.cpack_exe), "-G", os.environ["CPACK_GENERATORS"], "-C", build_config, "--config", "build/CPackConfig.cmake"])
+
+def build_prj2(params: Params, paths: Paths) -> None:
+	chdir_or_print(params, paths.prj2_dir)
+	build_config = os.environ["PRJ2_CONFIG"]
+	set_envvar_or_print(params, "CMAKE_BUILD_TYPE", build_config)
+
+	run_or_print_cmd(params, [str(paths.cmake_exe), "-S", ".", "-B", "build", "--install-prefix", str(paths.install_dir)])
+	run_or_print_cmd(params, [str(paths.cmake_exe), "--build", "build", "--config", build_config, "-j10"])
+	run_or_print_cmd(params, [str(paths.ctest_exe), "--test-dir", "build", "--build-config", build_config, "-j10"])
+	run_or_print_cmd(params, [str(paths.cmake_exe), "--install", "build", "--config", build_config])
+	if "CPACK_GENERATORS" in os.environ:
+		run_or_print_cmd(params, [str(paths.cpack_exe), "-G", os.environ["CPACK_GENERATORS"], "-C", build_config, "--config", "build/CPackConfig.cmake"])
+
 def run() -> None:
 	params = parse_args()
 	set_envvars(params)
@@ -172,6 +223,9 @@ def run() -> None:
 		check_cmake_version_has_presets(params, paths)
 		check_vcpkg(params, paths)
 	clean(params, paths)
+	build_ade_clang_format(params, paths)
+	build_prj1(params, paths)
+	build_prj2(params, paths)
 
 if __name__ == "__main__":
 	run()
