@@ -138,12 +138,23 @@ def check_cmake_version_has_presets(params: Params, paths: Paths) -> None:
 		MIN_MAJOR,
 		MIN_MINOR))
 
+def check_vcpkg(params: Params, paths: Paths) -> None:
+	if not os.listdir(paths.vcpkg_dir):
+		# Do not run the git command here: it is frequent to produce tarballs
+		# of a repo's sources and then distribute the tarball. If we use a
+		# 'git' command here, source tarballs would not work because the
+		# extracted tarball is not a Git repo.
+		raise RuntimeError(
+			"vcpkg dir does not exist; did you clone this repos's submodules? "
+			"Run: git submodule update --init --recursive")
+
 def run():
 	params = parse_args()
 	set_envvars(params)
 	paths = Paths(params)
 	if not params.is_dry_run:
 		check_cmake_version_has_presets(params, paths)
+		check_vcpkg(params, paths)
 
 if __name__ == "__main__":
 	run()
