@@ -15,6 +15,7 @@ MAIN_SCRIPT_DIR: Path = Path(inspect.stack()[-1][1]).parent.resolve()
 class Params:
 	def __init__(self, namespace: argparse.Namespace) -> None:
 		self.is_dry_run = namespace.dry_run
+		self.run_exe = namespace.run_exe
 
 def parse_args(args: list[str] = None) -> Params:
 	parser = argparse.ArgumentParser( \
@@ -24,6 +25,10 @@ def parse_args(args: list[str] = None) -> Params:
 		action="store_true",                    \
 		help="show commands that would be run", \
 		dest="dry_run")
+	parser.add_argument("-r", "--run-exe",    \
+		action="store_true",                  \
+		help="run executable after building", \
+		dest="run_exe")
 	namespace = parser.parse_args() if args == None else parser.parse_args(args)
 	return Params(namespace)
 
@@ -215,6 +220,12 @@ def build_prj2(params: Params, paths: Paths) -> None:
 	if "CPACK_GENERATORS" in os.environ:
 		run_or_print_cmd(params, [str(paths.cpack_exe), "-G", os.environ["CPACK_GENERATORS"], "-C", build_config, "--config", "build/CPackConfig.cmake"])
 
+def run_exe(params: Params, paths: Paths) -> None:
+	IS_WINDOWS = sys.platform == "win32"
+	run_or_print_cmd(params, \
+		["{}/bin/exe{}".format(
+			paths.install_dir, ".exe" if IS_WINDOWS else "")])
+
 def run() -> None:
 	params = parse_args()
 	set_envvars(params)
@@ -226,6 +237,8 @@ def run() -> None:
 	build_ade_clang_format(params, paths)
 	build_prj1(params, paths)
 	build_prj2(params, paths)
+	if params.run_exe:
+		run_exe(params, paths)
 
 if __name__ == "__main__":
 	run()
