@@ -4,6 +4,7 @@ import argparse
 import inspect
 import os
 import re
+import shutil
 import subprocess
 import sys
 
@@ -96,6 +97,14 @@ class Paths:
 		self.ctest_exe = Path(ctest_exe_path)
 		self.cpack_exe = Path(cpack_exe_path)
 		self.vcpkg_dir = Path(environ["VCPKG_DIR"])
+		self.ade_clang_format_dir = Path(
+			"{}/AdeClangFormat".format(MAIN_SCRIPT_DIR))
+		self.prj1_dir = Path(
+			"{}/prj1".format(MAIN_SCRIPT_DIR))
+		self.prj2_dir = Path(
+			"{}/prj2".format(MAIN_SCRIPT_DIR))
+		self.install_dir = Path(
+			"{}/install".format(MAIN_SCRIPT_DIR))
 
 	def __str__(self) -> str:
 		return "cmake_exe: {}, ctest_exe: {}, cpack_exe: {}, vcpkg_dir: {}" \
@@ -148,13 +157,21 @@ def check_vcpkg(params: Params, paths: Paths) -> None:
 			"vcpkg dir does not exist; did you clone this repos's submodules? "
 			"Run: git submodule update --init --recursive")
 
-def run():
+def clean(params: Params, paths: Paths) -> None:
+	if not params.is_dry_run:
+		shutil.rmtree(paths.ade_clang_format_dir.joinpath("build"), ignore_errors=True)
+		shutil.rmtree(paths.prj1_dir.joinpath("build"), ignore_errors=True)
+		shutil.rmtree(paths.prj2_dir.joinpath("build"), ignore_errors=True)
+		shutil.rmtree(paths.install_dir, ignore_errors=True)
+
+def run() -> None:
 	params = parse_args()
 	set_envvars(params)
 	paths = Paths(params)
 	if not params.is_dry_run:
 		check_cmake_version_has_presets(params, paths)
 		check_vcpkg(params, paths)
+	clean(params, paths)
 
 if __name__ == "__main__":
 	run()
