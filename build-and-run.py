@@ -178,6 +178,7 @@ def check_vcpkg(params: Params, paths: Paths) -> None:
 			"Run: git submodule update --init --recursive")
 
 def clean(params: Params, paths: Paths) -> None:
+	"""Deletes all build files."""
 	if not params.is_dry_run:
 		shutil.rmtree(paths.ade_clang_format_dir.joinpath("build"), ignore_errors=True)
 		shutil.rmtree(paths.prj1_dir.joinpath("build"), ignore_errors=True)
