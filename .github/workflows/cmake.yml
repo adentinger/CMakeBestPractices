@@ -157,10 +157,10 @@ jobs:
         echo "ADE_CLANG_FORMAT_GIT_REF_COMMIT=$ref" && \
         echo "ADE_CLANG_FORMAT_GIT_REF_COMMIT=$ref" >> "$GITHUB_ENV"
 
-    - name: Build and run
+    - name: Run superbuild
       working-directory: ${{github.workspace}}/repo
       run: |
-        ./build-and-run.sh
+        python3 superbuild.py
 
     - name: Tar files for artifact
       working-directory: ${{github.workspace}}/repo
