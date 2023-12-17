@@ -89,7 +89,7 @@ jobs:
       run: |
         wget https://github.com/ninja-build/ninja/releases/download/v1.11.1/ninja-linux.zip && \
         unzip ninja-linux.zip && rm ninja-linux.zip && \
-        echo "${{github.workspace}}" >> $GITHUB_PATH
+        echo "CMAKE_MAKE_PROGRAM=${{github.workspace}}" >> "$GITHUB_ENV"
 
     - name: Ubuntu clang-tidy && clang-format setup
       working-directory: ${{github.workspace}}
@@ -103,7 +103,7 @@ jobs:
       run: |
         wget https://github.com/ninja-build/ninja/releases/download/v1.11.1/ninja-mac.zip && \
         unzip ninja-mac.zip && rm ninja-mac.zip && \
-        echo "${{github.workspace}}" >> $GITHUB_PATH
+        echo "CMAKE_MAKE_PROGRAM=${{github.workspace}}" >> "$GITHUB_ENV"
 
     - name: MacOS packages setup
       if: matrix.runner-id == 'macos-latest'
@@ -160,7 +160,7 @@ jobs:
     - name: Run superbuild
       working-directory: ${{github.workspace}}/repo
       run: |
-        python3 superbuild.py
+        python3 superbuild.py --run-exe
 
     - name: Tar files for artifact
       working-directory: ${{github.workspace}}/repo
@@ -240,7 +240,7 @@ jobs:
       run: |
         (new-object System.Net.WebClient).DownloadFile('https://github.com/ninja-build/ninja/releases/download/v1.11.1/ninja-win.zip','${{github.workspace}}\ninja-win.zip');
         tar -xf ninja-win.zip;
-        echo "${{github.workspace}}" >> $GITHUB_PATH
+        echo "CMAKE_MAKE_PROGRAM=${{github.workspace}}" >> "$GITHUB_ENV"
 
     - name: Packages setup
       working-directory: ${{github.workspace}}
