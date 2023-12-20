@@ -32,11 +32,18 @@ def parse_args(args: list[str] = None) -> Params:
 	namespace = parser.parse_args() if args == None else parser.parse_args(args)
 	return Params(namespace)
 
-def run_or_print_cmd(params: Params, cmd: list[str], **kwargs: dict[str, str]):
+def run_or_print_cmd(params: Params, cmd: list[str], \
+					 check: bool | None = True, **kwargs: dict[str, str]):
 	"""
 	Depending on whether we are in a dry run or not, either calls
 	subprocess.run() with given kwargs and returns the returned
 	subprocess.CompletedProcess, or simply prints 'cmd' and returns None.
+
+	If 'check' is True (default), then sets check=True in the call to
+	subprocess.run(), even if kwargs requests otherwise. If False, then sets
+	check=False in the call to subprocess.run(), even if kwargs requests
+	otherwise. If None, then does not specify check, and leaves kwargs
+	untouched.
 	"""
 	if params.is_dry_run:
 		whitespaces = re.compile("\s")
@@ -46,6 +53,9 @@ def run_or_print_cmd(params: Params, cmd: list[str], **kwargs: dict[str, str]):
 		print('-- Would run: {}'.format(" ".join(cmd_escaped)))
 		return None
 	else:
+		if check != None:
+			kwargs = kwargs.copy()
+			kwargs["check"] = check
 		return subprocess.run(cmd, **kwargs)
 
 def chdir_or_print(params: Params, dir: str) -> None:
