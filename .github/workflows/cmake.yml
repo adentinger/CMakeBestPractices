@@ -230,48 +230,12 @@ jobs:
     continue-on-error: ${{matrix.has-analysis}}
 
     steps:
-    - name: Set environment
-      run: |
-        echo "VS_VCVARSALL=$env:ProgramFiles\Microsoft Visual Studio\${{matrix.vs-version}}\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" | `
-            Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-
     - name: Install ninja
       working-directory: ${{github.workspace}}
       run: |
         (new-object System.Net.WebClient).DownloadFile('https://github.com/ninja-build/ninja/releases/download/v1.11.1/ninja-win.zip','${{github.workspace}}\ninja-win.zip');
         tar -xf ninja-win.zip;
         echo "${{github.workspace}}" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-
-    - name: Packages setup
-      working-directory: ${{github.workspace}}
-      # We'll need to explicitly specify MSVC as the compiler to use on
-      # Windows, since CI setups obviously need to be reproductible and
-      # consistent. For example, before we did that here, CMake was choosing
-      # MinGW GCC as the compiler, which has a different name mangling scheme
-      # as MSVC. This caused linking errors when trying to link GTest (which
-      # is installed via vcpkg using the x64-windows triplet, which builds
-      # using MSVC) with the libraries built here with MinGW GCC.
-      #
-      # Setting MSVC as the compiler in non-"Visual Studio*" generators is
-      # non-trivial; it should be done by calling a specific script called
-      # 'vcvarsall.bat' deep inside the Visual Studio installation.
-      #
-      # However, that is a CMD batch file script, while the GitHub CI uses
-      # PowerShell, not CMD. So we have to use Invoke-BatchFile, which is an
-      # extension provided by the pscx community package:
-      # https://cmake.org/pipermail/cmake/2019-May/069461.html
-      #
-      # For pscx installation:
-      # https://stackoverflow.com/a/31845504/2252948
-      #
-      # Note that running 'Import-Module pscx' may require setting the
-      # PowerShell 'executionpolicy' (whatever that is):
-      # https://stackoverflow.com/a/18533754/2252948
-      run: |
-        Find-Package pscx -ProviderName PowerShellGet |                       `
-            Install-Package -Force -AllowClobber &&                           `
-        powershell Set-ExecutionPolicy RemoteSigned &&                        `
-        Import-Module pscx
 
     - uses: actions/checkout@v3
       with:
@@ -284,7 +248,24 @@ jobs:
 
     - name: Run superbuild
       working-directory: ${{github.workspace}}/repo
+      # With non-IDE generators like Ninja, CMake requires us to run it within
+      # the setup environment:
+      # https://discourse.cmake.org/t/best-practice-for-ninja-build-visual-studio/4653/2
+      #
+      # In the case of MSVC, setting up the environment isn't just a case of
+      # pointing to the compiler executable like with GCC and Clang. Instead,
+      # to use MSVC with Ninja, we have to run the superbuild.py script inside
+      # a "Visual Studio dev shell", as we do below.
+      #
+      # Note that there is another way of setting up the environment, which
+      # we've tried and which works: running the "vcvarsall.bat" script inside
+      # the Visual Studio installation, however that's a CMD script, so running
+      # that within powershell would require installing a third-party
+      # extension.
       run: |
+        $vsInstallPath = & "${env:ProgramFiles(x86)}/Microsoft Visual Studio/Installer/vswhere.exe" -property installationpath;
+        Import-Module "$vsInstallPath\Common7\Tools\Microsoft.VisualStudio.DevShell.dll" &&
+        Enter-VsDevShell -VsInstallPath "$vsInstallPath" -SkipAutomaticLocation &&
         python3 superbuild.py --run-exe
 
     - name: Upload artifacts for release
