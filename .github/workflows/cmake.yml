@@ -89,7 +89,7 @@ jobs:
       run: |
         wget https://github.com/ninja-build/ninja/releases/download/v1.11.1/ninja-linux.zip && \
         unzip ninja-linux.zip && rm ninja-linux.zip && \
-        echo "CMAKE_MAKE_PROGRAM=${{github.workspace}}" >> "$GITHUB_ENV"
+        echo "${{github.workspace}}" >> $GITHUB_PATH
 
     - name: Ubuntu clang-tidy && clang-format setup
       working-directory: ${{github.workspace}}
@@ -103,7 +103,7 @@ jobs:
       run: |
         wget https://github.com/ninja-build/ninja/releases/download/v1.11.1/ninja-mac.zip && \
         unzip ninja-mac.zip && rm ninja-mac.zip && \
-        echo "CMAKE_MAKE_PROGRAM=${{github.workspace}}" >> "$GITHUB_ENV"
+        echo "${{github.workspace}}" >> $GITHUB_PATH
 
     - name: MacOS packages setup
       if: matrix.runner-id == 'macos-latest'
@@ -240,7 +240,8 @@ jobs:
       run: |
         (new-object System.Net.WebClient).DownloadFile('https://github.com/ninja-build/ninja/releases/download/v1.11.1/ninja-win.zip','${{github.workspace}}\ninja-win.zip');
         tar -xf ninja-win.zip;
-        echo "CMAKE_MAKE_PROGRAM=${{github.workspace}}" >> "$GITHUB_ENV"
+        echo 'ls -l "${{github.workspace}}"'; ls -l "${{github.workspace}}";
+        echo "${{github.workspace}}" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
     - name: Packages setup
       working-directory: ${{github.workspace}}
@@ -285,6 +286,7 @@ jobs:
     - name: AdeClangFormat/Workflow
       working-directory: ${{github.workspace}}/repo/AdeClangFormat
       run: |
+        echo PATH: $env:PATH ; `
         $env:CMAKE_BUILD_TYPE="Release" &&                                           `
         cmake -S . -B build --install-prefix "${{github.workspace}}/repo/install" && `
         cmake --build build --config Release -j10 &&                                 `
