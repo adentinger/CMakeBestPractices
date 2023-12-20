@@ -33,7 +33,9 @@ def parse_args(args: list[str] = None) -> Params:
 	return Params(namespace)
 
 def run_or_print_cmd(params: Params, cmd: list[str], \
-					 check: bool | None = True, **kwargs: dict[str, str]):
+					 # Would like to use "check: bool | None" but GitHub's
+					 # Python isn't recent enough for that.
+					 check = True, **kwargs: dict[str, str]):
 	"""
 	Depending on whether we are in a dry run or not, either calls
 	subprocess.run() with given kwargs and returns the returned
