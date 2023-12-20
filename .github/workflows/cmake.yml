@@ -282,63 +282,10 @@ jobs:
         # 'git submodule update --init --recursive')
         submodules: recursive
 
-    - name: AdeClangFormat/Workflow
-      working-directory: ${{github.workspace}}/repo/AdeClangFormat
+    - name: Run superbuild
+      working-directory: ${{github.workspace}}/repo
       run: |
-        echo PATH: $env:PATH ; `
-        $env:CMAKE_BUILD_TYPE="Release" &&                                           `
-        cmake -S . -B build --install-prefix "${{github.workspace}}/repo/install" && `
-        cmake --build build --config Release -j10 &&                                 `
-        ctest --test-dir build --build-config Release -j10
-
-    - name: AdeClangFormat/Install
-      working-directory: ${{github.workspace}}/repo/AdeClangFormat
-      run: |
-        cmake --install build --config Release
-
-    - name: prj1/Workflow
-      working-directory: ${{github.workspace}}/repo/prj1
-      run: |
-        Invoke-BatchFile $env:VS_VCVARSALL x64 &&                             `
-        [Environment]::SetEnvironmentVariable("CMAKE_BUILD_TYPE", $env:PRJ1_CONFIG) && `
-        cmake --preset $env:PRJ1_CONFIGURE_PRESET &&                          `
-        cmake --build build --config $env:PRJ1_CONFIG -j10 &&                 `
-        ctest --test-dir build --build-config $env:PRJ1_CONFIG -j10
-
-    - name: prj1/CPack
-      working-directory: ${{github.workspace}}/repo/prj1
-      run: |
-        cpack -G $env:CPACK_GENERATORS -C $env:PRJ1_CONFIG `
-          --config build/CPackConfig.cmake
-
-    - name: prj1/Install
-      working-directory: ${{github.workspace}}/repo/prj1
-      run: |
-        cmake --install build --config $env:PRJ1_CONFIG
-
-    - name: prj2/Workflow
-      working-directory: ${{github.workspace}}/repo/prj2
-      run: |
-        Invoke-BatchFile $env:VS_VCVARSALL x64 &&                             `
-        [Environment]::SetEnvironmentVariable("CMAKE_BUILD_TYPE", $env:PRJ2_CONFIG) && `
-        cmake --preset $env:PRJ2_CONFIGURE_PRESET &&                          `
-        cmake --build build --config $env:PRJ2_CONFIG -j10 &&                 `
-        ctest --test-dir build --build-config $env:PRJ2_CONFIG -j10
-
-    - name: prj2/CPack
-      working-directory: ${{github.workspace}}/repo/prj2
-      run: |
-        cpack -G $env:CPACK_GENERATORS -C $env:PRJ2_CONFIG `
-          --config build/CPackConfig.cmake
-
-    - name: prj2/Install
-      working-directory: ${{github.workspace}}/repo/prj2
-      run: |
-        cmake --install build --config $env:PRJ2_CONFIG
-
-    - name: Run exe
-      run: |
-        ${{github.workspace}}/repo/install/bin/exe
+        python3 superbuild.py --run-exe
 
     - name: Upload artifacts for release
       uses: actions/upload-artifact@v3
@@ -399,59 +346,10 @@ jobs:
         # 'git submodule update --init --recursive')
         submodules: recursive
 
-    - name: AdeClangFormat/Workflow
-      working-directory: ${{github.workspace}}/repo/AdeClangFormat
+    - name: Run superbuild
+      working-directory: ${{github.workspace}}/repo
       run: |
-        $env:CMAKE_BUILD_TYPE="Release" &&                                           `
-        cmake -S . -B build --install-prefix "${{github.workspace}}/repo/install" && `
-        cmake --build build --config Release -j10 &&                                 `
-        ctest --test-dir build --build-config Release -j10
-
-    - name: AdeClangFormat/Install
-      working-directory: ${{github.workspace}}/repo/AdeClangFormat
-      run: |
-        cmake --install build --config Release
-
-    - name: prj1/Workflow
-      working-directory: ${{github.workspace}}/repo/prj1
-      run: |
-        [Environment]::SetEnvironmentVariable("CMAKE_BUILD_TYPE", $env:PRJ1_CONFIG) && `
-        cmake --preset $env:PRJ1_CONFIGURE_PRESET &&                          `
-        cmake --build build --config $env:PRJ1_CONFIG -j10 &&                 `
-        ctest --test-dir build --build-config $env:PRJ1_CONFIG -j10
-
-    - name: prj1/CPack
-      working-directory: ${{github.workspace}}/repo/prj1
-      run: |
-        cpack -G $env:CPACK_GENERATORS -C $env:PRJ1_CONFIG `
-          --config build/CPackConfig.cmake
-
-    - name: prj1/Install
-      working-directory: ${{github.workspace}}/repo/prj1
-      run: cmake --install build --config $env:PRJ1_CONFIG
-
-    - name: prj2/Workflow
-      working-directory: ${{github.workspace}}/repo/prj2
-      run: |
-        [Environment]::SetEnvironmentVariable("CMAKE_BUILD_TYPE", $env:PRJ2_CONFIG) && `
-        cmake --preset $env:PRJ2_CONFIGURE_PRESET &&                          `
-        cmake --build build --config $env:PRJ2_CONFIG -j10 &&                 `
-        ctest --test-dir build --build-config $env:PRJ2_CONFIG -j10
-
-    - name: prj2/CPack
-      working-directory: ${{github.workspace}}/repo/prj2
-      run: |
-        cpack -G $env:CPACK_GENERATORS -C $env:PRJ2_CONFIG `
-          --config build/CPackConfig.cmake
-
-    - name: prj2/Install
-      working-directory: ${{github.workspace}}/repo/prj2
-      run: |
-        cmake --install build --config $env:PRJ2_CONFIG
-
-    - name: Run exe
-      run: |
-        ${{github.workspace}}/repo/install/bin/exe
+        python3 superbuild.py --run-exe
 
 ###############################################################################
 # 'release' job
