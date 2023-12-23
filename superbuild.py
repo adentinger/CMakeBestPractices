@@ -48,7 +48,7 @@ def run_or_print_cmd(params: Params, cmd: list[str], \
 	untouched.
 	"""
 	if params.is_dry_run:
-		whitespaces = re.compile("\s")
+		whitespaces = re.compile("\\s")
 		cmd_escaped = \
 			[arg if whitespaces.search(arg) == None else '"{}"'.format(arg) \
 				for arg in cmd]
