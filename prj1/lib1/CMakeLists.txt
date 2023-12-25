@@ -10,7 +10,7 @@ file(GLOB_RECURSE CXX_HEADERS_PRIVATE CONFIGURE_DEPENDS
   "src/*.hpp")
 
 # This builds an 'object library', which is basically a collection of object
-# files. The 'lib2' library will link against it.
+# files. The 'lib1' library will link against it.
 #
 # There are three reasons for doing this despite making the rest of the
 # code below a little more complicated:
@@ -33,40 +33,38 @@ file(GLOB_RECURSE CXX_HEADERS_PRIVATE CONFIGURE_DEPENDS
 # in the same directory as the test executable, so the test executable wouldn't
 # be able to run. Instead, we should build an object library and link the
 # test executable against that.
-add_library(lib2__objlib_internal OBJECT ${CXX_SOURCES})
-# See comments of lib2 below. We're going to have to export the object library
+add_library(lib1__objlib_internal OBJECT ${CXX_SOURCES})
+# See comments of lib1 below. We're going to have to export the object library
 # anyway, so let's create an alias for it too.
-add_library(prj2::lib2__objlib_internal ALIAS lib2__objlib_internal)
-set_target_properties(lib2__objlib_internal
-  PROPERTIES
-    LINKER_LANGUAGE CXX)
+add_library(prj1::lib1__objlib_internal ALIAS lib1__objlib_internal)
+set_target_properties(lib1__objlib_internal PROPERTIES LINKER_LANGUAGE CXX)
 
-add_library(lib2 extra/cpp/dummy.cpp)
+add_library(lib1 extra/cpp/dummy.cpp)
 # Libraries/exes built outside *this* CMake build (aka "external dependencies")
-# will link against this one prepended with the "prj2::" namespace. In order
+# will link against this one prepended with the "prj1::" namespace. In order
 # for libraries/exes built inside *this* CMake build (aka "internal
 # dependencies") to have their dependencies look exactly the same as external
 # dependencies, let's create an alias target that looks exactly like the
 # external target.
 #
 # https://youtu.be/bsXLMQ6WgIk?t=3124
-add_library(prj2::lib2 ALIAS lib2)
-target_link_libraries(lib2 PUBLIC lib2__objlib_internal)
-
-find_package(prj1 1.0 REQUIRED CONFIG)
-target_link_libraries(lib2__objlib_internal
-  PUBLIC prj1::lib1)
+#
+# Since this CMake build doesn't have any other library/executable, that means
+# doing this is useless, but this is just to keep things consistent no matter
+# what.
+add_library(prj1::lib1 ALIAS lib1)
+target_link_libraries(lib1 PUBLIC lib1__objlib_internal)
 
 find_package(AdeClangFormat 1.1 CONFIG REQUIRED)
 ade_clang_format_git_targets(TARGETS
-  lib2
-  lib2__objlib_internal)
+  lib1
+  lib1__objlib_internal)
 
-set_target_properties(lib2
+set_target_properties(lib1
   PROPERTIES
     CXX_STANDARD 17
     CXX_STANDARD_REQUIRED ON)
-set_target_properties(lib2__objlib_internal
+set_target_properties(lib1__objlib_internal
   PROPERTIES
     CXX_STANDARD 17
     CXX_STANDARD_REQUIRED ON)
@@ -75,23 +73,23 @@ set_target_properties(lib2__objlib_internal
 # so checking whether the final library is built as a static or a shared
 # library should be done on the final library, not its underlying object
 # library.
-get_target_property(LIB_TYPE lib2 TYPE)
-if(LIB_TYPE STREQUAL SHARED_LIBRARY)
-  set(LIB_SHARED_MACRO "LIB2_SHARED")
+get_target_property(LIB_TYPE lib1 TYPE)
+if (LIB_TYPE STREQUAL SHARED_LIBRARY)
+  set(LIB_SHARED_MACRO "LIB1_SHARED")
   # Shared libraries always build with position-independent code.
   # No need to provide a cache option for this in this case.
-  set(lib2_BUILD_WITH_PIC ON)
+  set(lib1_BUILD_WITH_PIC ON)
 else()
   # Providing a CACHE option for this, since some users might want this.
   #
   # Default is OFF because this can sometimes have overhead:
   # https://stackoverflow.com/a/15890369/2252948.
-  option(lib2_BUILD_WITH_PIC
+  option(lib1_BUILD_WITH_PIC
 	"Whether to build this static library with position-independent code in case it is linked against by a shared library."
 	OFF)
 endif()
 
-if(lib2_BUILD_WITH_PIC)
+if(lib1_BUILD_WITH_PIC)
   # Yes, both the object library AND the final library need the same PIC
   # setting, otherwise linking will fail on non-DLL platforms when
   # building shared libraries:
@@ -99,16 +97,17 @@ if(lib2_BUILD_WITH_PIC)
   # "relocation R_X86_64_PC32 against symbol
   # `_ZTISt12domain_error@@GLIBCXX_3.4' can not be used when making a
   # shared object; recompile with -fPIC"
-  set_target_properties(lib2
+  set_target_properties(lib1
 	PROPERTIES
-      POSITION_INDEPENDENT_CODE "${lib2_BUILD_WITH_PIC}")
-  set_target_properties(lib2__objlib_internal
+      POSITION_INDEPENDENT_CODE "${lib1_BUILD_WITH_PIC}")
+  set_target_properties(lib1__objlib_internal
 	PROPERTIES
-      POSITION_INDEPENDENT_CODE "${lib2_BUILD_WITH_PIC}")
+      POSITION_INDEPENDENT_CODE "${lib1_BUILD_WITH_PIC}")
 endif()
 
-target_compile_definitions(lib2__objlib_internal
+target_compile_definitions(lib1__objlib_internal
   PUBLIC
+    LIB1_MACRO=42
 	# Unquoted variable expansion; this is on purpose: if the variable is empty
 	# or undefined, we *actually* want this to expand to nothing.
 	${LIB_SHARED_MACRO}
@@ -118,9 +117,9 @@ target_compile_definitions(lib2__objlib_internal
 	# exactly what we want when building shared libraries on Windows: we want
 	# headers to have __declspec(dllexport) when building the library, but
 	# we want headers to have __declspec(dllimport) when using the library.
-    LIB2_EXPORT)
+    LIB1_EXPORT)
 
-target_sources(lib2__objlib_internal
+target_sources(lib1__objlib_internal
   # The headers that are available to consumer targets and for compilation of
   # this library.
   # This also adds the correct include directory to whatever target is
@@ -143,48 +142,10 @@ target_sources(lib2__objlib_internal
     BASE_DIRS src
     FILES ${CXX_HEADERS_PRIVATE})
 
-# Properties used only when building shared libraries.
-#
-# For Apple and Unix-like platforms (although maybe not Cygwin?), an RPATH
-# metadata variable can be set inside the linked executable/library to specify
-# a search path for dependant shared libraries. However, this cannot be a
-# relative path because it would be relative to where the executable is run
-# from, which isn't what we want. So instead we specify a special string to
-# make the path relative to where the executable is located.
-#
-# Note that we use CACHE variables here. This is to allow whoever is
-# configuring the CMake build to override the values if they want to, while
-# still providing a sane default.
-if(APPLE)
-  # There is also "@rpath" that is a bit more flexible, but really the equivalent
-  # of "$ORIGIN" for Unix is "@executable_path".
-  set(LIB2_INSTALL_RPATH @executable_path/../lib CACHE STRING "RPATH to use for this target.")
-elseif(UNIX AND NOT CYGWIN)
-  # "$ORIGIN" is a special string that means "the directory containing the
-  # executable that is running".
-  set(LIB2_INSTALL_RPATH $ORIGIN/../lib CACHE STRING "RPATH to use for this target.")
-elseif(WIN32)
-  # DLL platforms don't support RPATH.
-  set(LIB2_INSTALL_RPATH "")
-else()
-  get_target_property(LIB_SHARED prj2::lib2 TYPE)
-  if ("${LIB_SHARED}" STREQUAL SHARED_LIBRARY)
-	message(FATAL_ERROR
-	  "Unsupported target platform ${CMAKE_SYSTEM_NAME} for linking against "
-	  "shared libraries.")
-  endif()
-  set(LIB2_INSTALL_RPATH "")
-endif()
-
-set_target_properties(lib2
-  PROPERTIES
-  INSTALL_RPATH "${LIB2_INSTALL_RPATH}")
-
-install(TARGETS lib2 lib2__objlib_internal
-  EXPORT prj2Targets
+install(TARGETS lib1 lib1__objlib_internal
+  EXPORT prj1Targets
   FILE_SET public_headers
-  # https://youtu.be/IZXNsim9TWI?t=2475
-  COMPONENT lib2
+  COMPONENT lib1
   DESTINATION include)
 
 add_subdirectory(test)
