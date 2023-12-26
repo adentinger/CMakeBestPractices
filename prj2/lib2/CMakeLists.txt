@@ -1,13 +1,7 @@
 # SPDX-License-Identifier: MIT
 
-file(GLOB_RECURSE CXX_SOURCES CONFIGURE_DEPENDS
-  "src/*.cpp")
-file(GLOB_RECURSE CXX_HEADERS_PUBLIC CONFIGURE_DEPENDS
-  "include/*.h"
-  "include/*.hpp")
-file(GLOB_RECURSE CXX_HEADERS_PRIVATE CONFIGURE_DEPENDS
-  "src/*.h"
-  "src/*.hpp")
+include("${CMAKE_SOURCE_DIR}/cmake/tree.cmake")
+ade_set_source_files(lib1 CXX_SOURCES CXX_HEADERS_PUBLIC CXX_HEADERS_PRIVATE)
 
 # This builds an 'object library', which is basically a collection of object
 # files. The 'lib2' library will link against it.
@@ -130,10 +124,10 @@ target_sources(lib2__objlib_internal
   PUBLIC
     FILE_SET public_headers
     TYPE HEADERS
-	# "include/" is the include directory to use for the headers in this
+	# "src/" is the include directory to use for the headers in this
 	# file set. This also means that the files will be installed without an
-	# initial "include" directory at the begining.
-    BASE_DIRS include
+	# initial "src" directory at the begining.
+    BASE_DIRS src
     FILES ${CXX_HEADERS_PUBLIC}
 	# The headers that are available only for compilation of this library.
 	# Won't be installed.
