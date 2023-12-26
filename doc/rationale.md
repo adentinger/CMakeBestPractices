@@ -66,20 +66,20 @@ The environment follows an opinionated source tree hierarchy. The sources of bot
 ```
 <lib or exe name>
 ├── CMakeLists.txt  # Main CMakeLists.txt for the library/executable
-├── include
-│   └── <lib name>
-│       └── <public headers>  # Headers needed to build the library and needed
-│                             # by the consumers of the library
 ├── src
-│   ├── <c/cpp files>         # Source files of the library (could also be
-│   │                         # C++20 modules perhaps?)
+│   │
 │   └── <lib or exe name>
+│       ├── <cpp files>           # Source files of the library (could also be
+│       |                         # C++20 modules)
+|       |
+│       ├── <public headers>      # Headers needed to build the library and needed
+│       |                         # by the consumers of the library
 │       └── private
-│           └── <private headers>  # Headers needed to build the library, but
-│                                  # which aren't installed. May be especially
-│                                  # important in closed-source projects.
+│           └── <private headers> # Headers needed to build the library, but
+│                                 # which aren't installed. Especially
+│                                 # important in closed-source projects.
 └── test
-    ├── CMakeLists.txt     # For tests setup
+    ├── CMakeLists.txt    # For tests setup
     └── src
-        └── <c/cpp files>  # Source files and headers for the test executable
+        └── <cpp files>   # Source files and headers for the test executable
 ```
