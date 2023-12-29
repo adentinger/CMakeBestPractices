@@ -51,7 +51,7 @@
 //			- Jim Cline
 //			- Jeff Kohn
 //			- Todd Heckel
-//			- Ullrich Pollähne
+//			- Ullrich PollÃ¤hne
 //			- Joe Vitaterna
 //			- Joe Woodbury
 //			- Aaron (no last name)
@@ -493,7 +493,7 @@ public:
 			// <nChars> or the NULL terminator, whichever comes first.  Since we
 			// are about to call a less forgiving overload (in which <nChars>
 			// must be a valid length), we must adjust the length here to a safe
-			// value.  Thanks to Ullrich Pollähne for catching this bug
+			// value.  Thanks to Ullrich PollÃ¤hne for catching this bug
 
 			nChars		= min(nChars, str.length() - nStart);
 
@@ -524,7 +524,7 @@ public:
 			// <nChars> or the NULL terminator, whichever comes first.  Since we
 			// are about to call a less forgiving overload (in which <nChars>
 			// must be a valid length), we must adjust the length here to a safe
-			// value. Thanks to Ullrich Pollähne for catching this bug
+			// value. Thanks to Ullrich Pollï¿½hne for catching this bug
 
 			nChars		= min(nChars, str.length() - nStart);
 
@@ -809,19 +809,13 @@ typedef CStdStr<char>		CStdStringA;	// a better std::string
 #define StdStringLessNoCase		SSLNCA
 #define StdStringEqualsNoCase		SSENCA
 
-struct StdStringLessNoCase
-	: std::binary_function<CStdStringA, CStdStringA, bool>
-{
-	inline
-	bool operator()(const CStdStringA& sLeft, const CStdStringA& sRight) const
-	{ return ssicmp(sLeft.c_str(), sRight.c_str()) < 0; }
+const auto StdStringLessNoCase = [](const CStdStringA& sLeft,
+                                    const CStdStringA& sRight) {
+	return ssicmp(sLeft.c_str(), sRight.c_str()) < 0;
 };
-struct StdStringEqualsNoCase
-	: std::binary_function<CStdStringA, CStdStringA, bool>
-{
-	inline
-	bool operator()(const CStdStringA& sLeft, const CStdStringA& sRight) const
-	{ return ssicmp(sLeft.c_str(), sRight.c_str()) == 0; }
+const auto StdStringEqualsNoCase = [](const CStdStringA& sLeft,
+                                      const CStdStringA& sRight) {
+	return ssicmp(sLeft.c_str(), sRight.c_str()) == 0;
 };
 
 // These std::swap specializations come courtesy of Mike Crusader. 
