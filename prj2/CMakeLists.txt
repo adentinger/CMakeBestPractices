@@ -29,6 +29,9 @@ set(CMAKE_DEBUG_POSTFIX -d)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+find_package(GTest CONFIG REQUIRED)
+find_package(FFMPEG REQUIRED)
+
 add_subdirectory(lib2)
 add_subdirectory(exe)
 
@@ -131,6 +134,3 @@ set(CPACK_WIX_UPGRADE_GUID "${CPACK_PROJECT_GUID}"
   CACHE STRING "Used in WIX .msi installers. Project GUID.")
 
 include(CPack)
-
-find_package(GTest CONFIG REQUIRED)
-
