@@ -502,12 +502,7 @@ if(WITH_OGG)
 endif()
 
 if(WIN32)
-  list(APPEND SMDATA_LINK_LIB
-              # The misc libraries are here.
-              "${LIB_SWSCALE}"
-              "${LIB_AVCODEC}"
-              "${LIB_AVFORMAT}"
-              "${LIB_AVUTIL}")
+  set(WIN32_PRIVATE_LIBS ${FFMPEG_LIBRARIES})
 
   list(APPEND SMDATA_LINK_LIB
               "dbghelp.lib"
@@ -643,7 +638,17 @@ else() # Unix / Linux TODO: Remember to find and locate the zip archive files.
   list(REMOVE_DUPLICATES SMDATA_LINK_LIB)
 endif()
 
-target_link_libraries("${SM_EXE_NAME}" ${SMDATA_LINK_LIB})
+target_include_directories("${SM_EXE_NAME}"
+  PRIVATE
+    ${FFMPEG_INCLUDE_DIRS})
+target_link_directories("${SM_EXE_NAME}"
+  PRIVATE
+    ${FFMPEG_LIBRARY_DIRS})
+target_link_libraries("${SM_EXE_NAME}"
+  PUBLIC
+    ${SMDATA_LINK_LIB}
+  PRIVATE
+    ${WIN32_PRIVATE_LIBS})
 
 list(APPEND SM_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}
             "${SM_SRC_DIR}/generated")
