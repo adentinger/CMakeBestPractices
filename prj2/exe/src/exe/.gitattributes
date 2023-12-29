@@ -1,0 +1,4 @@
+*.ico filter=lfs diff=lfs merge=lfs -text
+*.ICO filter=lfs diff=lfs merge=lfs -text
+*.lib filter=lfs diff=lfs merge=lfs -text
+*.exe filter=lfs diff=lfs merge=lfs -text
