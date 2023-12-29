@@ -436,12 +436,6 @@ if(HAS_MP3)
   endif()
 endif()
 
-if(WITH_SYSTEM_PCRE)
-  list(APPEND SMDATA_LINK_LIB ${PCRE_LIBRARY})
-else()
-  list(APPEND SMDATA_LINK_LIB "pcre")
-endif()
-
 if(WITH_SYSTEM_GLEW)
   list(APPEND SMDATA_LINK_LIB ${GLEW_LIBRARIES} ${GLEW_LIBRARY_RELEASE})
   list(APPEND SM_INCLUDE_DIRS ${GLEW_INCLUDE_DIRS})
@@ -649,6 +643,7 @@ target_link_libraries("${SM_EXE_NAME}"
     ${SMDATA_LINK_LIB}
   PRIVATE
     JsonCpp::JsonCpp
+    unofficial::pcre::pcre unofficial::pcre::pcre16 unofficial::pcre::pcre32 unofficial::pcre::pcrecpp
     ${WIN32_PRIVATE_LIBS})
 
 list(APPEND SM_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}
