@@ -420,12 +420,8 @@ int TimingData::GetSegmentIndexAtRow(TimingSegmentType tst, int iRow ) const
 	return INVALID_INDEX;
 }
 
-struct ts_less : binary_function <TimingSegment*, TimingSegment*, bool>
-{
-	bool operator() (const TimingSegment *x, const TimingSegment *y) const
-	{
-		return (*x) < (*y);
-	}
+const auto ts_less = [](const TimingSegment* x, const TimingSegment* y) {
+	return (*x) < (*y);
 };
 
 // Multiply the BPM in the range [fStartBeat,fEndBeat) by fFactor.
