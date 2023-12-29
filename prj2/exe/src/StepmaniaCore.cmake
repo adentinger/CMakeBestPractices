@@ -12,7 +12,7 @@ set(SM_INSTALLER_DIR "${CMAKE_CURRENT_LIST_DIR}/Installer")
 set(SM_XCODE_DIR "${CMAKE_CURRENT_LIST_DIR}/Xcode")
 set(SM_PROGRAM_DIR "${CMAKE_CURRENT_LIST_DIR}/Program")
 set(SM_BUILD_DIR "${CMAKE_CURRENT_LIST_DIR}/Build")
-set(SM_SRC_DIR "${CMAKE_CURRENT_LIST_DIR}/src")
+set(SM_SRC_DIR "${CMAKE_CURRENT_LIST_DIR}/exe")
 set(SM_DOC_DIR "${CMAKE_CURRENT_LIST_DIR}/Docs")
 set(SM_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}")
 
@@ -314,10 +314,6 @@ if(WIN32)
     get_filename_component(LIB_AVUTIL ${LIB_AVUTIL} NAME)
 
     list(APPEND SM_FFMPEG_WIN32_DLLS
-      "avcodec-55.dll"
-      "avformat-55.dll"
-      "avutil-52.dll"
-      "swscale-2.dll"
     )
     foreach(dll ${SM_FFMPEG_WIN32_DLLS})
       file(REMOVE "${SM_PROGRAM_DIR}/${dll}")
