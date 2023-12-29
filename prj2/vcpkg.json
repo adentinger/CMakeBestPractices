@@ -5,6 +5,7 @@
 	"dependencies": [
 		"ffmpeg",
 		"gtest",
-		"jsoncpp"
+		"jsoncpp",
+		"pcre"
 	]
 }
