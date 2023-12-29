@@ -648,6 +648,7 @@ target_link_libraries("${SM_EXE_NAME}"
   PUBLIC
     ${SMDATA_LINK_LIB}
   PRIVATE
+    JsonCpp::JsonCpp
     ${WIN32_PRIVATE_LIBS})
 
 list(APPEND SM_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}
