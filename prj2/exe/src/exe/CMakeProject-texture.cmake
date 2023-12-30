@@ -43,7 +43,7 @@ endif()
 
 sm_add_compile_definition("TextureFontGenerator" CMAKE_POWERED)
 
-list(APPEND TEXTURE_LINK_LIB "zlib" "png")
+list(APPEND TEXTURE_LINK_LIB "zlib")
 
 target_link_libraries("TextureFontGenerator" ${TEXTURE_LINK_LIB})
 
@@ -57,13 +57,11 @@ if(NOT WITH_SYSTEM_ZLIB)
               "${SM_EXTERN_DIR}/zlib")
 endif()
 
-if(NOT WITH_SYSTEM_PNG)
-  list(APPEND TEXTURE_INCLUDE_DIRS
-              "${SM_EXTERN_DIR}/libpng")
-endif()
-
 target_include_directories("TextureFontGenerator"
                            PUBLIC ${TEXTURE_INCLUDE_DIRS})
+target_link_libraries(TextureFontGenerator
+  PRIVATE
+    PNG::PNG)
 
 set_target_properties("TextureFontGenerator"
                       PROPERTIES RUNTIME_OUTPUT_DIRECTORY
