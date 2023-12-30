@@ -645,6 +645,7 @@ target_link_libraries("${SM_EXE_NAME}"
     GLEW::GLEW
     JsonCpp::JsonCpp
     Ogg::ogg
+    tomcrypt::tomcrypt
     Vorbis::vorbis
     Vorbis::vorbisfile
     ${LUA_LIBRARIES}
