@@ -37,6 +37,24 @@
 			}
 		},
 		{
+			"name": "linux-static-dev",
+			"inherits": ["base-default", "base-static", "base-dev", "base-linux"],
+			"condition": {
+				"type": "equals",
+				"lhs": "${hostSystemName}",
+				"rhs": "Linux"
+			}
+		},
+		{
+			"name": "linux-shared-dev",
+			"inherits": ["base-default", "base-shared", "base-dev", "base-linux"],
+			"condition": {
+				"type": "equals",
+				"lhs": "${hostSystemName}",
+				"rhs": "Linux"
+			}
+		},
+		{
 			"name": "osx-static",
 			"inherits": ["base-default", "base-static", "base-osx", "project-base"],
 			"condition": {
