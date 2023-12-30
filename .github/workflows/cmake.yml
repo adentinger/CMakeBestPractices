@@ -299,7 +299,7 @@ jobs:
       run: |
         $vsInstallPath = & "${env:ProgramFiles(x86)}/Microsoft Visual Studio/Installer/vswhere.exe" -property installationpath;
         Import-Module "$vsInstallPath\Common7\Tools\Microsoft.VisualStudio.DevShell.dll" &&
-        Enter-VsDevShell -VsInstallPath "$vsInstallPath" -SkipAutomaticLocation &&
+        Enter-VsDevShell -VsInstallPath "$vsInstallPath" -SkipAutomaticLocation -DevCmdArguments '-arch=x64' &&
         python3 superbuild.py --run-exe
 
     - name: Upload artifacts for release
