@@ -106,12 +106,12 @@ def set_envvars(params: Params) -> None:
 		preset = get_default_prj1_preset()
 		print('PRJ1_CONFIGURE_PRESET not defined, defaulting to "{}"'
 			.format(preset))
-		os.environ["PRJ1_CONFIGURE_PRESET"] = "Release"
+		os.environ["PRJ1_CONFIGURE_PRESET"] = preset
 	if not "PRJ2_CONFIGURE_PRESET" in os.environ:
 		preset = get_default_prj2_preset()
 		print('PRJ2_CONFIGURE_PRESET not defined, defaulting to "{}"'
 			.format(preset))
-		os.environ["PRJ2_CONFIGURE_PRESET"] = "Release"
+		os.environ["PRJ2_CONFIGURE_PRESET"] = preset
 	if not "CPACK_GENERATORS" in os.environ:
 		print("CPACK_GENERATORS not defined, cpack won't be called")
 	if not "CMAKE_DIR" in os.environ:
@@ -233,7 +233,7 @@ def build_prj1(params: Params, paths: Paths) -> None:
 	build_config = os.environ["PRJ1_CONFIG"]
 	set_envvar_or_print(params, "CMAKE_BUILD_TYPE", build_config)
 
-	run_or_print_cmd(params, [str(paths.cmake_exe), "-S", ".", "-B", "build", "--install-prefix", str(paths.install_dir)])
+	run_or_print_cmd(params, [str(paths.cmake_exe), "--preset", os.environ["PRJ1_CONFIGURE_PRESET"]])
 	run_or_print_cmd(params, [str(paths.cmake_exe), "--build", "build", "--config", build_config, "-j10"])
 	run_or_print_cmd(params, [str(paths.ctest_exe), "--test-dir", "build", "--build-config", build_config, "-j10"])
 	run_or_print_cmd(params, [str(paths.cmake_exe), "--install", "build", "--config", build_config])
@@ -245,7 +245,7 @@ def build_prj2(params: Params, paths: Paths) -> None:
 	build_config = os.environ["PRJ2_CONFIG"]
 	set_envvar_or_print(params, "CMAKE_BUILD_TYPE", build_config)
 
-	run_or_print_cmd(params, [str(paths.cmake_exe), "-S", ".", "-B", "build", "--install-prefix", str(paths.install_dir)])
+	run_or_print_cmd(params, [str(paths.cmake_exe), "--preset", os.environ["PRJ2_CONFIGURE_PRESET"]])
 	run_or_print_cmd(params, [str(paths.cmake_exe), "--build", "build", "--config", build_config, "-j10"])
 	run_or_print_cmd(params, [str(paths.ctest_exe), "--test-dir", "build", "--build-config", build_config, "-j10"])
 	run_or_print_cmd(params, [str(paths.cmake_exe), "--install", "build", "--config", build_config])
