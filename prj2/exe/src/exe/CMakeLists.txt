@@ -474,12 +474,6 @@ else()
   list(APPEND SMDATA_LINK_LIB "png")
 endif()
 
-if(WITH_SYSTEM_JSONCPP)
-  list(APPEND SMDATA_LINK_LIB ${JSONCPP_LIBRARIES})
-else()
-  list(APPEND SMDATA_LINK_LIB "jsoncpp")
-endif()
-
 if(WITH_OGG)
   if(WITH_SYSTEM_OGG)
     list(APPEND SMDATA_LINK_LIB
@@ -663,13 +657,6 @@ if(NOT APPLE)
   if(NOT WITH_SYSTEM_GLEW)
     list(APPEND SM_INCLUDE_DIRS
                 "${SM_EXTERN_DIR}/glew-1.5.8/include")
-  endif()
-
-  if(WITH_SYSTEM_JSONCPP)
-    list(APPEND SM_INCLUDE_DIRS ${JSONCPP_INCLUDE_DIRS})
-  else()
-    list(APPEND SM_INCLUDE_DIRS
-                "${SM_EXTERN_DIR}/jsoncpp/include")
   endif()
 
   if(NOT WITH_SYSTEM_ZLIB)
