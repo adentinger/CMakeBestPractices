@@ -7,6 +7,7 @@
 		"glew",
 		"gtest",
 		"jsoncpp",
+		"libmad",
 		"libpng",
 		"lua",
 		"pcre"
