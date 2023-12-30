@@ -38,7 +38,7 @@
 		},
 		{
 			"name": "linux-static-dev",
-			"inherits": ["base-default", "base-static", "base-dev", "base-linux"],
+			"inherits": ["base-default", "base-static", "base-linux", "base-dev"],
 			"condition": {
 				"type": "equals",
 				"lhs": "${hostSystemName}",
@@ -47,7 +47,7 @@
 		},
 		{
 			"name": "linux-shared-dev",
-			"inherits": ["base-default", "base-shared", "base-dev", "base-linux"],
+			"inherits": ["base-default", "base-shared", "base-linux", "base-dev"],
 			"condition": {
 				"type": "equals",
 				"lhs": "${hostSystemName}",
@@ -73,6 +73,24 @@
 			}
 		},
 		{
+			"name": "osx-static-dev",
+			"inherits": ["base-default", "base-static", "base-osx", "base-dev"],
+			"condition": {
+				"type": "equals",
+				"lhs": "${hostSystemName}",
+				"rhs": "Darwin"
+			}
+		},
+		{
+			"name": "osx-shared-dev",
+			"inherits": ["base-default", "base-shared", "base-osx", "base-dev"],
+			"condition": {
+				"type": "equals",
+				"lhs": "${hostSystemName}",
+				"rhs": "Darwin"
+			}
+		},
+		{
 			"name": "win-static",
 			"inherits": ["base-default", "base-static", "base-win", "project-base"],
 			"condition": {
@@ -84,6 +102,24 @@
 		{
 			"name": "win-shared",
 			"inherits": ["base-default", "base-shared", "base-win", "project-base"],
+			"condition": {
+				"type": "equals",
+				"lhs": "${hostSystemName}",
+				"rhs": "Windows"
+			}
+		},
+		{
+			"name": "win-static-dev",
+			"inherits": ["base-default", "base-static", "base-win", "base-dev"],
+			"condition": {
+				"type": "equals",
+				"lhs": "${hostSystemName}",
+				"rhs": "Windows"
+			}
+		},
+		{
+			"name": "win-shared-dev",
+			"inherits": ["base-default", "base-shared", "base-win", "base-dev"],
 			"condition": {
 				"type": "equals",
 				"lhs": "${hostSystemName}",
