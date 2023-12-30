@@ -71,24 +71,6 @@
 				"lhs": "${hostSystemName}",
 				"rhs": "Windows"
 			}
-		},
-		{
-			"name": "linux-static-dev",
-			"inherits": ["static", "base-dev", "base-linux"],
-			"condition": {
-				"type": "equals",
-				"lhs": "${hostSystemName}",
-				"rhs": "Linux"
-			}
-		},
-		{
-			"name": "linux-shared-dev",
-			"inherits": ["shared", "base-dev", "base-linux"],
-			"condition": {
-				"type": "equals",
-				"lhs": "${hostSystemName}",
-				"rhs": "Linux"
-			}
 		}
 	]
 }
