@@ -30,6 +30,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(FFMPEG REQUIRED)
+find_package(GLEW REQUIRED)
 find_package(GTest CONFIG REQUIRED)
 find_package(jsoncpp CONFIG REQUIRED)
 find_package(PNG REQUIRED)
