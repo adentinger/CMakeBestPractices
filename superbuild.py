@@ -80,6 +80,21 @@ def set_envvar_or_print(params: Params, envvar: str, value: str) -> None:
 	else:
 		print('-- Would set envvar {}="{}"'.format(envvar, value))
 
+def get_default_prj1_preset():
+	if sys.platform.startswith("linux"):
+		return "linux-shared"
+	if sys.platform == "darwin":
+		return "osx-shared"
+	if sys.platform == "win32":
+		return "win-shared"
+	raise RuntimeError(
+		'[BUG] Could not determine preset name for platform "{}"'
+			.format(sys.platform))
+
+def get_default_prj2_preset():
+	# Happens to be the same thing as prj1
+	return get_default_prj1_preset()
+
 def set_envvars(params: Params) -> None:
 	if not "PRJ1_CONFIG" in os.environ:
 		print('PRJ1_CONFIG not defined, defaulting to "Release"')
@@ -88,10 +103,14 @@ def set_envvars(params: Params) -> None:
 		print('PRJ2_CONFIG not defined, defaulting to "Release"')
 		os.environ["PRJ2_CONFIG"] = "Release"
 	if not "PRJ1_CONFIGURE_PRESET" in os.environ:
-		print('PRJ1_CONFIGURE_PRESET not defined, defaulting to "shared"')
+		preset = get_default_prj1_preset()
+		print('PRJ1_CONFIGURE_PRESET not defined, defaulting to "{}"'
+			.format(preset))
 		os.environ["PRJ1_CONFIGURE_PRESET"] = "Release"
 	if not "PRJ2_CONFIGURE_PRESET" in os.environ:
-		print('PRJ2_CONFIGURE_PRESET not defined, defaulting to "shared"')
+		preset = get_default_prj2_preset()
+		print('PRJ2_CONFIGURE_PRESET not defined, defaulting to "{}"'
+			.format(preset))
 		os.environ["PRJ2_CONFIGURE_PRESET"] = "Release"
 	if not "CPACK_GENERATORS" in os.environ:
 		print("CPACK_GENERATORS not defined, cpack won't be called")
