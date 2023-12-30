@@ -6,6 +6,7 @@
 		"ffmpeg",
 		"glew",
 		"gtest",
+		"ijg-libjpeg",
 		"jsoncpp",
 		"libmad",
 		"libogg",

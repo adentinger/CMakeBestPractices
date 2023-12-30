@@ -643,6 +643,7 @@ target_link_libraries("${SM_EXE_NAME}"
     ${SMDATA_LINK_LIB}
   PRIVATE
     GLEW::GLEW
+    JPEG::JPEG
     JsonCpp::JsonCpp
     Ogg::ogg
     tomcrypt::tomcrypt
