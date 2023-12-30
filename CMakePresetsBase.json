@@ -18,6 +18,10 @@
 				"CPACK_PACKAGE_DIRECTORY": {
 					"type": "PATH",
 					"value": "${sourceDir}/packages"
+				},
+				"CMAKE_MODULE_PATH": {
+					"type": "STRING",
+					"value": "${sourceDir}/../cmake/modules"
 				}
 			}
 		},
