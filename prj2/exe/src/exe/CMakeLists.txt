@@ -639,6 +639,7 @@ target_link_libraries("${SM_EXE_NAME}"
     GLEW::GLEW
     JPEG::JPEG
     JsonCpp::JsonCpp
+    Mad::Mad
     Ogg::ogg
     tomcrypt::tomcrypt
     Vorbis::vorbis
