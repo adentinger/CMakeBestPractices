@@ -237,24 +237,7 @@ if(WITH_MP3)
   endif()
 endif(WITH_MP3)
 
-if(WITH_OGG)
-  if(WIN32 OR MACOSX)
-    set(HAS_OGG TRUE)
-  else()
-    find_package(Ogg)
-    find_package(Vorbis)
-    find_package(VorbisFile)
-
-    if(NOT (OGG_FOUND AND VORBIS_FOUND AND VORBISFILE_FOUND))
-      message(
-        FATAL_ERROR
-          "Not all vorbis libraries were found. If you wish to skip vorbis support, set WITH_OGG to OFF when configuring."
-        )
-    else()
-      set(HAS_OGG TRUE)
-    endif()
-  endif()
-endif()
+set(HAS_OGG TRUE)
 
 if(WITH_SDL)
   find_package(SDL2 REQUIRED)

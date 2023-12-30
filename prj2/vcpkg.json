@@ -8,7 +8,9 @@
 		"gtest",
 		"jsoncpp",
 		"libmad",
+		"libogg",
 		"libpng",
+		"libvorbis",
 		"lua",
 		"pcre"
 	]
