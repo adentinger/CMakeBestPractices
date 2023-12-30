@@ -642,6 +642,7 @@ target_link_libraries("${SM_EXE_NAME}"
   PUBLIC
     ${SMDATA_LINK_LIB}
   PRIVATE
+    GLEW::GLEW
     JsonCpp::JsonCpp
     ${LUA_LIBRARIES}
     unofficial::pcre::pcre
