@@ -32,6 +32,17 @@ target_sources(tommath::tommath
     FILES ${tommath_HEADERS}
 )
 
+# Not sure why we need this, but we get CMake errors when we don't. Note
+# that these properties are only correct as long as the library is a static
+# library. If it is a shared library, then look at these properties for how to
+# set them.
+set_property(TARGET tommath::tommath APPEND PROPERTY
+  IMPORTED_CONFIGURATIONS RELEASE)
+set_target_properties(tommath::tommath PROPERTIES
+  IMPORTED_IMPLIB_RELEASE "${tommath_LIB}"
+  IMPORTED_LOCATION_RELEASE "${tommath_LIB}"
+)
+
 unset(tommath_LIB)
 unset(tommath_INCL)
 unset(tommath_HEADERS)
