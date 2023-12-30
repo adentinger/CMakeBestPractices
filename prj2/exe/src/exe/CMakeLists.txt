@@ -425,7 +425,6 @@ endif()
 
 set_property(TARGET "${SM_EXE_NAME}" PROPERTY FOLDER "Internal Libraries")
 
-list(APPEND SMDATA_LINK_LIB "lua-5.1")
 # include(../extern/CMakeProject-mmmagic.cmake)
 
 if(HAS_MP3)
@@ -634,7 +633,8 @@ endif()
 
 target_include_directories("${SM_EXE_NAME}"
   PRIVATE
-    ${FFMPEG_INCLUDE_DIRS})
+    ${FFMPEG_INCLUDE_DIRS}
+    ${LUA_INCLUDE_DIR})
 target_link_directories("${SM_EXE_NAME}"
   PRIVATE
     ${FFMPEG_LIBRARY_DIRS})
@@ -643,7 +643,11 @@ target_link_libraries("${SM_EXE_NAME}"
     ${SMDATA_LINK_LIB}
   PRIVATE
     JsonCpp::JsonCpp
-    unofficial::pcre::pcre unofficial::pcre::pcre16 unofficial::pcre::pcre32 unofficial::pcre::pcrecpp
+    ${LUA_LIBRARIES}
+    unofficial::pcre::pcre
+    unofficial::pcre::pcre16
+    unofficial::pcre::pcre32
+    unofficial::pcre::pcrecpp
     ${WIN32_PRIVATE_LIBS})
 
 list(APPEND SM_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}
