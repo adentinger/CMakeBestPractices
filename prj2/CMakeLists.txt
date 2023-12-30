@@ -32,6 +32,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(FFMPEG REQUIRED)
 find_package(GTest CONFIG REQUIRED)
 find_package(jsoncpp CONFIG REQUIRED)
+find_package(PNG REQUIRED)
 find_package(Lua REQUIRED)
 find_package(unofficial-pcre CONFIG REQUIRED)
 
