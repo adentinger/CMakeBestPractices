@@ -474,7 +474,6 @@ elseif(LINUX)
 
   set(OpenGL_GL_PREFERENCE GLVND)
   find_package(OpenGL REQUIRED)
-  find_package(GLEW REQUIRED)
 endif(WIN32) # LINUX, APPLE
 
 configure_file("${SM_SRC_DIR}/config.in.hpp"
