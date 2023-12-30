@@ -1,35 +1,35 @@
 # SPDX-License-Identifier: MIT
 
 # https://cmake.org/cmake/help/book/mastering-cmake/chapter/Finding%20Packages.html#built-in-find-modules
-set(tommath_FOUND ON)
-find_library(tommath_LIB tommath)
-find_path(tommath_INCL tommath.h)
+set(Tommath_FOUND ON)
+find_library(Tommath_LIB Tommath)
+find_path(Tommath_INCL Tommath.h)
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(tommath
+find_package_handle_standard_args(Tommath
   FOUND_VAR
-    tommath_FOUND
+    Tommath_FOUND
   REQUIRED_VARS
-    tommath_LIB
-    tommath_INCL
+    Tommath_LIB
+    Tommath_INCL
 )
 
-set(tommath_LIBRARIES "${tommath_LIB}")
-set(tommath_INCLUDE_DIRS "${tommath_INCL}")
+set(Tommath_LIBRARIES "${Tommath_LIB}")
+set(Tommath_INCLUDE_DIRS "${Tommath_INCL}")
 
-file(GLOB_RECURSE tommath_HEADERS
+file(GLOB_RECURSE Tommath_HEADERS
   LIST_DIRECTORIES false
-  "${tommath_INCLUDE_DIRS}/*.h"
-  "${tommath_INCLUDE_DIRS}/*.hpp")
+  "${Tommath_INCLUDE_DIRS}/*.h"
+  "${Tommath_INCLUDE_DIRS}/*.hpp")
 
 # Allows doing target_link_libraries(<target> PRIVATE tommath::tommath)
-# instead of manually using the tommath_* variables. 
+# instead of manually using the Tommath_* variables. 
 add_library(tommath::tommath STATIC IMPORTED)
 target_sources(tommath::tommath
   INTERFACE
     FILE_SET "public_headers"
     TYPE "HEADERS"
-    BASE_DIRS "${tommath_INCL}"
-    FILES ${tommath_HEADERS}
+    BASE_DIRS "${Tommath_INCL}"
+    FILES ${Tommath_HEADERS}
 )
 
 # Not sure why we need this, but we get CMake errors when we don't. Note
@@ -39,10 +39,10 @@ target_sources(tommath::tommath
 set_property(TARGET tommath::tommath APPEND PROPERTY
   IMPORTED_CONFIGURATIONS RELEASE)
 set_target_properties(tommath::tommath PROPERTIES
-  IMPORTED_IMPLIB_RELEASE "${tommath_LIB}"
-  IMPORTED_LOCATION_RELEASE "${tommath_LIB}"
+  IMPORTED_IMPLIB_RELEASE "${Tommath_LIB}"
+  IMPORTED_LOCATION_RELEASE "${Tommath_LIB}"
 )
 
-unset(tommath_LIB)
-unset(tommath_INCL)
-unset(tommath_HEADERS)
+unset(Tommath_LIB)
+unset(Tommath_INCL)
+unset(Tommath_HEADERS)
