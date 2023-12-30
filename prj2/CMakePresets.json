@@ -19,20 +19,76 @@
 			}
 		},
 		{
-			"name": "static",
-			"inherits": ["base-default", "base-static", "project-base"]
+			"name": "linux-static",
+			"inherits": ["base-default", "base-static", "base-linux", "project-base"],
+			"condition": {
+				"type": "equals",
+				"lhs": "${hostSystemName}",
+				"rhs": "Linux"
+			}
 		},
 		{
-			"name": "shared",
-			"inherits": ["base-default", "base-shared", "project-base"]
+			"name": "linux-shared",
+			"inherits": ["base-default", "base-shared", "base-linux", "project-base"],
+			"condition": {
+				"type": "equals",
+				"lhs": "${hostSystemName}",
+				"rhs": "Linux"
+			}
 		},
 		{
-			"name": "static-dev",
-			"inherits": ["static", "base-dev"]
+			"name": "osx-static",
+			"inherits": ["base-default", "base-static", "base-osx", "project-base"],
+			"condition": {
+				"type": "equals",
+				"lhs": "${hostSystemName}",
+				"rhs": "Darwin"
+			}
 		},
 		{
-			"name": "shared-dev",
-			"inherits": ["shared", "base-dev"]
+			"name": "osx-shared",
+			"inherits": ["base-default", "base-shared", "base-osx", "project-base"],
+			"condition": {
+				"type": "equals",
+				"lhs": "${hostSystemName}",
+				"rhs": "Darwin"
+			}
+		},
+		{
+			"name": "win-static",
+			"inherits": ["base-default", "base-static", "base-win", "project-base"],
+			"condition": {
+				"type": "equals",
+				"lhs": "${hostSystemName}",
+				"rhs": "Windows"
+			}
+		},
+		{
+			"name": "win-shared",
+			"inherits": ["base-default", "base-shared", "base-win", "project-base"],
+			"condition": {
+				"type": "equals",
+				"lhs": "${hostSystemName}",
+				"rhs": "Windows"
+			}
+		},
+		{
+			"name": "linux-static-dev",
+			"inherits": ["static", "base-dev", "base-linux"],
+			"condition": {
+				"type": "equals",
+				"lhs": "${hostSystemName}",
+				"rhs": "Linux"
+			}
+		},
+		{
+			"name": "linux-shared-dev",
+			"inherits": ["shared", "base-dev", "base-linux"],
+			"condition": {
+				"type": "equals",
+				"lhs": "${hostSystemName}",
+				"rhs": "Linux"
+			}
 		}
 	],
 	"buildPresets": [
