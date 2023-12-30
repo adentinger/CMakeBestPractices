@@ -38,7 +38,7 @@
 		},
 		{
 			"name": "linux-static-dev",
-			"inherits": ["base-static", "base-dev", "base-linux"],
+			"inherits": ["base-default", "base-static", "base-dev", "base-linux"],
 			"condition": {
 				"type": "equals",
 				"lhs": "${hostSystemName}",
@@ -47,7 +47,7 @@
 		},
 		{
 			"name": "linux-shared-dev",
-			"inherits": ["base-shared", "base-dev", "base-linux"],
+			"inherits": ["base-default", "base-shared", "base-dev", "base-linux"],
 			"condition": {
 				"type": "equals",
 				"lhs": "${hostSystemName}",
