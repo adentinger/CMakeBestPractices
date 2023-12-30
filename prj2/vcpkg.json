@@ -10,6 +10,7 @@
 		"libmad",
 		"libogg",
 		"libpng",
+		"libtomcrypt",
 		"libvorbis",
 		"lua",
 		"pcre"
