@@ -22,6 +22,54 @@
 			}
 		},
 		{
+			"name": "base-win",
+			"hidden": true,
+			"description": "Base Windows",
+			"condition": {
+				"type": "equals",
+				"lhs": "${hostSystemName}",
+				"rhs": "Windows"
+			},
+			"cacheVariables": {
+				"VCPKG_TARGET_TRIPLET": {
+					"type": "STRING",
+					"value": "x64-windows"
+				}
+			}
+		},
+		{
+			"name": "base-linux",
+			"hidden": true,
+			"description": "Base Linux",
+			"condition": {
+				"type": "equals",
+				"lhs": "${hostSystemName}",
+				"rhs": "Linux"
+			},
+			"cacheVariables": {
+				"VCPKG_TARGET_TRIPLET": {
+					"type": "STRING",
+					"value": "x64-linux"
+				}
+			}
+		},
+		{
+			"name": "base-osx",
+			"hidden": true,
+			"description": "Base OSX",
+			"condition": {
+				"type": "equals",
+				"lhs": "${hostSystemName}",
+				"rhs": "Darwin"
+			},
+			"cacheVariables": {
+				"VCPKG_TARGET_TRIPLET": {
+					"type": "STRING",
+					"value": "x64-osx"
+				}
+			}
+		},
+		{
 			"name": "base-dev",
 			"hidden": true,
 			"description": "Base for dev/CI setup",
