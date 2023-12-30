@@ -644,6 +644,9 @@ target_link_libraries("${SM_EXE_NAME}"
   PRIVATE
     GLEW::GLEW
     JsonCpp::JsonCpp
+    Ogg::ogg
+    Vorbis::vorbis
+    Vorbis::vorbisfile
     ${LUA_LIBRARIES}
     unofficial::pcre::pcre
     unofficial::pcre::pcre16
