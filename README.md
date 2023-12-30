@@ -33,7 +33,7 @@ sudo apt install clang-format-16 clang-tidy-16
 - Actual dependencies:
     - CMake >= 3.26. If such a version is not available on your system, you can [download/install it here](https://cmake.org/download/).
     - A generator supported by CMake (such as `ninja` or `make`).
-    - (Optional) `clang-tidy` and `clang-format` version >= 16. Only needed by the `static-dev` and `shared-dev` configure presets.
+    - (Optional) `clang-tidy` and `clang-format` version >= 16. Only needed by the `*-dev` configure presets.
 
 Here's how to build the project:
 
@@ -69,8 +69,8 @@ Run `python3 superbuild.py --dry-run` to get the cmake commands that would be ru
 # Note that environment variables are passed as-is to CMake, so you can specify
 # environment variables to be used by CMake, such as CMAKE_GENERATOR or VERBOSE.
 # See: https://cmake.org/cmake/help/latest/manual/cmake-env-variables.7.html
-PRJ1_CONFIGURE_PRESET=shared-dev \
-PRJ2_CONFIGURE_PRESET=static-dev \
+PRJ1_CONFIGURE_PRESET=win-shared-dev \
+PRJ2_CONFIGURE_PRESET=win-static-dev \
 PRJ1_CONFIG=Debug \
 CMAKE_GENERATOR="Visual Studio 17 2022" \
 VERBOSE=1 \
