@@ -24,8 +24,8 @@ jobs:
       matrix:
         # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#choosing-github-hosted-runners
         runner-id: [ubuntu-latest, macos-latest]
-        prj1-configure-preset: [static, shared]
-        prj2-configure-preset: [static, shared]
+        prj1-shared-libs: [false, true]
+        prj2-shared-libs: [false, true]
         has-analysis: [false]
 
         # Remove the configuration "ubuntu-latest, static, static", and replace
@@ -44,14 +44,14 @@ jobs:
         # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstrategymatrixexclude
         exclude:
           - runner-id: ubuntu-latest
-            prj1-configure-preset: static
-            prj2-configure-preset: static
+            prj1-shared-libs: false
+            prj2-shared-libs: false
             has-analysis: false
 
           # Don't do (shared, static) CI jobs --if the others work then there's
           # a good chance that one will too.
-          - prj1-configure-preset: shared
-            prj2-configure-preset: static
+          - prj1-shared-libs: true
+            prj2-shared-libs: false
 
         # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstrategymatrixinclude
         include:
@@ -60,16 +60,40 @@ jobs:
           # the current job, if any.
           - runner-id: ubuntu-latest
             cpack-generators: "DEB;RPM;External;STGZ;TGZ;ZIP"
-          - runner-id: macos-latest
-            cpack-generators: "DragNDrop;productbuild;External;STGZ;TGZ;ZIP"
-
           - runner-id: ubuntu-latest
-            prj1-configure-preset: static-dev
-            prj2-configure-preset: static-dev
+            prj1-shared-libs: false
+            prj2-shared-libs: true
+            prj1-configure-preset: linux-static
+            prj2-configure-preset: linux-shared
+          - runner-id: ubuntu-latest
+            prj1-shared-libs: true
+            prj2-shared-libs: true
+            prj1-configure-preset: linux-shared
+            prj2-configure-preset: linux-shared
+          - runner-id: ubuntu-latest
+            prj1-shared-libs: false
+            prj2-shared-libs: false
+            prj1-configure-preset: linux-static-dev
+            prj2-configure-preset: linux-static-dev
             has-analysis: true
             # This should be the same value as for "runner-id: ubuntu-latest"
             # above.
             cpack-generators: "DEB;RPM;External;STGZ;TGZ;ZIP"
+
+          - runner-id: macos-latest
+            cpack-generators: "DragNDrop;productbuild;External;STGZ;TGZ;ZIP"
+          - runner-id: macos-latest
+            prj1-shared-libs: false
+            prj1-configure-preset: osx-static
+          - runner-id: macos-latest
+            prj1-shared-libs: true
+            prj1-configure-preset: osx-shared
+          - runner-id: macos-latest
+            prj2-shared-libs: false
+            prj2-configure-preset: osx-static
+          - runner-id: macos-latest
+            prj2-shared-libs: true
+            prj2-configure-preset: osx-shared
 
     env:
       # Environment variables used by CMake.
@@ -167,8 +191,8 @@ jobs:
       if: |
         github.event_name == 'push' &&
         github.ref_type == 'tag' &&
-        (matrix.prj1-configure-preset == 'static' || matrix.prj1-configure-preset == 'static-dev') &&
-        (matrix.prj2-configure-preset == 'static' || matrix.prj2-configure-preset == 'static-dev')
+        matrix.prj1-shared-libs == 'false' &&
+        matrix.prj2-shared-libs == 'false'
       # Unfortunately on MacOS the actions/upload-artifact action takes nearly
       # three hours to upload directories at the moment, so tar the files and
       # upload the tar instead:
@@ -186,8 +210,8 @@ jobs:
       if: |
         github.event_name == 'push' &&
         github.ref_type == 'tag' &&
-        (matrix.prj1-configure-preset == 'static' || matrix.prj1-configure-preset == 'static-dev') &&
-        (matrix.prj2-configure-preset == 'static' || matrix.prj2-configure-preset == 'static-dev')
+        matrix.prj1-shared-libs == 'false' &&
+        matrix.prj2-shared-libs == 'false'
       with:
         name: release-packages-${{matrix.runner-id}}
         path: ${{github.workspace}}/repo/release-packages-${{matrix.runner-id}}.tar.gz
@@ -202,8 +226,8 @@ jobs:
       matrix:
         # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#choosing-github-hosted-runners
         runner-id: [windows-latest]
-        prj1-configure-preset: [static, shared]
-        prj2-configure-preset: [static, shared]
+        prj1-shared-libs: [false, true]
+        prj2-shared-libs: [false, true]
         # Specify Visual Studio release year. Multiple such list items can
         # be added to try multiple VS versions. Not sure if different VS
         # versions necessarily have a different version of MSVC or if they
@@ -215,8 +239,18 @@ jobs:
         exclude:
           # Don't do (shared, static) CI jobs --if the others work then there's
           # a good chance that one will too.
-          - prj1-configure-preset: shared
-            prj2-configure-preset: static
+          - prj1-shared-libs: true
+            prj2-shared-libs: false
+        # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstrategymatrixinclude
+        include:
+          - prj1-shared-libs: false
+            prj1-configure-preset: win-static
+          - prj1-shared-libs: true
+            prj1-configure-preset: win-shared
+          - prj2-shared-libs: false
+            prj2-configure-preset: win-static
+          - prj2-shared-libs: true
+            prj2-configure-preset: win-shared
 
     env:
       # Environment variables used by CMake.
@@ -274,8 +308,8 @@ jobs:
       if: |
         github.event_name == 'push' &&
         github.ref_type == 'tag' &&
-        (matrix.prj1-configure-preset == 'static' || matrix.prj1-configure-preset == 'static-dev') &&
-        (matrix.prj2-configure-preset == 'static' || matrix.prj2-configure-preset == 'static-dev')
+        matrix.prj1-shared-libs == 'false' &&
+        matrix.prj2-shared-libs == 'false'
       with:
         name: release-packages-${{matrix.runner-id}}
         # Upload of directory is slow only on MacOS but fine on Windows, so use
@@ -298,15 +332,25 @@ jobs:
     strategy:
       matrix:
         generator: ["Visual Studio 17 2022"]
-        prj1-configure-preset: [static, shared]
-        prj2-configure-preset: [static, shared]
+        prj1-shared-libs: [false, true]
+        prj2-shared-libs: [false, true]
 
         # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstrategymatrixexclude
         exclude:
           # Don't do (shared, static) CI jobs --if the others work then there's
           # a good chance that one will too.
-          - prj1-configure-preset: shared
-            prj2-configure-preset: static
+          - prj1-shared-libs: true
+            prj2-shared-libs: false
+        # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstrategymatrixinclude
+        include:
+          - prj1-shared-libs: false
+            prj1-configure-preset: win-static
+          - prj1-shared-libs: true
+            prj1-configure-preset: win-shared
+          - prj2-shared-libs: false
+            prj2-configure-preset: win-static
+          - prj2-shared-libs: true
+            prj2-configure-preset: win-shared
 
     runs-on: windows-latest
 
