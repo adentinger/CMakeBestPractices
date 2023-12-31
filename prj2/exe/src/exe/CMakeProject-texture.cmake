@@ -35,8 +35,6 @@ add_executable("TextureFontGenerator"
 unset(CMAKE_MFC_FLAG)
 set_property(TARGET "TextureFontGenerator" PROPERTY FOLDER "Internal Libraries")
 
-disable_project_warnings("TextureFontGenerator")
-
 sm_add_compile_definition("TextureFontGenerator" CMAKE_POWERED)
 
 list(APPEND TEXTURE_INCLUDE_DIRS

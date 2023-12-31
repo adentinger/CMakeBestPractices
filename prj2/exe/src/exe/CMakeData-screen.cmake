@@ -174,10 +174,8 @@ list(APPEND SMDATA_SCREEN_NET_HPP
             "ScreenNetSelectMusic.h"
             "ScreenNetworkOptions.h")
 
-if(WITH_NETWORKING)
-  list(APPEND SMDATA_SCREEN_NET_SRC "ScreenSMOnlineLogin.cpp")
-  list(APPEND SMDATA_SCREEN_NET_HPP "ScreenSMOnlineLogin.h")
-endif()
+list(APPEND SMDATA_SCREEN_NET_SRC "ScreenSMOnlineLogin.cpp")
+list(APPEND SMDATA_SCREEN_NET_HPP "ScreenSMOnlineLogin.h")
 
 source_group("Screens\\\\Network"
              FILES

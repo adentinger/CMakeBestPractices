@@ -176,10 +176,8 @@ list(APPEND SMDATA_ACTOR_MENU_HPP
             "WheelNotifyIcon.h"
             "WorkoutGraph.h")
 
-if(WITH_NETWORKING)
-  list(APPEND SMDATA_ACTOR_MENU_SRC "RoomInfoDisplay.cpp")
-  list(APPEND SMDATA_ACTOR_MENU_HPP "RoomInfoDisplay.h")
-endif()
+list(APPEND SMDATA_ACTOR_MENU_SRC "RoomInfoDisplay.cpp")
+list(APPEND SMDATA_ACTOR_MENU_HPP "RoomInfoDisplay.h")
 
 source_group("Actors\\\\Menus"
              FILES

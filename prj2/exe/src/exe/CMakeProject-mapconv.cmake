@@ -12,8 +12,6 @@ add_executable("mapconv" ${MAPCONV_SRC})
 
 set_property(TARGET "mapconv" PROPERTY FOLDER "Internal Libraries")
 
-disable_project_warnings("mapconv")
-
 set_target_properties("mapconv"
                       PROPERTIES RUNTIME_OUTPUT_DIRECTORY
                                  "${SM_PROGRAM_DIR}"
