@@ -3,22 +3,22 @@
 
 # Find Iconv on the system. When this is done, the following are defined:
 
-# ICONV_FOUND - The system has Iconv. ICONV_INCLUDE_DIR - The Iconv include
-# directory. ICONV_LIBRARIES - The library file to link to.
+# Iconv_FOUND - The system has Iconv. Iconv_INCLUDE_DIR - The Iconv include
+# directory. Iconv_LIBRARIES - The library file to link to.
 
-if(ICONV_INCLUDE_DIR AND ICONV_LIBRARIES)
+if(Iconv_INCLUDE_DIR AND Iconv_LIBRARIES)
   # Already in cache, so don't repeat the finding procedures.
-  set(ICONV_FIND_QUIETLY TRUE)
+  set(Iconv_FIND_QUIETLY TRUE)
 endif()
 
-find_path(ICONV_INCLUDE_DIR iconv.h)
-set(ICONV_NAMES ${ICONV_NAMES} iconv libiconv libiconv-2 c)
-find_library(ICONV_LIBRARIES NAMES ${ICONV_NAMES})
+find_path(Iconv_INCLUDE_DIR Iconv.h)
+set(Iconv_NAMES ${Iconv_NAMES} Iconv libIconv libIconv-2 c)
+find_library(Iconv_LIBRARIES NAMES ${Iconv_NAMES})
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(ICONV
+find_package_handle_standard_args(Iconv
                                   DEFAULT_MSG
-                                  ICONV_LIBRARIES
-                                  ICONV_INCLUDE_DIR)
+                                  Iconv_LIBRARIES
+                                  Iconv_INCLUDE_DIR)
 
-mark_as_advanced(ICONV_INCLUDE_DIR ICONV_LIBRARIES)
+mark_as_advanced(Iconv_INCLUDE_DIR Iconv_LIBRARIES)
