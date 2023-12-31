@@ -731,7 +731,7 @@ void TimingData::AddSegment( const TimingSegment *seg )
 	{
 		// copy and insert a new segment
 		vector<TimingSegment*>::iterator it;
-		it = upper_bound( vSegs.begin(), vSegs.end(), cpy, ts_less() );
+		it = upper_bound( vSegs.begin(), vSegs.end(), cpy, ts_less );
 		vSegs.insert( it, cpy );
 	}
 }
