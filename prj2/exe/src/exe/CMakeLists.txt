@@ -3,9 +3,7 @@ file(MAKE_DIRECTORY "${SM_SRC_DIR}/generated")
 if(MSVC)
   # Add the mapconv program of the past to allow for debugging information.
   include("CMakeProject-mapconv.cmake")
-  if(WITH_TEXTURE_GENERATOR OR WITH_FULL_RELEASE)
-    include("CMakeProject-texture.cmake")
-  endif()
+  include("CMakeProject-texture.cmake")
 endif()
 
 # Keep the module path local for easier grabbing.
@@ -587,10 +585,8 @@ if(NOT APPLE)
     # Hardcoding the values for now since the foreach loop is not working as
     # intended.
     install(TARGETS "${SM_EXE_NAME}" DESTINATION "${SM_FULL_INSTALLATION_PATH}")
-    if(WITH_FULL_RELEASE OR WITH_TEXTURE_GENERATOR)
-      install(FILES "${SM_PROGRAM_DIR}/Texture Font Generator.exe"
-              DESTINATION "${SM_FULL_INSTALLATION_PATH}")
-    endif()
+    install(FILES "${SM_PROGRAM_DIR}/Texture Font Generator.exe"
+            DESTINATION "${SM_FULL_INSTALLATION_PATH}")
     install(FILES "${SM_PROGRAM_DIR}/parallel_lights_io.dll"
             DESTINATION "${SM_FULL_INSTALLATION_PATH}")
     install(FILES "${SM_PROGRAM_DIR}/StepMania.vdi"
