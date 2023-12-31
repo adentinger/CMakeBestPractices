@@ -806,16 +806,12 @@ typedef CStdStr<char>		CStdStringA;	// a better std::string
 //		 proper string but in the wrong case.
 // -----------------------------------------------------------------------------
 
-#define StdStringLessNoCase		SSLNCA
-#define StdStringEqualsNoCase		SSENCA
-
-const auto StdStringLessNoCase = [](const CStdStringA& sLeft,
-                                    const CStdStringA& sRight) {
-	return ssicmp(sLeft.c_str(), sRight.c_str()) < 0;
-};
-const auto StdStringEqualsNoCase = [](const CStdStringA& sLeft,
-                                      const CStdStringA& sRight) {
-	return ssicmp(sLeft.c_str(), sRight.c_str()) == 0;
+class StdStringLessNoCase {
+public:
+	bool operator()(const CStdStringA& sLeft,
+                    const CStdStringA& sRight) const {
+		return ssicmp(sLeft.c_str(), sRight.c_str()) < 0;
+	}
 };
 
 // These std::swap specializations come courtesy of Mike Crusader. 
