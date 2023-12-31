@@ -404,11 +404,6 @@ void MovieTexture_FFMpeg::RegisterProtocols()
 	if( Done )
 		return;
 	Done = true;
-
-#if !FF_API_NEXT
-	avcodec::avcodec_register_all();
-	avcodec::av_register_all();
-#endif
 }
 
 static int AVIORageFile_ReadPacket( void *opaque, uint8_t *buf, int buf_size )
