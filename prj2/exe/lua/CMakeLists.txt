@@ -11,9 +11,9 @@ file(GLOB_RECURSE C_CXX_HEADERS_PUBLIC_ETC CONFIGURE_DEPENDS
 add_library(lua STATIC ${C_CXX_SOURCES})
 add_library(prj2::lua ALIAS lua)
 
-# StepMania includes lua.h, not lua.hpp, so it needs C++ symbols, not C
-# symbols.
-set_target_properties(lua PROPERTIES LINKER_LANGUAGE CXX)
+# StepMania includes lua.h with 'extern "C"' around it, so we want to use C
+# linking.
+set_target_properties(lua PROPERTIES LINKER_LANGUAGE C)
 
 target_sources(lua
   PUBLIC

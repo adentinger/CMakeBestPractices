@@ -8,16 +8,11 @@ class RageMutex;
 class XNode;
 class LuaReference;
 
-#ifndef _MSC_VER
-extern "C"
-{
-#endif
+extern "C" {
 #include <lua.h>
 #include <lualib.h>
 #include <lauxlib.h>
-#ifndef _MSC_VER
-}
-#endif
+}  // extern "C"
 
 // For Dialog::Result
 #include "arch/Dialog/Dialog.h"
