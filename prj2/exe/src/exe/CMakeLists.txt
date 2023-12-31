@@ -650,6 +650,14 @@ target_link_libraries("${SM_EXE_NAME}"
     unofficial::pcre::pcre32
     unofficial::pcre::pcrecpp
     ${WIN32_PRIVATE_LIBS})
+if(WIN32)
+  # When compiling in C++ >= c++17, we have an ambiguity
+  # between std::byte (introduced in C++17) and ::byte of the Windows header
+  # "rpcndr.h". Defining _HAS_STD_BYTE=0 removes ::byte from rpcndr.h .
+  # https://studiofreya.com/2018/01/06/visual-studio-2017-with-cpp17-and-boost/#stdbyte-ambiguous-symbol-and-rpcndr.h
+  target_compile_definitions("${SM_EXE_NAME}"
+    PRIVATE "_HAS_STD_BYTE=0")
+endif()
 
 list(APPEND SM_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}
             "${SM_SRC_DIR}/generated")
