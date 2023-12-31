@@ -1480,11 +1480,8 @@ bool GetFileContents( const RString &sFile, vector<RString> &asOut )
 	return true;
 }
 
-#ifndef USE_SYSTEM_PCRE
-#include "../extern/pcre/pcre.h"
-#else
 #include <pcre.h>
-#endif
+
 void Regex::Compile()
 {
 	const char *error;
