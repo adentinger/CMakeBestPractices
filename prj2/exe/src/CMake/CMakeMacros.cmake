@@ -114,13 +114,6 @@ macro(configure_msvc_runtime)
                 CMAKE_CXX_FLAGS_MINSIZEREL
                 CMAKE_CXX_FLAGS_RELEASE
                 CMAKE_CXX_FLAGS_RELWITHDEBINFO)
-    if(WITH_STATIC_LINKING)
-      set(TO_REPLACE "/MD")
-      set(REPLACE_WITH "/MT")
-    else()
-      set(TO_REPLACE "/MT")
-      set(REPLACE_WITH "/MD")
-    endif()
     foreach(COMPILER_VARIABLE ${COMPILER_VARIABLES})
       if(${COMPILER_VARIABLE} MATCHES "${TO_REPLACE}")
         string(REGEX
