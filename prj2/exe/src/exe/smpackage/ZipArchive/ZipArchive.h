@@ -79,11 +79,7 @@
 	#pragma warning( disable : 4275 ) // non dll-interface class used as base for dll-interface
 #endif
 
-#ifdef __GNUC__
-	#include "zlib.h"
-#else
-	#include "../../../extern/zlib/zlib.h"
-#endif
+#include <zlib.h>
 
 #include "ZipException.h"
 #include "ZipAutoBuffer.h"
