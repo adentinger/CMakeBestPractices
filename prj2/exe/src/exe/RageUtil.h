@@ -6,6 +6,7 @@
 #include <map>
 #include <vector>
 #include <sstream>
+#include <inttypes.h>
 #include "global.h"
 class RageFileDriver;
 
@@ -245,11 +246,42 @@ inline uint16_t Swap16LE( uint16_t n ) { return Swap16( n ); }
 
 struct MersenneTwister
 {
+	// Must satisfy concept UniformRandomBitGenerator to be used in
+	// std::shuffle():
+	// https://en.cppreference.com/w/cpp/named_req/UniformRandomBitGenerator
+	using result_type = uint32_t;
+
 	MersenneTwister( int iSeed = 0 ); // 0 = time()
-	int operator()(); // returns [0,2^31-1]
-	int operator()( int n ) // returns [0,n)
+
+	[[nodiscard]]
+	static constexpr result_type min() noexcept {
+		return 0;
+	}
+
+	[[nodiscard]]
+	static constexpr result_type max() noexcept {
+		return (static_cast<result_type>(1) << 31) - 1;
+	}
+
+	result_type operator()(); // returns [0,2^31-1]
+	result_type operator()( int n ) // returns [0,n)
 	{
-		return (*this)() % n;
+		using src_type = decltype(n);
+		// From gsl::narrow<>(). Unfortunately in this project #including
+		// gsl/gsl explodes everything for whatever reason, so let's just
+		// do that manually.
+		constexpr const bool is_different_signedness =
+        	(std::is_signed<result_type>::value !=
+				std::is_signed<src_type>::value);
+		const auto t = static_cast<result_type>(n);
+		if (static_cast<src_type>(t) != n
+			|| (is_different_signedness
+			&& ((t < result_type{}) != (n < src_type{})))
+		) {
+			throw std::runtime_error{
+				std::string{"[BUG] Narrowing error in "} + __func__};
+		}
+		return (*this)() % static_cast<result_type>(n);
 	}
 
 	void Reset( int iSeed );

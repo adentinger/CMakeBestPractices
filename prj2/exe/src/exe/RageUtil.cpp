@@ -84,7 +84,7 @@ int MersenneTwister::Temper( int iVal )
 	return iVal;
 }
 
-int MersenneTwister::operator()()
+MersenneTwister::result_type MersenneTwister::operator()()
 {
 	if( m_iNext == 624 )
 	{
@@ -92,7 +92,23 @@ int MersenneTwister::operator()()
 		GenerateValues();
 	}
 
-	return Temper( m_Values[m_iNext++] );
+	const auto n = Temper( m_Values[m_iNext++] );
+	using src_type = decltype(n);
+	// From gsl::narrow<>(). Unfortunately in this project #including
+	// gsl/gsl explodes everything for whatever reason, so let's just
+	// do that manually.
+	constexpr const bool is_different_signedness =
+		(std::is_signed<result_type>::value !=
+			std::is_signed<src_type>::value);
+	const auto t = static_cast<result_type>(n);
+	if (static_cast<src_type>(t) != n
+		|| (is_different_signedness
+		&& ((t < result_type{}) != (n < src_type{})))
+	) {
+		throw std::runtime_error{
+			std::string{"[BUG] Narrowing error in "} + __func__};
+	}
+	return t;
 }
 
 /* Extend MersenneTwister into Lua space. This is intended to replace

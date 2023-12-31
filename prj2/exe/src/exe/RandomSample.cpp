@@ -4,6 +4,7 @@
 #include "RageUtil.h"
 #include "RageLog.h"
 
+#include <random>
 
 RandomSample::RandomSample()
 {
@@ -56,7 +57,9 @@ bool RandomSample::LoadSoundDir( RString sDir, int iMaxToLoad )
 	GetDirListing( sDir + "*.ogg", arraySoundFiles );
 	GetDirListing( sDir + "*.wav", arraySoundFiles );
 
-	random_shuffle( arraySoundFiles.begin(), arraySoundFiles.end() );
+	std::random_device rd;
+	std::mt19937 g(rd());
+	shuffle( arraySoundFiles.begin(), arraySoundFiles.end(), g);
 	arraySoundFiles.resize( min( arraySoundFiles.size(), (unsigned)iMaxToLoad ) );
 
 	for( unsigned i=0; i<arraySoundFiles.size(); i++ )
