@@ -86,28 +86,3 @@ macro(check_compile_features
     endif()
   endif()
 endmacro()
-
-# Borrowed from http://stackoverflow.com/q/10113017
-macro(configure_msvc_runtime)
-  if(MSVC)
-    # Get the compiler options generally used.
-    list(APPEND COMPILER_VARIABLES
-                CMAKE_C_FLAGS_DEBUG
-                CMAKE_C_FLAGS_MINSIZEREL
-                CMAKE_C_FLAGS_RELEASE
-                CMAKE_C_FLAGS_RELWITHDEBINFO
-                CMAKE_CXX_FLAGS_DEBUG
-                CMAKE_CXX_FLAGS_MINSIZEREL
-                CMAKE_CXX_FLAGS_RELEASE
-                CMAKE_CXX_FLAGS_RELWITHDEBINFO)
-    foreach(COMPILER_VARIABLE ${COMPILER_VARIABLES})
-      if(${COMPILER_VARIABLE} MATCHES "${TO_REPLACE}")
-        string(REGEX
-               REPLACE "${TO_REPLACE}"
-                       "${REPLACE_WITH}"
-                       ${COMPILER_VARIABLE}
-                       "${${COMPILER_VARIABLE}}")
-      endif()
-    endforeach()
-  endif()
-endmacro()
