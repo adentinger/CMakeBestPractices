@@ -25,26 +25,14 @@ option(WITH_FULL_RELEASE "Build as a proper, full release." OFF)
 # Turn this option off to not use the GPL exclusive components.
 option(WITH_GPL_LIBS "Build with GPL libraries." ON)
 
-# Turn this option off to disable using WAV files with the game. Note that it is
-# recommended to keep this on.
-set(WITH_WAV ON)
-
 # Turn this option off to disable using MP3 files with the game.
 option(WITH_MP3 "Build with MP3 Support." ON)
-
-# Turn this option off to disable using OGG files with the game.
-set(WITH_OGG ON)
 
 # Turn this option on to log every segment added or removed.
 option(WITH_LOGGING_TIMING_DATA
        "Build with logging all Add and Erase Segment calls." OFF)
 
 option(WITH_SDL "Build with SDL" OFF)
-
-if(MSVC)
-  # Turn this option on to enable using the Texture Font Generator.
-  set(WITH_TEXTURE_GENERATOR ON)
-endif()
 
 if(WIN32)
 elseif(LINUX)
