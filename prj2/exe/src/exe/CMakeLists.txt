@@ -548,7 +548,8 @@ target_link_libraries("${SM_EXE_NAME}"
     unofficial::pcre::pcre
     unofficial::pcre::pcre16
     unofficial::pcre::pcre32
-    unofficial::pcre::pcrecpp)
+    unofficial::pcre::pcrecpp
+    ZLIB::ZLIB)
 if(WIN32)
   # When compiling in C++ >= c++17, we have an ambiguity
   # between std::byte (introduced in C++17) and ::byte of the Windows header

@@ -41,6 +41,7 @@ find_package(Tomcrypt REQUIRED)
 find_package(Vorbis CONFIG REQUIRED)
 find_package(Microsoft.GSL CONFIG REQUIRED)
 find_package(unofficial-pcre CONFIG REQUIRED)
+find_package(ZLIB REQUIRED)
 
 add_subdirectory(lib2)
 add_subdirectory(exe)
