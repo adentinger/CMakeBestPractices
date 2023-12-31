@@ -13,7 +13,6 @@
 		"libpng",
 		"libtomcrypt",
 		"libvorbis",
-		"lua",
 		"pcre"
 	]
 }

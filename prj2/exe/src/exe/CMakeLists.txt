@@ -627,8 +627,7 @@ endif()
 
 target_include_directories("${SM_EXE_NAME}"
   PRIVATE
-    ${FFMPEG_INCLUDE_DIRS}
-    ${LUA_INCLUDE_DIR})
+    ${FFMPEG_INCLUDE_DIRS})
 target_link_directories("${SM_EXE_NAME}"
   PRIVATE
     ${FFMPEG_LIBRARY_DIRS})
@@ -644,7 +643,7 @@ target_link_libraries("${SM_EXE_NAME}"
     tomcrypt::tomcrypt
     Vorbis::vorbis
     Vorbis::vorbisfile
-    ${LUA_LIBRARIES}
+    prj2::lua
     unofficial::pcre::pcre
     unofficial::pcre::pcre16
     unofficial::pcre::pcre32

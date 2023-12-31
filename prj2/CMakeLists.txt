@@ -39,7 +39,6 @@ find_package(Ogg CONFIG REQUIRED)
 find_package(PNG REQUIRED)
 find_package(Tomcrypt REQUIRED)
 find_package(Vorbis CONFIG REQUIRED)
-find_package(Lua REQUIRED)
 find_package(unofficial-pcre CONFIG REQUIRED)
 
 add_subdirectory(lib2)
