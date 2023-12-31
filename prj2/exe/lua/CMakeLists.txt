@@ -42,14 +42,14 @@ target_sources(lua
 if(APPLE)
   # There is also "@rpath" that is a bit more flexible, but really the equivalent
   # of "$ORIGIN" for Unix is "@executable_path".
-  set(LIB2_INSTALL_RPATH @executable_path/../lib CACHE STRING "RPATH to use for this target.")
+  set(LUA_INSTALL_RPATH @executable_path/../lib CACHE STRING "RPATH to use for this target.")
 elseif(UNIX AND NOT CYGWIN)
   # "$ORIGIN" is a special string that means "the directory containing the
   # executable that is running".
-  set(LIB2_INSTALL_RPATH $ORIGIN/../lib CACHE STRING "RPATH to use for this target.")
+  set(LUA_INSTALL_RPATH $ORIGIN/../lib CACHE STRING "RPATH to use for this target.")
 elseif(WIN32)
   # DLL platforms don't support RPATH.
-  set(LIB2_INSTALL_RPATH "")
+  set(LUA_INSTALL_RPATH "")
 else()
   get_target_property(LIB_SHARED prj2::lua TYPE)
   if ("${LIB_SHARED}" STREQUAL SHARED_LIBRARY)
@@ -57,7 +57,7 @@ else()
 	  "Unsupported target platform ${CMAKE_SYSTEM_NAME} for linking against "
 	  "shared libraries.")
   endif()
-  set(LIB2_INSTALL_RPATH "")
+  set(LUA_INSTALL_RPATH "")
 endif()
 
 set_target_properties(lua
