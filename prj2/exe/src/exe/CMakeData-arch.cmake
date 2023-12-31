@@ -222,12 +222,6 @@ if(NOT APPLE)
                 "arch/Lights/LightsDriver_Win32Parallel.h"
                 "arch/Lights/LightsDriver_Win32Serial.h"
                 "arch/Lights/LightsDriver_PacDrive.cpp")
-    if(WITH_MINIMAID)
-      list(APPEND SMDATA_ARCH_LIGHTS_SRC
-                  "arch/Lights/LightsDriver_Win32Minimaid.cpp")
-      list(APPEND SMDATA_ARCH_LIGHTS_HPP
-                  "arch/Lights/LightsDriver_Win32Minimaid.h")
-    endif()
   else() # Unix/Linux TODO: Linux HAVE_PARALLEL_PORT
     if(LINUX)
       list(APPEND SMDATA_LINK_LIB "udev")
@@ -252,12 +246,6 @@ if(NOT APPLE)
                     "arch/Lights/LightsDriver_LinuxParallel.cpp")
         list(APPEND SMDATA_ARCH_LIGHTS_HPP
                     "arch/Lights/LightsDriver_LinuxParallel.h")
-      endif()
-      if(WITH_MINIMAID)
-        list(APPEND SMDATA_ARCH_LIGHTS_SRC
-                    "arch/Lights/LightsDriver_LinuxMinimaid.cpp")
-        list(APPEND SMDATA_ARCH_LIGHTS_HPP
-                    "arch/Lights/LightsDriver_LinuxMinimaid.h")
       endif()
     endif()
   endif(WIN32)

@@ -3,9 +3,6 @@ file(MAKE_DIRECTORY "${SM_SRC_DIR}/generated")
 if(MSVC)
   # Add the mapconv program of the past to allow for debugging information.
   include("CMakeProject-mapconv.cmake")
-  if(WITH_IRC_POST_HOOK)
-    include("CMakeProject-irc.cmake")
-  endif()
   if(WITH_TEXTURE_GENERATOR OR WITH_FULL_RELEASE)
     include("CMakeProject-texture.cmake")
   endif()
@@ -115,12 +112,7 @@ set_target_properties("${SM_EXE_NAME}"
 # Required for usage of tomcrypt and tommath.
 sm_add_compile_definition("${SM_EXE_NAME}" LTM_DESC)
 
-if(WITH_PORTABLE_TOMCRYPT)
-  sm_add_compile_definition("${SM_EXE_NAME}" LTC_NO_ASM)
-endif()
-if(WITH_NO_ROLC_TOMCRYPT)
-  sm_add_compile_definition("${SM_EXE_NAME}" LTC_NO_ROLC)
-endif()
+sm_add_compile_definition("${SM_EXE_NAME}" LTC_NO_ASM)
 
 sm_add_compile_definition("${SM_EXE_NAME}" CMAKE_POWERED)
 
