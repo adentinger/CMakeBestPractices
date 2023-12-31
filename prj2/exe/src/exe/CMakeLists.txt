@@ -176,11 +176,7 @@ set_target_properties("${SM_EXE_NAME}"
                                  "${SM_NAME_RELWITHDEBINFO}")
 
 list(APPEND SM_WINDOWS_PROGRAM_DLLS
-            "${SM_PROGRAM_DIR}/avcodec-55.dll"
-            "${SM_PROGRAM_DIR}/avformat-55.dll"
-            "${SM_PROGRAM_DIR}/avutil-52.dll"
-            "${SM_PROGRAM_DIR}/parallel_lights_io.dll"
-            "${SM_PROGRAM_DIR}/swscale-2.dll")
+            "${SM_PROGRAM_DIR}/parallel_lights_io.dll")
 
 if(WIN32)
   sm_add_compile_definition("${SM_EXE_NAME}" WINDOWS)
@@ -188,7 +184,6 @@ if(WIN32)
                                                        # potential duplicate.
   sm_add_compile_definition("${SM_EXE_NAME}" _CRT_SECURE_NO_WARNINGS)
   sm_add_compile_definition("${SM_EXE_NAME}" _WINSOCK_DEPRECATED_NO_WARNINGS)
-  sm_add_compile_definition("${SM_EXE_NAME}" GLEW_STATIC)
 
   set_target_properties("${SM_EXE_NAME}"
                         PROPERTIES RUNTIME_OUTPUT_DIRECTORY
@@ -215,7 +210,7 @@ if(WIN32)
 elseif(APPLE)
   sm_add_compile_definition("${SM_EXE_NAME}" BACKTRACE_METHOD_X86_DARWIN)
   sm_add_compile_definition("${SM_EXE_NAME}" MACOSX)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++14 -stdlib=libc++")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
   set_target_properties(
     "${SM_EXE_NAME}"
     PROPERTIES
@@ -425,72 +420,7 @@ endif()
 
 set_property(TARGET "${SM_EXE_NAME}" PROPERTY FOLDER "Internal Libraries")
 
-# include(../extern/CMakeProject-mmmagic.cmake)
-
-if(HAS_MP3)
-  if(WITH_SYSTEM_MAD)
-    list(APPEND SMDATA_LINK_LIB ${LIBMAD_LIBRARY})
-  else()
-    list(APPEND SMDATA_LINK_LIB "mad")
-  endif()
-endif()
-
-if(WITH_SYSTEM_GLEW)
-  list(APPEND SMDATA_LINK_LIB ${GLEW_LIBRARIES} ${GLEW_LIBRARY_RELEASE})
-  list(APPEND SM_INCLUDE_DIRS ${GLEW_INCLUDE_DIRS})
-else()
-  list(APPEND SMDATA_LINK_LIB "glew")
-endif()
-
-if(WITH_SYSTEM_TOMCRYPT)
-  list(APPEND SMDATA_LINK_LIB ${TOMCRYPT_LIBRARY})
-else()
-  list(APPEND SMDATA_LINK_LIB "tomcrypt")
-endif()
-
-if(WITH_SYSTEM_TOMMATH)
-  list(APPEND SMDATA_LINK_LIB ${TOMMATH_LIBRARY})
-else()
-  list(APPEND SMDATA_LINK_LIB "tommath")
-endif()
-
-if(WITH_SYSTEM_JPEG)
-  sm_add_compile_definition("${SM_EXE_NAME}" SYSTEM_JPEGLIB)
-  list(APPEND SMDATA_LINK_LIB ${JPEG_LIBRARIES})
-else()
-  list(APPEND SMDATA_LINK_LIB "jpeg")
-endif()
-
-if(WITH_SYSTEM_ZLIB)
-  list(APPEND SMDATA_LINK_LIB ${ZLIB_LIBRARIES} ${ZLIB_LIBRARY_RELEASE})
-else()
-  list(APPEND SMDATA_LINK_LIB "zlib")
-endif()
-
-if(WITH_SYSTEM_PNG)
-  sm_add_compile_definition("${SM_EXE_NAME}" SYSTEM_PNG)
-  list(APPEND SMDATA_LINK_LIB ${PNG_LIBRARIES})
-else()
-  list(APPEND SMDATA_LINK_LIB "png")
-endif()
-
-if(WITH_OGG)
-  if(WITH_SYSTEM_OGG)
-    list(APPEND SMDATA_LINK_LIB
-                "${VORBISFILE_LIBRARY}"
-                "${VORBIS_LIBRARY}"
-                "${OGG_LIBRARY}")
-  else()
-    list(APPEND SMDATA_LINK_LIB
-                "vorbisfile"
-                "vorbis"
-                "ogg")
-  endif()
-endif()
-
 if(WIN32)
-  set(WIN32_PRIVATE_LIBS ${FFMPEG_LIBRARIES})
-
   list(APPEND SMDATA_LINK_LIB
               "dbghelp.lib"
               "setupapi.lib"
@@ -534,35 +464,8 @@ elseif(APPLE)
   list(APPEND SMDATA_LINK_LIB
               "${BZIP2_LIBRARY_RELEASE}"
               "${ICONV_LIBRARIES}")
-
-  if(HAS_FFMPEG)
-    list(APPEND SMDATA_LINK_LIB
-                "${SM_FFMPEG_ROOT}/libavformat/libavformat.a"
-                "${SM_FFMPEG_ROOT}/libavcodec/libavcodec.a"
-                "${SM_FFMPEG_ROOT}/libswscale/libswscale.a"
-                "${SM_FFMPEG_ROOT}/libavutil/libavutil.a")
-  endif()
 else() # Unix / Linux TODO: Remember to find and locate the zip archive files.
   if(HAS_FFMPEG)
-    if(WITH_SYSTEM_FFMPEG)
-      list(APPEND SMDATA_LINK_LIB
-                  "${FFMPEG_avformat_LIBRARY}"
-                  "${FFMPEG_avcodec_LIBRARY}"
-                  "${FFMPEG_swscale_LIBRARY}"
-                  "${FFMPEG_avutil_LIBRARY}")
-    else()
-      list(APPEND SMDATA_LINK_LIB
-                  "${SM_FFMPEG_ROOT}/libavformat/libavformat.a"
-                  "${SM_FFMPEG_ROOT}/libavcodec/libavcodec.a"
-                  "${SM_FFMPEG_ROOT}/libswscale/libswscale.a"
-                  "${SM_FFMPEG_ROOT}/libavutil/libavutil.a")
-    endif()
-
-    if(NOT WITH_SYSTEM_ZLIB)
-      list(REMOVE_ITEM SMDATA_LINK_LIB "zlib")
-      list(APPEND SMDATA_LINK_LIB "zlib")
-    endif()
-
     if(VA_FOUND)
       list(APPEND SMDATA_LINK_LIB ${VA_LIBRARY})
     endif()
@@ -612,10 +515,6 @@ else() # Unix / Linux TODO: Remember to find and locate the zip archive files.
     sm_add_compile_definition("${SM_EXE_NAME}" HAVE_SDL)
   endif()
 
-  if(PCRE_FOUND)
-    list(APPEND SMDATA_LINK_LIB ${PCRE_LIBRARY})
-  endif()
-  
   if(LIBXTST_FOUND)
     list(APPEND SMDATA_LINK_LIB ${LIBXTST_LIBRARY})
   endif()
@@ -635,6 +534,7 @@ target_link_libraries("${SM_EXE_NAME}"
   PUBLIC
     ${SMDATA_LINK_LIB}
   PRIVATE
+    ${FFMPEG_LIBRARIES}
     GLEW::GLEW
     JPEG::JPEG
     JsonCpp::JsonCpp
@@ -648,8 +548,7 @@ target_link_libraries("${SM_EXE_NAME}"
     unofficial::pcre::pcre
     unofficial::pcre::pcre16
     unofficial::pcre::pcre32
-    unofficial::pcre::pcrecpp
-    ${WIN32_PRIVATE_LIBS})
+    unofficial::pcre::pcrecpp)
 if(WIN32)
   # When compiling in C++ >= c++17, we have an ambiguity
   # between std::byte (introduced in C++17) and ::byte of the Windows header
@@ -661,38 +560,8 @@ endif()
 
 list(APPEND SM_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}
             "${SM_SRC_DIR}/generated")
-list(APPEND SM_INCLUDE_DIRS "${JPEG_INCLUDE_DIR}")
 if(NOT APPLE)
-  if(NOT WITH_SYSTEM_GLEW)
-    list(APPEND SM_INCLUDE_DIRS
-                "${SM_EXTERN_DIR}/glew-1.5.8/include")
-  endif()
-
-  if(NOT WITH_SYSTEM_ZLIB)
-    list(APPEND SM_INCLUDE_DIRS
-                "${SM_EXTERN_DIR}/zlib")
-  endif()
-
-  if(MSVC)
-    if(WITH_OGG)
-      list(APPEND SM_INCLUDE_DIRS
-                  "${SM_EXTERN_DIR}/newogg/include"
-                  "${SM_EXTERN_DIR}/newvorbis/lib"
-                  "${SM_EXTERN_DIR}/newvorbis/include")
-    endif()
-    list(APPEND SM_INCLUDE_DIRS "${SM_EXTERN_DIR}/ffmpeg/include")
-  else()
-    if(WITH_OGG AND NOT WITH_SYSTEM_OGG)
-      list(APPEND SM_INCLUDE_DIRS "${SM_EXTERN_DIR}/vorbis")
-    endif()
-    if(HAS_FFMPEG)
-      if(WITH_SYSTEM_FFMPEG)
-        list(APPEND SM_INCLUDE_DIRS "${FFMPEG_INCLUDE_DIR}")
-      else()
-        add_dependencies("${SM_EXE_NAME}" "ffmpeg")
-        list(APPEND SM_INCLUDE_DIRS "${SM_FFMPEG_SRC_DIR}" "${SM_FFMPEG_ROOT}")
-      endif()
-    endif()
+  if(NOT MSVC)
     if(HAS_GTK3)
       list(APPEND SM_INCLUDE_DIRS "${GTK3_INCLUDE_DIRS}")
     endif()
@@ -707,28 +576,7 @@ if(NOT APPLE)
     endif()
   endif()
 else()
-  if(WITH_OGG)
-    list(APPEND SM_INCLUDE_DIRS "${SM_EXTERN_DIR}/newogg/include"
-                "${SM_EXTERN_DIR}/newvorbis/include")
-  endif()
   list(APPEND SM_INCLUDE_DIRS "archutils/Unix")
-  if(HAS_FFMPEG)
-    add_dependencies("${SM_EXE_NAME}" "ffmpeg")
-    list(APPEND SM_INCLUDE_DIRS "${SM_FFMPEG_SRC_DIR}" "${SM_FFMPEG_ROOT}")
-  endif()
-endif()
-
-if(WIN32)
-  # FIXME: This makes no sense...
-  #list(APPEND SM_INCLUDE_DIRS ${DIRECTX_INCLUDE_DIR})
-endif()
-
-if(NOT WITH_SYSTEM_PNG)
-  list(APPEND SM_INCLUDE_DIRS "${SM_EXTERN_DIR}/libpng")
-endif()
-
-if(NOT WITH_SYSTEM_TOMCRYPT)
-  list(APPEND SM_INCLUDE_DIRS "${SM_SRC_DIR}/libtomcrypt/src/headers")
 endif()
 
 target_include_directories("${SM_EXE_NAME}" PUBLIC ${SM_INCLUDE_DIRS})
@@ -750,15 +598,7 @@ if(NOT APPLE)
       install(FILES "${SM_PROGRAM_DIR}/Texture Font Generator.exe"
               DESTINATION "${SM_FULL_INSTALLATION_PATH}")
     endif()
-    install(FILES "${SM_PROGRAM_DIR}/avcodec-55.dll"
-            DESTINATION "${SM_FULL_INSTALLATION_PATH}")
-    install(FILES "${SM_PROGRAM_DIR}/avformat-55.dll"
-            DESTINATION "${SM_FULL_INSTALLATION_PATH}")
-    install(FILES "${SM_PROGRAM_DIR}/avutil-52.dll"
-            DESTINATION "${SM_FULL_INSTALLATION_PATH}")
     install(FILES "${SM_PROGRAM_DIR}/parallel_lights_io.dll"
-            DESTINATION "${SM_FULL_INSTALLATION_PATH}")
-    install(FILES "${SM_PROGRAM_DIR}/swscale-2.dll"
             DESTINATION "${SM_FULL_INSTALLATION_PATH}")
     install(FILES "${SM_PROGRAM_DIR}/StepMania.vdi"
             DESTINATION "${SM_FULL_INSTALLATION_PATH}")
