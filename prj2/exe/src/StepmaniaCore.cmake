@@ -19,28 +19,6 @@ set(SM_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}")
 # TODO: Reconsile the OS dependent naming scheme.
 set(SM_EXE_NAME "StepMania")
 
-# Some OS specific helpers.
-if(CMAKE_SYSTEM_NAME MATCHES "Linux")
-  set(LINUX TRUE)
-  set(SM_CPP_STANDARD "gnu++11")
-else()
-  set(LINUX FALSE)
-endif()
-
-if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
-  set(MACOSX TRUE)
-  set(SM_CPP_STANDARD "gnu++14")
-else()
-  set(MACOSX FALSE)
-endif()
-
-if(CMAKE_SYSTEM_NAME MATCHES "BSD")
-  set(BSD TRUE)
-  set(SM_CPP_STANDARD "gnu++11")
-else()
-  set(BSD FALSE)
-endif()
-
 # Allow for finding our libraries in a standard location.
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}"
             "${SM_CMAKE_DIR}/Modules/")
