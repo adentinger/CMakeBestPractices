@@ -495,6 +495,7 @@ target_link_libraries("${SM_EXE_NAME}"
     Mad::Mad
     Microsoft.GSL::GSL
     Ogg::ogg
+    PNG::PNG
     tomcrypt::tomcrypt
     Vorbis::vorbis
     Vorbis::vorbisfile
