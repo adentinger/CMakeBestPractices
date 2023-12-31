@@ -161,4 +161,4 @@
 # add_subdirectory(test)
 
 add_subdirectory(lua)
-# add_subdirectory(src)
+add_subdirectory(src)
