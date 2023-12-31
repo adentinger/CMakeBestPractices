@@ -12,9 +12,9 @@ class LuaReference;
 extern "C"
 {
 #endif
-#include "../extern/lua-5.1/src/lua.h"
-#include "../extern/lua-5.1/src/lualib.h"
-#include "../extern/lua-5.1/src/lauxlib.h"
+#include <lua.h>
+#include <lualib.h>
+#include <lauxlib.h>
 #ifndef _MSC_VER
 }
 #endif
