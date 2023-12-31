@@ -13,6 +13,11 @@ find_package_handle_standard_args(Tomcrypt
     Tomcrypt_INCL
 )
 
+# find_package() is also how to find a dependency inside the
+# Find<Module>.cmake. This is also how CMake's FindGTest.cmake works:
+# https://github.com/Kitware/CMake/blob/aea1365e6f347f96d2a07423b0313f846a8dad50/Modules/FindGTest.cmake#L283
+find_package(Tommath REQUIRED QUIET)
+
 set(Tomcrypt_LIBRARIES "${Tomcrypt_LIB}")
 set(Tomcrypt_INCLUDE_DIRS "${Tomcrypt_INCL}")
 
@@ -41,6 +46,8 @@ set_property(TARGET tomcrypt::tomcrypt APPEND PROPERTY
 set_target_properties(tomcrypt::tomcrypt PROPERTIES
   IMPORTED_IMPLIB_RELEASE "${Tomcrypt_LIB}"
   IMPORTED_LOCATION_RELEASE "${Tomcrypt_LIB}"
+  # Tomcrypt needs Tommath
+  INTERFACE_LINK_LIBRARIES "tommath::tommath"
 )
 
 unset(Tomcrypt_LIB)
