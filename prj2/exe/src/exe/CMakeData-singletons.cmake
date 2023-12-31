@@ -51,10 +51,8 @@ list(APPEND SMDATA_GLOBAL_SINGLETON_HPP
             "ThemeManager.h"
             "UnlockManager.h")
 
-if(WITH_NETWORKING)
-  list(APPEND SMDATA_GLOBAL_SINGLETON_SRC "ezsockets.cpp")
-  list(APPEND SMDATA_GLOBAL_SINGLETON_HPP "ezsockets.h")
-endif()
+list(APPEND SMDATA_GLOBAL_SINGLETON_SRC "ezsockets.cpp")
+list(APPEND SMDATA_GLOBAL_SINGLETON_HPP "ezsockets.h")
 
 source_group("Global Singletons"
              FILES

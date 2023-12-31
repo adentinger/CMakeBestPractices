@@ -114,48 +114,12 @@ sm_add_compile_definition("${SM_EXE_NAME}" LTC_NO_ASM)
 
 sm_add_compile_definition("${SM_EXE_NAME}" CMAKE_POWERED)
 
-if(NOT WITH_NETWORKING)
-  sm_add_compile_definition("${SM_EXE_NAME}" WITHOUT_NETWORKING)
-endif()
-
 # Compilation flags per project here.
 sm_add_compile_definition("${SM_EXE_NAME}" $<$<CONFIG:Debug>:DEBUG>)
 sm_add_compile_definition("${SM_EXE_NAME}" $<$<CONFIG:Release>:RELEASE>)
 sm_add_compile_definition("${SM_EXE_NAME}" $<$<CONFIG:MinSizeRel>:MINSIZEREL>)
 sm_add_compile_definition("${SM_EXE_NAME}"
                           $<$<CONFIG:RelWithDebInfo>:RELWITHDEBINFO>)
-
-set(SM_COMPILE_FLAGS "")
-
-if(WITH_SSE2)
-  if(MSVC)
-    if(SM_WIN32_ARCH MATCHES "x86")
-      set(SM_COMPILE_FLAGS "${SM_COMPILE_FLAGS} /arch:SSE2")
-    endif()
-  elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "x86")
-    set(SM_COMPILE_FLAGS "${SM_COMPILE_FLAGS} -msse2")
-  elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64")
-    set(SM_COMPILE_FLAGS "${SM_COMPILE_FLAGS} -mtune=cortex-a72")
-  else()
-    message("Unrecognized host processor type")
-  endif()
-endif()
-
-if(WITH_LTO)
-  if(MSVC)
-    set(SM_COMPILE_FLAGS "${SM_COMPILE_FLAGS} /GL")
-  else()
-    set(SM_COMPILE_FLAGS "${SM_COMPILE_FLAGS} -flto")
-  endif()
-endif()
-
-if(MSVC)
-  # TODO: Find a way to do this cleanly for non MSVC users.
-  set(SM_COMPILE_FLAGS "${SM_COMPILE_FLAGS} /MP2")
-endif()
-
-set_target_properties("${SM_EXE_NAME}"
-                      PROPERTIES COMPILE_FLAGS "${SM_COMPILE_FLAGS}")
 
 set_target_properties("${SM_EXE_NAME}"
                       PROPERTIES OUTPUT_NAME_DEBUG

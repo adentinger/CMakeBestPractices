@@ -266,10 +266,8 @@ list(APPEND SM_DATA_REST_HPP
             "TimingSegments.h"
             "TitleSubstitution.h")
 
-if(WITH_NETWORKING)
-  list(APPEND SM_DATA_REST_SRC "RoomWheel.cpp")
-  list(APPEND SM_DATA_REST_HPP "RoomWheel.h")
-endif()
+list(APPEND SM_DATA_REST_SRC "RoomWheel.cpp")
+list(APPEND SM_DATA_REST_HPP "RoomWheel.h")
 
 source_group("Data Structures\\\\Misc Objects"
              FILES

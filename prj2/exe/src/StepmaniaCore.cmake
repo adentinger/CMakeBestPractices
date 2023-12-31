@@ -189,31 +189,17 @@ endif()
 # Dependencies go here.
 include(ExternalProject)
 
+set(HAS_MP3 TRUE)
 if(NOT WITH_GPL_LIBS)
   message("Disabling GPL exclusive libraries: no MP3 support.")
-  set(WITH_MP3 OFF)
+  set(HAS_MP3 OFF)
 endif()
 
 set(HAS_WAV TRUE)
 
-if(WITH_MP3)
-  if(WIN32 OR MACOSX)
-    set(HAS_MP3 TRUE)
-  else()
-    find_package(Mad)
-    if(NOT LIBMAD_FOUND)
-      message(
-        FATAL_ERROR
-          "Libmad library not found. If you wish to skip mp3 support, set WITH_MP3 to OFF when configuring."
-        )
-    else()
-      set(HAS_MP3 TRUE)
-    endif()
-  endif()
-endif(WITH_MP3)
-
 set(HAS_OGG TRUE)
 
+set(HAS_SDL OFF)
 if(WITH_SDL)
   find_package(SDL2 REQUIRED)
   set(HAS_SDL TRUE)
