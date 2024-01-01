@@ -496,7 +496,6 @@ target_link_libraries("${SM_EXE_NAME}"
     Microsoft.GSL::GSL
     Ogg::ogg
     PNG::PNG
-    tomcrypt::tomcrypt
     Vorbis::vorbis
     Vorbis::vorbisfile
     prj2::lua

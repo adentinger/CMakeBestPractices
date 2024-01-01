@@ -9,7 +9,7 @@ set(CMAKE_TOOLCHAIN_FILE
 
 project(prj1
   VERSION 1.0
-  LANGUAGES CXX
+  LANGUAGES CXX C
   HOMEPAGE_URL "https://github.com/AnthonyD973/CMakeBestPracticesTests"
   DESCRIPTION "A library meant to be imported by another CMake project.")
 # Note that this variable is not a special CMake variable.
