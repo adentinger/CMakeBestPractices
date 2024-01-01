@@ -10,12 +10,13 @@
 # (which are used for the build *and* are installed).
 function(ade_set_source_files
 	target_name
-	cxx_sources_varname
+	c_cxx_sources_varname
 	cxx_headers_public_varname
 	cxx_headers_private_varname
 )
-	file(GLOB_RECURSE CXX_SOURCES CONFIGURE_DEPENDS
-		"${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
+	file(GLOB_RECURSE C_CXX_SOURCES CONFIGURE_DEPENDS
+		"${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
+		"${CMAKE_CURRENT_SOURCE_DIR}/src/*.c")
 	file(GLOB_RECURSE CXX_HEADERS CONFIGURE_DEPENDS
 		"${CMAKE_CURRENT_SOURCE_DIR}/src/*.h"
 		"${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp")
@@ -32,7 +33,7 @@ function(ade_set_source_files
 			list(APPEND CXX_HEADERS_PUBLIC "${header}")
 		endif()
 	endforeach()
-	set("${cxx_sources_varname}" ${CXX_SOURCES} PARENT_SCOPE)
+	set("${c_cxx_sources_varname}" ${C_CXX_SOURCES} PARENT_SCOPE)
 	set("${cxx_headers_public_varname}" ${CXX_HEADERS_PUBLIC} PARENT_SCOPE)
 	set("${cxx_headers_private_varname}" ${CXX_HEADERS_PRIVATE} PARENT_SCOPE)
 endfunction()
