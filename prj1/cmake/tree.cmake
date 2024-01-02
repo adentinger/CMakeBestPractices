@@ -11,29 +11,29 @@
 function(ade_set_source_files
 	target_name
 	c_cxx_sources_varname
-	cxx_headers_public_varname
-	cxx_headers_private_varname
+	headers_public_varname
+	headers_private_varname
 )
 	file(GLOB_RECURSE C_CXX_SOURCES CONFIGURE_DEPENDS
 		"${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
 		"${CMAKE_CURRENT_SOURCE_DIR}/src/*.c")
-	file(GLOB_RECURSE CXX_HEADERS CONFIGURE_DEPENDS
+	file(GLOB_RECURSE HEADERS CONFIGURE_DEPENDS
 		"${CMAKE_CURRENT_SOURCE_DIR}/src/*.h"
 		"${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp")
-	set(CXX_HEADERS_PUBLIC)
-	set(CXX_HEADERS_PRIVATE)
-	foreach(header ${CXX_HEADERS})
+	set(HEADERS_PUBLIC)
+	set(HEADERS_PRIVATE)
+	foreach(header ${HEADERS})
 		string(REGEX MATCH
 			"^${CMAKE_CURRENT_SOURCE_DIR}/src/${target_name}/private/.*"
 			header_if_matches
 			"${header}")
 		if(header_if_matches)
-			list(APPEND CXX_HEADERS_PRIVATE "${header}")
+			list(APPEND HEADERS_PRIVATE "${header}")
 		else()
-			list(APPEND CXX_HEADERS_PUBLIC "${header}")
+			list(APPEND HEADERS_PUBLIC "${header}")
 		endif()
 	endforeach()
 	set("${c_cxx_sources_varname}" ${C_CXX_SOURCES} PARENT_SCOPE)
-	set("${cxx_headers_public_varname}" ${CXX_HEADERS_PUBLIC} PARENT_SCOPE)
-	set("${cxx_headers_private_varname}" ${CXX_HEADERS_PRIVATE} PARENT_SCOPE)
+	set("${headers_public_varname}" ${HEADERS_PUBLIC} PARENT_SCOPE)
+	set("${headers_private_varname}" ${HEADERS_PRIVATE} PARENT_SCOPE)
 endfunction()
