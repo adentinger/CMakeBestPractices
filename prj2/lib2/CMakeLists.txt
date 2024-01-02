@@ -103,9 +103,16 @@ endif()
 
 target_compile_definitions(lib2__objlib_internal
   PUBLIC
-	# Unquoted variable expansion; this is on purpose: if the variable is empty
-	# or undefined, we *actually* want this to expand to nothing.
-	${LIB_SHARED_MACRO}
+    # Unquoted variable expansion; this is on purpose: if the variable is empty
+    # or undefined, we *actually* want this to expand to nothing.
+    ${LIB_SHARED_MACRO}
+    # These macros were found in StepMania's "libtomcrypt_VS2008.vcproj". We
+    # don't know what they do, so just add them.
+    _CRT_SECURE_NO_WARNINGS
+    _CRT_NONSTDC_NO_DEPRECATE
+    LTC_SOURCE
+    LTC_NO_TEST
+    LTC_NO_PROTOTYPES
   PRIVATE
     # This macro will be used as part of the compilation of this library, but
     # won't be used for libraries/executables that depend on it. This is
