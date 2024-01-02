@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: MIT
 
 include("${CMAKE_SOURCE_DIR}/cmake/tree.cmake")
-ade_set_source_files(lib1 CXX_SOURCES CXX_HEADERS_PUBLIC CXX_HEADERS_PRIVATE)
+ade_set_source_files(lib1 C_CXX_SOURCES CXX_HEADERS_PUBLIC CXX_HEADERS_PRIVATE)
 
 # This builds an 'object library', which is basically a collection of object
 # files. The 'lib1' library will link against it.
@@ -27,7 +27,7 @@ ade_set_source_files(lib1 CXX_SOURCES CXX_HEADERS_PUBLIC CXX_HEADERS_PRIVATE)
 # in the same directory as the test executable, so the test executable wouldn't
 # be able to run. Instead, we should build an object library and link the
 # test executable against that.
-add_library(lib1__objlib_internal OBJECT ${CXX_SOURCES})
+add_library(lib1__objlib_internal OBJECT ${C_CXX_SOURCES})
 # See comments of lib1 below. We're going to have to export the object library
 # anyway, so let's create an alias for it too.
 add_library(prj1::lib1__objlib_internal ALIAS lib1__objlib_internal)
