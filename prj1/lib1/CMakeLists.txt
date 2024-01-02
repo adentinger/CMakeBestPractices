@@ -57,7 +57,16 @@ ade_clang_format_git_targets(TARGETS
 set_target_properties(lib1
   PROPERTIES
     CXX_STANDARD 17
-    CXX_STANDARD_REQUIRED ON)
+    CXX_STANDARD_REQUIRED ON
+    # On Windows, symbols have to be explicitly exported and imported (usually
+    # by a macro used inside the library's headers that is defined to
+    # "__declspec(dllexport)" when building the library, and
+    # "__declspec(dllimport)" when using the built library). However,
+    # libtommath doesn't explicitly export its symbols since it's primarily
+    # meant to be built on *nix (https://github.com/libtom/libtommath/blob/8314bde5e5c8e5d9331460130a9d1066e324f091/doc/bn.tex#L105)
+    # So we'll have to set WINDOWS_EXPORT_ALL_SYMBOLS ON so that CMake
+    # automatically exports all symbols.
+    WINDOWS_EXPORT_ALL_SYMBOLS ON)
 set_target_properties(lib1__objlib_internal
   PROPERTIES
     CXX_STANDARD 17
