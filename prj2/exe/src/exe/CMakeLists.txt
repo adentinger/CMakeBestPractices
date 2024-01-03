@@ -498,6 +498,7 @@ target_link_libraries("${SM_EXE_NAME}"
     Vorbis::vorbis
     Vorbis::vorbisfile
     prj2::lua
+    prj2::lib2
     unofficial::pcre::pcre
     unofficial::pcre::pcre16
     unofficial::pcre::pcre32
