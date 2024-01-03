@@ -281,7 +281,7 @@ struct MersenneTwister
 			throw std::runtime_error{
 				std::string{"[BUG] Narrowing error in "} + __func__};
 		}
-		return (*this)() % static_cast<result_type>(n);
+		return (*this)() % t;
 	}
 
 	void Reset( int iSeed );
