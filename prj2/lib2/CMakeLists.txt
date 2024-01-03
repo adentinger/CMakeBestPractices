@@ -81,8 +81,8 @@ else()
   # Default is OFF because this can sometimes have overhead:
   # https://stackoverflow.com/a/15890369/2252948.
   option(lib2_BUILD_WITH_PIC
-	"Whether to build this static library with position-independent code in case it is linked against by a shared library."
-	OFF)
+    "Whether to build this static library with position-independent code in case it is linked against by a shared library."
+    OFF)
 endif()
 
 if(lib2_BUILD_WITH_PIC)
@@ -94,10 +94,10 @@ if(lib2_BUILD_WITH_PIC)
   # `_ZTISt12domain_error@@GLIBCXX_3.4' can not be used when making a
   # shared object; recompile with -fPIC"
   set_target_properties(lib2
-	PROPERTIES
+    PROPERTIES
       POSITION_INDEPENDENT_CODE "${lib2_BUILD_WITH_PIC}")
   set_target_properties(lib2__objlib_internal
-	PROPERTIES
+    PROPERTIES
       POSITION_INDEPENDENT_CODE "${lib2_BUILD_WITH_PIC}")
 endif()
 
@@ -116,9 +116,9 @@ target_compile_definitions(lib2__objlib_internal
   PRIVATE
     # This macro will be used as part of the compilation of this library, but
     # won't be used for libraries/executables that depend on it. This is
-	# exactly what we want when building shared libraries on Windows: we want
-	# headers to have __declspec(dllexport) when building the library, but
-	# we want headers to have __declspec(dllimport) when using the library.
+    # exactly what we want when building shared libraries on Windows: we want
+    # headers to have __declspec(dllexport) when building the library, but
+    # we want headers to have __declspec(dllimport) when using the library.
     LIB2_EXPORT)
 
 target_sources(lib2__objlib_internal
@@ -131,13 +131,13 @@ target_sources(lib2__objlib_internal
   PUBLIC
     FILE_SET public_headers
     TYPE HEADERS
-	# "src/" is the include directory to use for the headers in this
-	# file set. This also means that the files will be installed without an
-	# initial "src" directory at the begining.
+    # "src/" is the include directory to use for the headers in this
+    # file set. This also means that the files will be installed without an
+    # initial "src" directory at the begining.
     BASE_DIRS src
     FILES ${CXX_HEADERS_PUBLIC}
-	# The headers that are available only for compilation of this library.
-	# Won't be installed.
+  # The headers that are available only for compilation of this library.
+  # Won't be installed.
   PRIVATE
     FILE_SET private_headers
     TYPE HEADERS
