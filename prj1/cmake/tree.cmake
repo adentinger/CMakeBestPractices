@@ -4,8 +4,8 @@
 # for the target 'target_name'.
 #
 # This assumes the source tree follows an opinionated where the sources are
-# inside 'src/', the headers are inside 'src/${target_name}/', with the headers
-# under 'src/${target_name}/private/' being the private headers (which are used
+# inside 'src/', the headers are inside 'src/', with the headers under
+# 'src/${target_name}/private/' being the private headers (which are used
 # for the build but aren't installed) and the others are the public headers
 # (which are used for the build *and* are installed).
 function(ade_set_source_files
