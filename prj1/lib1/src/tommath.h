@@ -155,10 +155,10 @@ extern "C" {
 typedef int           mp_err;
 
 /* you'll have to tune these... */
-extern int KARATSUBA_MUL_CUTOFF,
-           KARATSUBA_SQR_CUTOFF,
-           TOOM_MUL_CUTOFF,
-           TOOM_SQR_CUTOFF;
+LTM_SHRSYM extern int KARATSUBA_MUL_CUTOFF;
+LTM_SHRSYM extern int KARATSUBA_SQR_CUTOFF;
+LTM_SHRSYM extern int TOOM_MUL_CUTOFF;
+LTM_SHRSYM extern int TOOM_SQR_CUTOFF;
 
 /* define this to use lower memory usage routines (exptmods mostly) */
 /* #define MP_LOW_MEM */
@@ -453,7 +453,7 @@ int mp_exptmod(mp_int *a, mp_int *b, mp_int *c, mp_int *d);
 #endif
 
 /* table of first PRIME_SIZE primes */
-extern const mp_digit ltm_prime_tab[];
+LTM_SHRSYM extern const mp_digit ltm_prime_tab[];
 
 /* result=1 if a is divisible by one of the first PRIME_SIZE primes */
 int mp_prime_is_divisible(mp_int *a, int *result);
@@ -570,7 +570,7 @@ int mp_exptmod_fast(mp_int *G, mp_int *X, mp_int *P, mp_int *Y, int mode);
 int s_mp_exptmod (mp_int * G, mp_int * X, mp_int * P, mp_int * Y, int mode);
 void bn_reverse(unsigned char *s, int len);
 
-extern const char *mp_s_rmap;
+LTM_SHRSYM extern const char *mp_s_rmap;
 
 #ifdef __cplusplus
    }

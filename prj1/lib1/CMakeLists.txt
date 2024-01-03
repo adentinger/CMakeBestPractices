@@ -65,7 +65,11 @@ set_target_properties(lib1
     # libtommath doesn't explicitly export its symbols since it's primarily
     # meant to be built on *nix (https://github.com/libtom/libtommath/blob/8314bde5e5c8e5d9331460130a9d1066e324f091/doc/bn.tex#L105)
     # So we'll have to set WINDOWS_EXPORT_ALL_SYMBOLS ON so that CMake
-    # automatically exports all symbols.
+    # automatically exports all function symbols. For global data symbols
+    # (i.e., global variables), we have to tweak the code of libtomcrypt so
+    # that the headers that provide them use "__declspec(dllimport)", as
+    # required by CMake:
+    # https://cmake.org/cmake/help/latest/prop_tgt/WINDOWS_EXPORT_ALL_SYMBOLS.html
     WINDOWS_EXPORT_ALL_SYMBOLS ON)
 set_target_properties(lib1__objlib_internal
   PROPERTIES
