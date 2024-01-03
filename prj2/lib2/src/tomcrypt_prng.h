@@ -79,7 +79,7 @@ typedef struct {
 } prng_state;
 
 /** PRNG descriptor */
-extern struct ltc_prng_descriptor {
+LTC_SHRSYM extern struct ltc_prng_descriptor {
     /** Name of the PRNG */
     const char *name;
     /** size in bytes of exported state */
@@ -142,7 +142,7 @@ int yarrow_done(prng_state *prng);
 int  yarrow_export(unsigned char *out, unsigned long *outlen, prng_state *prng);
 int  yarrow_import(const unsigned char *in, unsigned long inlen, prng_state *prng);
 int  yarrow_test(void);
-extern const struct ltc_prng_descriptor yarrow_desc;
+LTC_SHRSYM extern const struct ltc_prng_descriptor yarrow_desc;
 #endif
 
 #ifdef LTC_FORTUNA
@@ -154,7 +154,7 @@ int fortuna_done(prng_state *prng);
 int  fortuna_export(unsigned char *out, unsigned long *outlen, prng_state *prng);
 int  fortuna_import(const unsigned char *in, unsigned long inlen, prng_state *prng);
 int  fortuna_test(void);
-extern const struct ltc_prng_descriptor fortuna_desc;
+LTC_SHRSYM extern const struct ltc_prng_descriptor fortuna_desc;
 #endif
 
 #ifdef LTC_RC4
@@ -166,7 +166,7 @@ int  rc4_done(prng_state *prng);
 int  rc4_export(unsigned char *out, unsigned long *outlen, prng_state *prng);
 int  rc4_import(const unsigned char *in, unsigned long inlen, prng_state *prng);
 int  rc4_test(void);
-extern const struct ltc_prng_descriptor rc4_desc;
+LTC_SHRSYM extern const struct ltc_prng_descriptor rc4_desc;
 #endif
 
 #ifdef LTC_CHACHA20_PRNG
@@ -178,7 +178,7 @@ int  chacha20_prng_done(prng_state *prng);
 int  chacha20_prng_export(unsigned char *out, unsigned long *outlen, prng_state *prng);
 int  chacha20_prng_import(const unsigned char *in, unsigned long inlen, prng_state *prng);
 int  chacha20_prng_test(void);
-extern const struct ltc_prng_descriptor chacha20_prng_desc;
+LTC_SHRSYM extern const struct ltc_prng_descriptor chacha20_prng_desc;
 #endif
 
 #ifdef LTC_SPRNG
@@ -190,7 +190,7 @@ int sprng_done(prng_state *prng);
 int  sprng_export(unsigned char *out, unsigned long *outlen, prng_state *prng);
 int  sprng_import(const unsigned char *in, unsigned long inlen, prng_state *prng);
 int  sprng_test(void);
-extern const struct ltc_prng_descriptor sprng_desc;
+LTC_SHRSYM extern const struct ltc_prng_descriptor sprng_desc;
 #endif
 
 #ifdef LTC_SOBER128
@@ -202,7 +202,7 @@ int sober128_done(prng_state *prng);
 int  sober128_export(unsigned char *out, unsigned long *outlen, prng_state *prng);
 int  sober128_import(const unsigned char *in, unsigned long inlen, prng_state *prng);
 int  sober128_test(void);
-extern const struct ltc_prng_descriptor sober128_desc;
+LTC_SHRSYM extern const struct ltc_prng_descriptor sober128_desc;
 #endif
 
 int find_prng(const char *name);
@@ -222,7 +222,7 @@ unsigned long rng_get_bytes(unsigned char *out,
 int rng_make_prng(int bits, int wprng, prng_state *prng, void (*callback)(void));
 
 #ifdef LTC_PRNG_ENABLE_LTC_RNG
-extern unsigned long (*ltc_rng)(unsigned char *out, unsigned long outlen,
+LTC_SHRSYM extern unsigned long (*ltc_rng)(unsigned char *out, unsigned long outlen,
       void (*callback)(void));
 #endif
 

@@ -10,6 +10,17 @@
 #ifndef TOMCRYPT_CUSTOM_H_
 #define TOMCRYPT_CUSTOM_H_
 
+// https://cmake.org/cmake/help/latest/guide/tutorial/Selecting%20Static%20or%20Shared%20Libraries.html#mathfunctions-mathfunctions-h
+#if defined(_WIN32) && defined(LIB2_SHARED)
+#  if defined(LIB2_EXPORT)
+#    define LTC_SHRSYM __declspec(dllexport)
+#  else
+#    define LTC_SHRSYM __declspec(dllimport)
+#  endif
+#else // non-DLL or static lib
+#  define LTC_SHRSYM
+#endif
+
 /* macros for various libc functions you can change for embedded targets */
 #ifndef XMALLOC
 #define XMALLOC  malloc

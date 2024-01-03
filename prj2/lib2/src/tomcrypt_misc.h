@@ -60,7 +60,7 @@ void burn_stack(unsigned long len);
 
 const char *error_to_string(int err);
 
-extern const char *crypt_build_settings;
+LTC_SHRSYM extern const char *crypt_build_settings;
 
 /* ---- HMM ---- */
 int crypt_fsa(void *mp, ...);

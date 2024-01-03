@@ -370,7 +370,7 @@ void gcm_gf_mult(const unsigned char *a, const unsigned char *b, unsigned char *
 
 /* table shared between GCM and LRW */
 #if defined(LTC_GCM_TABLES) || defined(LTC_LRW_TABLES) || ((defined(LTC_GCM_MODE) || defined(LTC_GCM_MODE)) && defined(LTC_FAST))
-extern const unsigned char gcm_shift_table[];
+LTC_SHRSYM extern const unsigned char gcm_shift_table[];
 #endif
 
 #ifdef LTC_GCM_MODE
