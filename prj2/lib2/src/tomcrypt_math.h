@@ -490,22 +490,22 @@ typedef struct {
    int (*rand)(void *a, int size);
 } ltc_math_descriptor;
 
-extern ltc_math_descriptor ltc_mp;
+LTC_SHRSYM extern ltc_math_descriptor ltc_mp;
 
 int ltc_init_multi(void **a, ...);
 void ltc_deinit_multi(void *a, ...);
 void ltc_cleanup_multi(void **a, ...);
 
 #ifdef LTM_DESC
-extern const ltc_math_descriptor ltm_desc;
+LTC_SHRSYM extern const ltc_math_descriptor ltm_desc;
 #endif
 
 #ifdef TFM_DESC
-extern const ltc_math_descriptor tfm_desc;
+LTC_SHRSYM extern const ltc_math_descriptor tfm_desc;
 #endif
 
 #ifdef GMP_DESC
-extern const ltc_math_descriptor gmp_desc;
+LTC_SHRSYM extern const ltc_math_descriptor gmp_desc;
 #endif
 
 #if !defined(DESC_DEF_ONLY) && defined(LTC_SOURCE)

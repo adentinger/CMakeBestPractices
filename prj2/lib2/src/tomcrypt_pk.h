@@ -230,7 +230,7 @@ typedef struct {
   const char *name, *base, *prime;
 } ltc_dh_set_type;
 
-extern const ltc_dh_set_type ltc_dh_sets[];
+LTC_SHRSYM extern const ltc_dh_set_type ltc_dh_sets[];
 
 /* internal helper functions */
 int dh_check_pubkey(dh_key *key);
@@ -303,7 +303,7 @@ typedef struct {
 } ecc_key;
 
 /** the ECC params provided */
-extern const ltc_ecc_set_type ltc_ecc_sets[];
+LTC_SHRSYM extern const ltc_ecc_set_type ltc_ecc_sets[];
 
 int  ecc_test(void);
 void ecc_sizes(int *low, int *high);

@@ -59,7 +59,20 @@ ade_clang_format_git_targets(TARGETS
 set_target_properties(lib2
   PROPERTIES
     CXX_STANDARD 17
-    CXX_STANDARD_REQUIRED ON)
+    CXX_STANDARD_REQUIRED ON
+    # On Windows, symbols have to be explicitly exported and imported (usually
+    # by a macro used inside the library's headers that is defined to
+    # "__declspec(dllexport)" when building the library, and
+    # "__declspec(dllimport)" when using the built library). However,
+    # libtomcrypt doesn't explicitly export its symbols since it's primarily
+    # meant to be built on *nix.
+    # So we'll have to set WINDOWS_EXPORT_ALL_SYMBOLS ON so that CMake
+    # automatically exports all symbols. For global data symbols
+    # (i.e., global variables), we have to tweak the code of libtomcrypt so
+    # that the headers that provide them use "__declspec(dllimport)", as
+    # required by CMake:
+    # https://cmake.org/cmake/help/latest/prop_tgt/WINDOWS_EXPORT_ALL_SYMBOLS.html
+    WINDOWS_EXPORT_ALL_SYMBOLS ON)
 set_target_properties(lib2__objlib_internal
   PROPERTIES
     CXX_STANDARD 17
