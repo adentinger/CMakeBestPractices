@@ -1,20 +1,19 @@
-# Include the macros and functions.
-
-include(${CMAKE_CURRENT_LIST_DIR}/res/CMake/CMakeMacros.cmake)
-
-# Make Xcode's 'Archive' build work
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/extern")
-
 # Set up helper variables for future configuring.
-set(SM_EXTERN_DIR "${CMAKE_CURRENT_LIST_DIR}/extern")
-set(SM_RESOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}")
+set(SM_SRC_DIR "${CMAKE_CURRENT_LIST_DIR}/exe")
+set(SM_RESOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}/../res")
+set(SM_EXTERN_DIR "${CMAKE_CURRENT_LIST_DIR}/../extern")
 set(SM_CMAKE_DIR "${SM_RESOURCE_DIR}/CMake")
 set(SM_INSTALLER_DIR "${SM_RESOURCE_DIR}/Installer")
 set(SM_XCODE_DIR "${SM_RESOURCE_DIR}/Xcode")
 set(SM_PROGRAM_DIR "${SM_RESOURCE_DIR}/Program")
 set(SM_BUILD_DIR "${SM_RESOURCE_DIR}/Build")
-set(SM_SRC_DIR "${SM_RESOURCE_DIR}/exe")
 set(SM_DOC_DIR "${SM_RESOURCE_DIR}/Docs")
+
+# Include the macros and functions.
+include("${SM_CMAKE_DIR}/CMakeMacros.cmake")
+
+# Make Xcode's 'Archive' build work
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${SM_EXTERN_DIR}")
 
 # TODO: Reconsile the OS dependent naming scheme.
 set(SM_EXE_NAME "StepMania")
@@ -351,4 +350,4 @@ configure_file("${SM_SRC_DIR}/verstub.in.cpp"
                "${SM_SRC_DIR}/generated/verstub.cpp")
 
 # Define installer based items for cpack.
-include("${CMAKE_CURRENT_LIST_DIR}/CMake/CPackSetup.cmake")
+include("${SM_CMAKE_DIR}/CPackSetup.cmake")
