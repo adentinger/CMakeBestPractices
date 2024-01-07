@@ -128,9 +128,6 @@ set_target_properties("${SM_EXE_NAME}"
                                  OUTPUT_NAME_RELWITHDEBINFO
                                  "${SM_NAME_RELWITHDEBINFO}")
 
-list(APPEND SM_WINDOWS_PROGRAM_DLLS
-            "${SM_PROGRAM_DIR}/parallel_lights_io.dll")
-
 if(WIN32)
   sm_add_compile_definition("${SM_EXE_NAME}" WINDOWS)
   sm_add_compile_definition("${SM_EXE_NAME}" _WINDOWS) # TODO: Remove this
@@ -168,15 +165,15 @@ elseif(APPLE)
     "${SM_EXE_NAME}"
     PROPERTIES
       RUNTIME_OUTPUT_DIRECTORY
-      "${SM_ROOT_DIR}"
+      "${SM_RESOURCE_DIR}"
       RUNTIME_OUTPUT_DIRECTORY_RELEASE
-      "${SM_ROOT_DIR}"
+      "${SM_RESOURCE_DIR}"
       RUNTIME_OUTPUT_DIRECTORY_DEBUG
-      "${SM_ROOT_DIR}"
+      "${SM_RESOURCE_DIR}"
       RUNTIME_OUTPUT_DIRECTORY_MINSIZEREL
-      "${SM_ROOT_DIR}"
+      "${SM_RESOURCE_DIR}"
       RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO
-      "${SM_ROOT_DIR}"
+      "${SM_RESOURCE_DIR}"
       MACOSX_BUNDLE_INFO_PLIST
       "${SM_XCODE_DIR}/Info.StepMania.plist"
       XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD
@@ -207,17 +204,17 @@ elseif(APPLE)
       # "${SM_XCODE_DIR}/StepMania.entitlements")
       
   set(APPLE_BUNDLE_RESOURCES
-    "${SM_ROOT_DIR}/Announcers"
-    "${SM_ROOT_DIR}/BackgroundEffects"
-    "${SM_ROOT_DIR}/BackgroundTransitions"
-    "${SM_ROOT_DIR}/BGAnimations"
-    "${SM_ROOT_DIR}/Characters"
-    "${SM_ROOT_DIR}/Courses"
-    "${SM_ROOT_DIR}/Data"
-    "${SM_ROOT_DIR}/NoteSkins"
-    "${SM_ROOT_DIR}/Scripts"
-    "${SM_ROOT_DIR}/Songs"
-    "${SM_ROOT_DIR}/Themes"
+    "${SM_RESOURCE_DIR}/Announcers"
+    "${SM_RESOURCE_DIR}/BackgroundEffects"
+    "${SM_RESOURCE_DIR}/BackgroundTransitions"
+    "${SM_RESOURCE_DIR}/BGAnimations"
+    "${SM_RESOURCE_DIR}/Characters"
+    "${SM_RESOURCE_DIR}/Courses"
+    "${SM_RESOURCE_DIR}/Data"
+    "${SM_RESOURCE_DIR}/NoteSkins"
+    "${SM_RESOURCE_DIR}/Scripts"
+    "${SM_RESOURCE_DIR}/Songs"
+    "${SM_RESOURCE_DIR}/Themes"
   )
   
   target_sources("${SM_EXE_NAME}" PUBLIC ${APPLE_BUNDLE_RESOURCES})
@@ -254,25 +251,25 @@ elseif(APPLE)
   set(SM_DMG_RELEASE_NAME "${SM_NAME_VERSION}-mac.dmg")
 
   add_custom_target(dmg
-                    COMMAND pushd ${SM_ROOT_DIR}\; mkdir -p dmgtmpdir\; cd
+                    COMMAND pushd ${SM_RESOURCE_DIR}\; mkdir -p dmgtmpdir\; cd
                             dmgtmpdir\; mkdir -p ${SM_NAME_VERSION}\; cd
                             ${SM_NAME_VERSION}\; mkdir -p ${SM_NAME_VERSION}\; cd
                             ${SM_NAME_VERSION}\; cp -R
-                            "${SM_ROOT_DIR}/Announcers" .\; cp -R
-                            "${SM_ROOT_DIR}/BackgroundEffects" .\; cp -R
-                            "${SM_ROOT_DIR}/BackgroundTransitions" .\; cp -R
-                            "${SM_ROOT_DIR}/BGAnimations" .\; cp -R
-                            "${SM_ROOT_DIR}/Characters" .\; cp -R
-                            "${SM_ROOT_DIR}/Courses" .\; cp -R
-                            "${SM_ROOT_DIR}/Data" .\; cp -R
-                            "${SM_ROOT_DIR}/Docs" .\; cp -R
-                            "${SM_ROOT_DIR}/Manual" .\; cp -R
-                            "${SM_ROOT_DIR}/NoteSkins" .\; cp -R
-                            "${SM_ROOT_DIR}/Scripts" .\; cp -R
-                            "${SM_ROOT_DIR}/Songs" .\; cp -R
-                            "${SM_ROOT_DIR}/Themes" .\; cp -R
-                            "${SM_ROOT_DIR}/${SM_APP_RELEASE_NAME}.app" .\; cd
-                            ${SM_ROOT_DIR}\; hdiutil create
+                            "${SM_RESOURCE_DIR}/Announcers" .\; cp -R
+                            "${SM_RESOURCE_DIR}/BackgroundEffects" .\; cp -R
+                            "${SM_RESOURCE_DIR}/BackgroundTransitions" .\; cp -R
+                            "${SM_RESOURCE_DIR}/BGAnimations" .\; cp -R
+                            "${SM_RESOURCE_DIR}/Characters" .\; cp -R
+                            "${SM_RESOURCE_DIR}/Courses" .\; cp -R
+                            "${SM_RESOURCE_DIR}/Data" .\; cp -R
+                            "${SM_RESOURCE_DIR}/Docs" .\; cp -R
+                            "${SM_RESOURCE_DIR}/Manual" .\; cp -R
+                            "${SM_RESOURCE_DIR}/NoteSkins" .\; cp -R
+                            "${SM_RESOURCE_DIR}/Scripts" .\; cp -R
+                            "${SM_RESOURCE_DIR}/Songs" .\; cp -R
+                            "${SM_RESOURCE_DIR}/Themes" .\; cp -R
+                            "${SM_RESOURCE_DIR}/${SM_APP_RELEASE_NAME}.app" .\; cd
+                            ${SM_RESOURCE_DIR}\; hdiutil create
                             "${SM_DMG_RELEASE_NAME}" -VOLNAME
                             "StepMania ${SM_DMG_VERSION}" -SRCFOLDER
                             "dmgtmpdir/${SM_NAME_VERSION}/" -OV\; rm -fR
@@ -291,15 +288,15 @@ elseif(APPLE)
 else() # Linux
   set_target_properties("${SM_EXE_NAME}"
                         PROPERTIES RUNTIME_OUTPUT_DIRECTORY
-                                   "${SM_ROOT_DIR}"
+                                   "${SM_RESOURCE_DIR}"
                                    RUNTIME_OUTPUT_DIRECTORY_RELEASE
-                                   "${SM_ROOT_DIR}"
+                                   "${SM_RESOURCE_DIR}"
                                    RUNTIME_OUTPUT_DIRECTORY_DEBUG
-                                   "${SM_ROOT_DIR}"
+                                   "${SM_RESOURCE_DIR}"
                                    RUNTIME_OUTPUT_DIRECTORY_MINSIZEREL
-                                   "${SM_ROOT_DIR}"
+                                   "${SM_RESOURCE_DIR}"
                                    RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO
-                                   "${SM_ROOT_DIR}")
+                                   "${SM_RESOURCE_DIR}")
 
   if(${WITH_CRASH_HANDLER})
     sm_add_compile_definition("${SM_EXE_NAME}" CRASH_HANDLER)
@@ -546,52 +543,47 @@ if(NOT APPLE)
   if(WIN32)
     set(SM_FULL_INSTALLATION_PATH_LIST "${SM_INSTALL_DESTINATION}" "Program")
     sm_join("${SM_FULL_INSTALLATION_PATH_LIST}" "/" SM_FULL_INSTALLATION_PATH)
-    # Hardcoding the values for now since the foreach loop is not working as
-    # intended.
     install(TARGETS "${SM_EXE_NAME}" DESTINATION "${SM_FULL_INSTALLATION_PATH}")
-    install(FILES "${SM_PROGRAM_DIR}/parallel_lights_io.dll"
-            DESTINATION "${SM_FULL_INSTALLATION_PATH}")
+    # install(FILES "${SM_PROGRAM_DIR}/parallel_lights_io.dll"
+    #         DESTINATION "${SM_FULL_INSTALLATION_PATH}")
     install(FILES "${SM_PROGRAM_DIR}/StepMania.vdi"
             DESTINATION "${SM_FULL_INSTALLATION_PATH}")
-
-    # foreach(SM_WINDOW_DLL "${SM_WINDOWS_PROGRAM_DLLS}") install(FILES
-    # "${SM_WINDOW_DLL}" DESTINATION "${SM_INSTALL_DESTINATION}") endforeach()
   else()
     install(TARGETS "${SM_EXE_NAME}" DESTINATION "${SM_INSTALL_DESTINATION}")
   endif()
   if(UNIX OR LINUX)
-    install(FILES "${SM_ROOT_DIR}/GtkModule.so"
+    install(FILES "${SM_RESOURCE_DIR}/GtkModule.so"
             LIBRARY DESTINATION "${SM_INSTALL_DESTINATION}" OPTIONAL)
   endif()
-  install(DIRECTORY "${SM_ROOT_DIR}/Announcers"
+  install(DIRECTORY "${SM_RESOURCE_DIR}/Announcers"
           DESTINATION "${SM_INSTALL_DESTINATION}")
-  install(DIRECTORY "${SM_ROOT_DIR}/BGAnimations"
+  install(DIRECTORY "${SM_RESOURCE_DIR}/BGAnimations"
           DESTINATION "${SM_INSTALL_DESTINATION}")
-  install(DIRECTORY "${SM_ROOT_DIR}/Themes"
+  install(DIRECTORY "${SM_RESOURCE_DIR}/Themes"
           DESTINATION "${SM_INSTALL_DESTINATION}")
-  install(DIRECTORY "${SM_ROOT_DIR}/Characters"
+  install(DIRECTORY "${SM_RESOURCE_DIR}/Characters"
           DESTINATION "${SM_INSTALL_DESTINATION}")
-  install(DIRECTORY "${SM_ROOT_DIR}/Scripts"
+  install(DIRECTORY "${SM_RESOURCE_DIR}/Scripts"
           DESTINATION "${SM_INSTALL_DESTINATION}")
-  install(DIRECTORY "${SM_ROOT_DIR}/Courses"
+  install(DIRECTORY "${SM_RESOURCE_DIR}/Courses"
           DESTINATION "${SM_INSTALL_DESTINATION}")
-  install(DIRECTORY "${SM_ROOT_DIR}/BackgroundEffects"
+  install(DIRECTORY "${SM_RESOURCE_DIR}/BackgroundEffects"
           DESTINATION "${SM_INSTALL_DESTINATION}")
-  install(DIRECTORY "${SM_ROOT_DIR}/Data"
+  install(DIRECTORY "${SM_RESOURCE_DIR}/Data"
           DESTINATION "${SM_INSTALL_DESTINATION}")
-  install(DIRECTORY "${SM_ROOT_DIR}/BackgroundTransitions"
+  install(DIRECTORY "${SM_RESOURCE_DIR}/BackgroundTransitions"
           DESTINATION "${SM_INSTALL_DESTINATION}")
-  install(DIRECTORY "${SM_ROOT_DIR}/Docs"
+  install(DIRECTORY "${SM_RESOURCE_DIR}/Docs"
           DESTINATION "${SM_INSTALL_DESTINATION}")
-  install(DIRECTORY "${SM_ROOT_DIR}/NoteSkins"
+  install(DIRECTORY "${SM_RESOURCE_DIR}/NoteSkins"
           DESTINATION "${SM_INSTALL_DESTINATION}")
   if(NOT SM_INSTALL_DESTINATION)
-    install(DIRECTORY "${SM_ROOT_DIR}/Songs/StepMania 5" DESTINATION "Songs")
-    install(FILES "${SM_ROOT_DIR}/Songs/instructions.txt" DESTINATION "Songs")
+    install(DIRECTORY "${SM_RESOURCE_DIR}/Songs/StepMania 5" DESTINATION "Songs")
+    install(FILES "${SM_RESOURCE_DIR}/Songs/instructions.txt" DESTINATION "Songs")
   else()
-    install(DIRECTORY "${SM_ROOT_DIR}/Songs/StepMania 5"
+    install(DIRECTORY "${SM_RESOURCE_DIR}/Songs/StepMania 5"
             DESTINATION "${SM_INSTALL_DESTINATION}/Songs")
-    install(FILES "${SM_ROOT_DIR}/Songs/instructions.txt"
+    install(FILES "${SM_RESOURCE_DIR}/Songs/instructions.txt"
             DESTINATION "${SM_INSTALL_DESTINATION}/Songs")
   endif()
 endif()

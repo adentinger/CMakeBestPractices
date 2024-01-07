@@ -15,19 +15,19 @@ sm_add_compile_flag("GtkModule" "-std=${SM_CPP_STANDARD}")
 set_target_properties("GtkModule" PROPERTIES PREFIX "")
 set_target_properties("GtkModule" PROPERTIES OUTPUT_NAME "GtkModule")
 set_target_properties("GtkModule"
-                      PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${SM_ROOT_DIR}")
+                      PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${SM_RESOURCE_DIR}")
 set_target_properties("GtkModule"
                       PROPERTIES LIBRARY_OUTPUT_DIRECTORY_RELEASE
-                                 "${SM_ROOT_DIR}")
+                                 "${SM_RESOURCE_DIR}")
 set_target_properties(
   "GtkModule"
-  PROPERTIES LIBRARY_OUTPUT_DIRECTORY_DEBUG "${SM_ROOT_DIR}")
+  PROPERTIES LIBRARY_OUTPUT_DIRECTORY_DEBUG "${SM_RESOURCE_DIR}")
 set_target_properties("GtkModule"
                       PROPERTIES LIBRARY_OUTPUT_DIRECTORY_MINSIZEREL
-                                 "${SM_ROOT_DIR}")
+                                 "${SM_RESOURCE_DIR}")
 set_target_properties("GtkModule"
                       PROPERTIES LIBRARY_OUTPUT_DIRECTORY_RELWITHDEBINFO
-                                 "${SM_ROOT_DIR}")
+                                 "${SM_RESOURCE_DIR}")
 target_link_libraries("GtkModule" ${GTK3_LIBRARIES})
 set_property(TARGET "GtkModule" PROPERTY FOLDER "Internal Libraries")
 list(APPEND SM_GTK_INCLUDE_DIRS
