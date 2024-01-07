@@ -146,37 +146,42 @@ else()
   set(ENDIAN_LITTLE 1)
 endif()
 
-check_compile_features("${SM_CMAKE_DIR}/TestCode"
-                       "${SM_CMAKE_DIR}/TestCode/test_prototype.c"
-                       "Checking for function prototype capabilities"
-                       "found"
-                       "not found"
-                       SM_IGNORED_PROTOTYPE_CALL
-                       FALSE)
+set(SM_IGNORED_PROTOTYPE_CALL 1 CACHE INTERNAL "Have function prototype capabilities")
+# Does not work anymore
+# check_compile_features("${SM_CMAKE_DIR}/TestCode"
+#                        "${SM_CMAKE_DIR}/TestCode/test_prototype.c"
+#                        "Checking for function prototype capabilities"
+#                        "found"
+#                        "not found"
+#                        SM_IGNORED_PROTOTYPE_CALL
+#                        FALSE)
 
 if(NOT SM_IGNORED_PROTOTYPE_CALL)
   set(HAVE_PROTOTYPES TRUE)
 endif()
 
-check_compile_features("${SM_CMAKE_DIR}/TestCode"
-                       "${SM_CMAKE_DIR}/TestCode/test_external.c"
-                       "Checking for external name shortening requirements"
-                       "not needed"
-                       "needed"
-                       SM_BUILT_LONG_NAME
-                       TRUE)
-
+set(SM_BUILT_LONG_NAME 1 CACHE INTERNAL "Whether the compiler supports long identifiers")
+# Does not work anymore
+# check_compile_features("${SM_CMAKE_DIR}/TestCode"
+#                        "${SM_CMAKE_DIR}/TestCode/test_external.c"
+#                        "Checking for external name shortening requirements"
+#                        "not needed"
+#                        "needed"
+#                        SM_BUILT_LONG_NAME
+#                        TRUE)
 if(NOT SM_BUILT_LONG_NAME)
   set(NEED_SHORT_EXTERNAL_NAMES 1)
 endif()
 
-check_compile_features("${SM_CMAKE_DIR}/TestCode"
-                       "${SM_CMAKE_DIR}/TestCode/test_broken.c"
-                       "Checking if incomplete types are broken."
-                       "not broken"
-                       "broken"
-                       SM_BUILT_INCOMPLETE_TYPE
-                       FALSE)
+set(SM_BUILT_INCOMPLETE_TYPE 1 CACHE INTERNAL "Whether the compiler rejects incomplete types.")
+# Does not work anymore
+# check_compile_features("${SM_CMAKE_DIR}/TestCode"
+#                        "${SM_CMAKE_DIR}/TestCode/test_broken.c"
+#                        "Checking if incomplete types are broken."
+#                        "not broken"
+#                        "broken"
+#                        SM_BUILT_INCOMPLETE_TYPE
+#                        FALSE)
 
 if(SM_BUILT_INCOMPLETE_TYPE)
   set(INCOMPLETE_TYPES_BROKEN 1)
