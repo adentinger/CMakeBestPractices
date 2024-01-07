@@ -1,20 +1,20 @@
 # Include the macros and functions.
 
-include(${CMAKE_CURRENT_LIST_DIR}/CMake/CMakeMacros.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/res/CMake/CMakeMacros.cmake)
 
 # Make Xcode's 'Archive' build work
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/extern")
 
 # Set up helper variables for future configuring.
-set(SM_CMAKE_DIR "${CMAKE_CURRENT_LIST_DIR}/CMake")
 set(SM_EXTERN_DIR "${CMAKE_CURRENT_LIST_DIR}/extern")
-set(SM_INSTALLER_DIR "${CMAKE_CURRENT_LIST_DIR}/Installer")
-set(SM_XCODE_DIR "${CMAKE_CURRENT_LIST_DIR}/Xcode")
-set(SM_PROGRAM_DIR "${CMAKE_CURRENT_LIST_DIR}/Program")
-set(SM_BUILD_DIR "${CMAKE_CURRENT_LIST_DIR}/Build")
-set(SM_SRC_DIR "${CMAKE_CURRENT_LIST_DIR}/exe")
-set(SM_DOC_DIR "${CMAKE_CURRENT_LIST_DIR}/Docs")
-set(SM_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}")
+set(SM_RESOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}")
+set(SM_CMAKE_DIR "${SM_RESOURCE_DIR}/CMake")
+set(SM_INSTALLER_DIR "${SM_RESOURCE_DIR}/Installer")
+set(SM_XCODE_DIR "${SM_RESOURCE_DIR}/Xcode")
+set(SM_PROGRAM_DIR "${SM_RESOURCE_DIR}/Program")
+set(SM_BUILD_DIR "${SM_RESOURCE_DIR}/Build")
+set(SM_SRC_DIR "${SM_RESOURCE_DIR}/exe")
+set(SM_DOC_DIR "${SM_RESOURCE_DIR}/Docs")
 
 # TODO: Reconsile the OS dependent naming scheme.
 set(SM_EXE_NAME "StepMania")
