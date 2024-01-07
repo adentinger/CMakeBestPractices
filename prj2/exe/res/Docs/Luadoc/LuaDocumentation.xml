@@ -2185,7 +2185,7 @@ Def.Sound{
 		pathed relative to the current theme's <code>./Fonts/</code> directory.<br />
 		StepMania expects fonts to be formatted as spritesheets with accompanying ini files.
 		These can be generated from ttf files using <em>Texture Font Generator.exe</em> in the
-		<code>./Program/</code> directory of packaged StepMania releases.<br />
+		<code>./bin/</code> directory of packaged StepMania releases.<br />
 		The text displayed can be initially set using the <code>Text</code> attribute, and changed
 		later using <Link class='BitmapText' function='settext'>settext()</Link>.<br />
 		Basic usage example:

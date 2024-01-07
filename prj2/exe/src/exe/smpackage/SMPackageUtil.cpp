@@ -175,7 +175,7 @@ bool SMPackageUtil::LaunchGame()
 	STARTUPINFO	si;
 	ZeroMemory( &si, sizeof(si) );
 
-	RString sFile = "Program\\" PRODUCT_FAMILY ".exe";
+	RString sFile = "bin\\" PRODUCT_FAMILY ".exe";
 
 	BOOL bSuccess = CreateProcess(
 		sFile,	// pointer to name of executable module
