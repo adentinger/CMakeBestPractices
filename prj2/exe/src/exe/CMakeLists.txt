@@ -94,6 +94,34 @@ else()
                  ${SMDATA_ALL_FILES_HPP})
 endif()
 
+# Providing a CACHE option for this, since this is a nice convenience that
+# some users might want.
+#
+# Default is ON, which means the installation should be self-contained. This
+# is because StepMania is general software that should "just work" and be easy
+# to setup. It's not a C/C++ library or executable that is actively trying to
+# fail if it is badly configured.
+#
+# However, there should always be an option to turn this OFF, since in some
+# situations consumer code might want to e.g. provide all of the dependencies
+# themselves, such as in the case of a package manager.
+option(exe_INSTALL_DEPENDANT_DLLS
+  "If ON, install any DLL that this executable depends on along with it."
+  ON)
+if (exe_INSTALL_DEPENDANT_DLLS)
+  # On Windows, DLLs need to be in the same directory as the executable for it
+  # to run. This is not a perfect solution because 1) this is inconsistent with
+  # what happens on Unix-like systems (where the shared libraries would need to
+  # be installed in one of the directories specified in the RPATH), 2) a
+  # package manager like vcpkg would want to manage the dependencies themselves
+  # (that's what they are there for right?), and 3) because it's possible that
+  # something else provides the same DLL file, so packaging the DLLs would mean
+  # that the DLLs that end up in the final installation tree would depend on
+  # installation order, which sounds pretty bad.
+  install(FILES "$<TARGET_RUNTIME_DLLS:${SM_EXE_NAME}>"
+	  DESTINATION bin)
+endif()
+
 set_target_properties("${SM_EXE_NAME}"
                       PROPERTIES OUTPUT_NAME
                                  "${SM_NAME_RELEASE}"
