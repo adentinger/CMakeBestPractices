@@ -552,6 +552,21 @@ if(NOT APPLE)
     install(TARGETS "${SM_EXE_NAME}" DESTINATION "${SM_FULL_INSTALLATION_PATH}")
     # install(FILES "${SM_PROGRAM_DIR}/parallel_lights_io.dll"
     #         DESTINATION "${SM_FULL_INSTALLATION_PATH}")
+
+    if(exe_INSTALL_DEPENDANT_DLLS)
+      # Not sure where in this buildsystem we cause StepMania.exe to need the
+      # DLL versions of the FFPMEG libraries, but CMake is unaware of this and
+      # therefore does not install them. Until we figure this out, we'll have
+      # to install the libraries manually.
+      install(FILES
+        "${SM_PROGRAM_DIR}/avcodec-60.dll"
+        "${SM_PROGRAM_DIR}/avformat-60.dll"
+        "${SM_PROGRAM_DIR}/avutil-58.dll"
+        "${SM_PROGRAM_DIR}/swresample-4.dll"
+        "${SM_PROGRAM_DIR}/swscale-7.dll"
+        "${SM_PROGRAM_DIR}/libpng16.dll"
+        DESTINATION bin)
+    endif()
   else()
     install(TARGETS "${SM_EXE_NAME}" DESTINATION "${SM_INSTALL_DESTINATION}")
   endif()
