@@ -135,10 +135,7 @@ set_target_properties("${SM_EXE_NAME}"
                                  "${SM_NAME_RELWITHDEBINFO}")
 
 # Required for usage of tomcrypt and tommath.
-sm_add_compile_definition("${SM_EXE_NAME}" LTM_DESC)
-
 sm_add_compile_definition("${SM_EXE_NAME}" LTC_NO_ASM)
-
 sm_add_compile_definition("${SM_EXE_NAME}" CMAKE_POWERED)
 
 # Compilation flags per project here.
