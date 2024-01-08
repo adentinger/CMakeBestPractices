@@ -491,9 +491,8 @@ target_link_directories("${SM_EXE_NAME}"
   PRIVATE
     ${FFMPEG_LIBRARY_DIRS})
 target_link_libraries("${SM_EXE_NAME}"
-  PUBLIC
-    ${SMDATA_LINK_LIB}
   PRIVATE
+    ${SMDATA_LINK_LIB}
     ${FFMPEG_LIBRARIES}
     GLEW::GLEW
     JPEG::JPEG
@@ -519,7 +518,6 @@ if(WIN32)
   target_compile_definitions("${SM_EXE_NAME}"
     PRIVATE "_HAS_STD_BYTE=0")
 endif()
-
 list(APPEND SM_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}
             "${SM_SRC_DIR}/generated")
 if(NOT APPLE)
