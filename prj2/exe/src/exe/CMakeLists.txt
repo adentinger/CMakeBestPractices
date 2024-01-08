@@ -1,10 +1,5 @@
 file(MAKE_DIRECTORY "${SM_SRC_DIR}/generated")
 
-if(MSVC)
-  # Add the mapconv program of the past to allow for debugging information.
-  include("CMakeProject-mapconv.cmake")
-endif()
-
 # Keep the module path local for easier grabbing.
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR})
 
@@ -172,16 +167,6 @@ if(WIN32)
                                    RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO
                                    "${SM_PROGRAM_DIR}")
 
-  # if(MSVC)
-    # Allow for getting a virtualdub stack trace.
-    # add_custom_command(
-    #   TARGET "${SM_EXE_NAME}" POST_BUILD
-    #   COMMAND
-    #     "mapconv"
-    #     "${SM_PROGRAM_DIR}/$<$<CONFIG:DEBUG>:${SM_NAME_DEBUG}>$<$<CONFIG:MINSIZEREL>:${SM_NAME_MINSIZEREL}>$<$<CONFIG:RELWITHDEBINFO>:${SM_NAME_RELWITHDEBINFO}>$<$<CONFIG:RELEASE>:${SM_NAME_RELEASE}>.map"
-    #     "${SM_PROGRAM_DIR}/$<$<CONFIG:DEBUG>:${SM_NAME_DEBUG}>$<$<CONFIG:MINSIZEREL>:${SM_NAME_MINSIZEREL}>$<$<CONFIG:RELWITHDEBINFO>:${SM_NAME_RELWITHDEBINFO}>$<$<CONFIG:RELEASE>:${SM_NAME_RELEASE}>.vdi"
-    #   COMMENT "Generating file to allow for easier stack traces.")
-  # endif()
 elseif(APPLE)
   sm_add_compile_definition("${SM_EXE_NAME}" BACKTRACE_METHOD_X86_DARWIN)
   sm_add_compile_definition("${SM_EXE_NAME}" MACOSX)
