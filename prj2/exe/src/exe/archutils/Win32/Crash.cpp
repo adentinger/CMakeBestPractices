@@ -563,7 +563,7 @@ void CrashHandler::do_backtrace( const void **buf, size_t size,
 }
 
 // Trigger the crash handler. This works even in the debugger.
-static void NORETURN debug_crash()
+static void SM_NORETURN debug_crash()
 {
 //	__try {
 #if defined(__MSC_VER)
