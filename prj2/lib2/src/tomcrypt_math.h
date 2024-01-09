@@ -490,7 +490,10 @@ typedef struct {
    int (*rand)(void *a, int size);
 } ltc_math_descriptor;
 
-LTC_SHRSYM extern ltc_math_descriptor ltc_mp;
+// Unlike most extern global variables, this one should not be LTC_SHRSYM,
+// since libtomcrypt requires the user of this library to define this global;
+// libtomcrypt doesn't export/define it anywhere.
+extern ltc_math_descriptor ltc_mp;
 
 int ltc_init_multi(void **a, ...);
 void ltc_deinit_multi(void *a, ...);
