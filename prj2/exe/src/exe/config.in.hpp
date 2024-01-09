@@ -125,10 +125,10 @@ typedef std::make_signed<size_t>::type ssize_t;
 #endif
 
 /* Defined to 1 if the underlying system uses little endian. */
-#cmakedefine ENDIAN_LITTLE 1
+#cmakedefine SM_ENDIAN_LITTLE 1
 
 /* Defined to 1 if the underlying system uses big endian. */
-#cmakedefine ENDIAN_BIG 1
+#cmakedefine SM_ENDIAN_BIG 1
 
 /* Defined to 1 if compiling with WAV support. */
 #cmakedefine HAS_WAV 1
@@ -281,8 +281,8 @@ inline long lrintf( float f )
 #endif
 
 /* Ensure we have an endianness defined. */
-#if !defined(ENDIAN_LITTLE) && !defined(ENDIAN_BIG)
-#error "Neither ENDIAN_LITTLE nor ENDIAN_BIG defined. Aborting."
+#if !defined(SM_ENDIAN_LITTLE) && !defined(SM_ENDIAN_BIG)
+#error "Neither SM_ENDIAN_LITTLE nor SM_ENDIAN_BIG defined. Aborting."
 #endif
 
 /* Define standard endianness macros, if they're missing. */
@@ -295,9 +295,9 @@ inline long lrintf( float f )
 #define LITTLE_ENDIAN 1234
 /** @brief The macro for big endian order. */
 #define BIG_ENDIAN 4321
-#if defined(ENDIAN_LITTLE)
+#if defined(SM_ENDIAN_LITTLE)
 #define BYTE_ORDER LITTLE_ENDIAN
-#elif defined(ENDIAN_BIG)
+#elif defined(SM_ENDIAN_BIG)
 #define BYTE_ORDER BIG_ENDIAN
 #endif
 
