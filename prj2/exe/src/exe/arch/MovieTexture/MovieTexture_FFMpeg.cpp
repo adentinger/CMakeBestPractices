@@ -11,7 +11,7 @@
 
 static void FixLilEndian()
 {
-#if defined(ENDIAN_LITTLE)
+#if defined(SM_ENDIAN_LITTLE)
 	static bool Initialized = false;
 	if( Initialized )
 		return;

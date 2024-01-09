@@ -228,7 +228,7 @@ inline uint16_t Swap16( uint16_t n )
 }
 #endif
 
-#if defined(ENDIAN_LITTLE)
+#if defined(SM_ENDIAN_LITTLE)
 inline uint32_t Swap32LE( uint32_t n ) { return n; }
 inline uint32_t Swap24LE( uint32_t n ) { return n; }
 inline uint16_t Swap16LE( uint16_t n ) { return n; }

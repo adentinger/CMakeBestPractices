@@ -169,7 +169,7 @@ namespace
 
 	void FixLittleEndian()
 	{
-#if defined(ENDIAN_LITTLE)
+#if defined(SM_ENDIAN_LITTLE)
 		static bool bInitialized = false;
 		if (bInitialized)
 			return;
