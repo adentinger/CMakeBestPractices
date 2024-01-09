@@ -23,16 +23,20 @@ Here's how to get the project's dependencies:
 - Ubuntu:
 
 ```bash
+sudo apt update
 # Assumes cmake's version is >= to version required by this project. If not
 # the case, see below.
-sudo apt install build-essential ninja-build cmake
+sudo apt-get install build-essential ninja-build pkg-config cmake python3
+# Needed by vcpkg ports
+sudo apt-get install curl zip unzip tar nasm libxmu-dev libxi-dev libgl-dev
 # Optional dependencies --generally for regular contributors of the project
-sudo apt install clang-format-16 clang-tidy-16
+sudo apt-get install clang-format-16 clang-tidy-16
 ```
 
 - Actual dependencies:
-    - CMake >= 3.26. If such a version is not available on your system, you can [download/install it here](https://cmake.org/download/).
+    - CMake >= 3.26. If such a version is not available on your system, you can [find it here](https://cmake.org/download/).
     - A generator supported by CMake (such as `ninja` or `make`).
+    - python3. If such a version is not available with a package manager, [find it here](https://www.python.org/downloads/).
     - (Optional) `clang-tidy` and `clang-format` version >= 16. Only needed by the `*-dev` configure presets.
 
 Here's how to build the project:
