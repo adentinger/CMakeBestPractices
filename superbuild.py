@@ -208,13 +208,25 @@ def check_vcpkg(params: Params, paths: Paths) -> None:
 			"vcpkg dir does not exist; did you clone this repos's submodules? "
 			"Run: git submodule update --init --recursive")
 
-def clean(params: Params, paths: Paths) -> None:
-	"""Deletes all build files."""
+def clean_ade_clang_format(params: Params, paths: Paths) -> None:
+	"""Deletes all AdeClangFormat build files. Also deletes the install
+	directory."""
 	if not params.is_dry_run:
 		shutil.rmtree(paths.ade_clang_format_dir.joinpath("build"), ignore_errors=True)
-		shutil.rmtree(paths.prj1_dir.joinpath("build"), ignore_errors=True)
-		shutil.rmtree(paths.prj2_dir.joinpath("build"), ignore_errors=True)
+
+def clean_prj1(params: Params, paths: Paths) -> None:
+	"""Deletes all prj1 build files. Also deletes the install
+	directory."""
+	if not params.is_dry_run:
 		shutil.rmtree(paths.install_dir, ignore_errors=True)
+		shutil.rmtree(paths.prj1_dir.joinpath("build"), ignore_errors=True)
+
+def clean_prj2(params: Params, paths: Paths) -> None:
+	"""Deletes all prj2 build files. Also deletes the install
+	directory."""
+	if not params.is_dry_run:
+		shutil.rmtree(paths.install_dir, ignore_errors=True)
+		shutil.rmtree(paths.prj2_dir.joinpath("build"), ignore_errors=True)
 
 def build_ade_clang_format(params: Params, paths: Paths) -> None:
 	chdir_or_print(params, paths.ade_clang_format_dir)
@@ -265,7 +277,9 @@ def run() -> None:
 	if not params.is_dry_run:
 		check_cmake_version_has_presets(params, paths)
 		check_vcpkg(params, paths)
-	clean(params, paths)
+	clean_ade_clang_format(params, paths)
+	clean_prj1(params, paths)
+	clean_prj2(params, paths)
 	build_ade_clang_format(params, paths)
 	build_prj1(params, paths)
 	build_prj2(params, paths)
