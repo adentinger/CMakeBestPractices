@@ -408,7 +408,6 @@ elseif(APPLE)
               ${MAC_FRAME_CORESERVICES}
               ${MAC_FRAME_SYSTEM})
   list(APPEND SMDATA_LINK_LIB
-              "${BZIP2_LIBRARY_RELEASE}"
               "${ICONV_LIBRARIES}")
 else() # Unix / Linux TODO: Remember to find and locate the zip archive files.
   if(HAS_FFMPEG)
@@ -427,7 +426,7 @@ else() # Unix / Linux TODO: Remember to find and locate the zip archive files.
     list(APPEND SMDATA_LINK_LIB "${GTK3_LIBRARIES}")
   endif()
 
-  list(APPEND SMDATA_LINK_LIB "${BZIP2_LIBRARIES}" "${CMAKE_THREAD_LIBS_INIT}")
+  list(APPEND SMDATA_LINK_LIB "${CMAKE_THREAD_LIBS_INIT}")
 
   if(HAS_ALSA)
     list(APPEND SMDATA_LINK_LIB ${ALSA_LIBRARIES})
