@@ -15,6 +15,7 @@
 		"libvorbis",
 		"ms-gsl",
 		"pcre",
+		"yasm",
 		"zlib"
 	]
 }

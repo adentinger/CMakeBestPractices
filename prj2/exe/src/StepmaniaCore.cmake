@@ -207,7 +207,7 @@ if(WITH_SDL)
 endif()
 
 find_package(nasm)
-find_package(yasm)
+find_package(yasm REQUIRED)
 
 find_package(Iconv)
 
