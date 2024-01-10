@@ -9,6 +9,7 @@
 		"gtest",
 		"ijg-libjpeg",
 		"jsoncpp",
+		"libiconv",
 		"libmad",
 		"libogg",
 		"libpng",
