@@ -29,6 +29,7 @@ set(CMAKE_DEBUG_POSTFIX -d)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+find_package(BZip2 REQUIRED)
 find_package(FFMPEG REQUIRED)
 find_package(GLEW REQUIRED)
 find_package(GTest CONFIG REQUIRED)
