@@ -3,6 +3,7 @@
 	"name": "cmake-best-practices-tests",
 	"version": "1.0",
 	"dependencies": [
+		"bzip2",
 		"ffmpeg",
 		"glew",
 		"gtest",

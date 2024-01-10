@@ -479,6 +479,7 @@ target_link_directories("${SM_EXE_NAME}"
 target_link_libraries("${SM_EXE_NAME}"
   PRIVATE
     ${SMDATA_LINK_LIB}
+    BZip2::BZip2
     ${FFMPEG_LIBRARIES}
     GLEW::GLEW
     JPEG::JPEG
