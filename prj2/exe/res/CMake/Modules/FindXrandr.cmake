@@ -1,12 +1,12 @@
-# This is borrowed from FreeRDP. - Find XRANDR Find the XRANDR libraries
+# This is borrowed from FreeRDP. - Find Xrandr Find the Xrandr libraries
 #
-# This module defines the following variables: XRANDR_FOUND        - true if
-# XRANDR_INCLUDE_DIR & XRANDR_LIBRARY are found XRANDR_LIBRARIES    - Set when
-# XRANDR_LIBRARY is found XRANDR_INCLUDE_DIRS - Set when XRANDR_INCLUDE_DIR is
+# This module defines the following variables: Xrandr_FOUND        - true if
+# Xrandr_INCLUDE_DIR & Xrandr_LIBRARY are found Xrandr_LIBRARIES    - Set when
+# Xrandr_LIBRARY is found Xrandr_INCLUDE_DIRS - Set when Xrandr_INCLUDE_DIR is
 # found
 #
-# XRANDR_INCLUDE_DIR  - where to find Xrandr.h, etc. XRANDR_LIBRARY      - the
-# XRANDR library
+# Xrandr_INCLUDE_DIR  - where to find Xrandr.h, etc. Xrandr_LIBRARY      - the
+# Xrandr library
 #
 
 # =============================================================================
@@ -25,21 +25,21 @@
 # the License.
 # =============================================================================
 
-find_path(XRANDR_INCLUDE_DIRS
+find_path(Xrandr_INCLUDE_DIRS
           NAMES X11/extensions/Xrandr.h
           PATH_SUFFIXES X11/extensions
           PATHS /opt/X11/include
-          DOC "The XRANDR include directory")
+          DOC "The Xrandr include directory")
 
-find_library(XRANDR_LIBRARIES
+find_library(Xrandr_LIBRARIES
              NAMES Xrandr
              PATHS /opt/X11/lib
-             DOC "The XRANDR library")
+             DOC "The Xrandr library")
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(XRANDR
+find_package_handle_standard_args(Xrandr
                                   DEFAULT_MSG
-                                  XRANDR_LIBRARIES
-                                  XRANDR_INCLUDE_DIRS)
+                                  Xrandr_LIBRARIES
+                                  Xrandr_INCLUDE_DIRS)
 
-mark_as_advanced(XRANDR_INCLUDE_DIRS XRANDR_LIBRARIES)
+mark_as_advanced(Xrandr_INCLUDE_DIRS Xrandr_LIBRARIES)
