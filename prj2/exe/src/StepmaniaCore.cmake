@@ -271,7 +271,7 @@ elseif(LINUX)
   find_package("ZLIB" REQUIRED)
   find_package("JPEG" REQUIRED)
 
-  find_package(Dl)
+  find_package(DL)
 
   set(HAS_XRANDR FALSE)
   if(WITH_XRANDR)
