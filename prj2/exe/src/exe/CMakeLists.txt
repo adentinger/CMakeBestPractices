@@ -136,6 +136,11 @@ set_target_properties("${SM_EXE_NAME}"
                                  OUTPUT_NAME_RELWITHDEBINFO
                                  "${SM_NAME_RELWITHDEBINFO}")
 
+# Libraries & targets that are optional but were found and should be linked`
+# against. E.g., a library may be required only on Linux but not on Windows or
+# MacOS.
+set(SM_EXE_OPTIONAL_LINK_LIBS)
+
 if(WIN32)
   sm_add_compile_definition("${SM_EXE_NAME}" WINDOWS)
   sm_add_compile_definition("${SM_EXE_NAME}" _WINDOWS) # TODO: Remove this
@@ -356,6 +361,7 @@ else() # Linux
 
   if(GTK3_FOUND)
     sm_add_compile_definition("${SM_EXE_NAME}" HAVE_GTK)
+    list(APPEND SM_EXE_OPTIONAL_LINK_LIBS GTK3::GTK3)
   endif()
 
   sm_add_compile_definition("${SM_EXE_NAME}" UNIX)
@@ -421,11 +427,6 @@ else() # Unix / Linux TODO: Remember to find and locate the zip archive files.
   endif()
 
   list(APPEND SMDATA_LINK_LIB "${OPENGL_LIBRARY}")
-
-  if(GTK3_FOUND)
-    list(APPEND SMDATA_LINK_LIB "${GTK3_LIBRARIES}")
-  endif()
-
   list(APPEND SMDATA_LINK_LIB "${CMAKE_THREAD_LIBS_INIT}")
 
   if(HAS_ALSA)
@@ -478,6 +479,7 @@ target_link_directories("${SM_EXE_NAME}"
 target_link_libraries("${SM_EXE_NAME}"
   PRIVATE
     ${SMDATA_LINK_LIB}
+    ${SM_EXE_OPTIONAL_LINK_LIBS}
     BZip2::BZip2
     ${FFMPEG_LIBRARIES}
     GLEW::GLEW
@@ -508,9 +510,6 @@ list(APPEND SM_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}
             "${SM_SRC_DIR}/generated")
 if(NOT APPLE)
   if(NOT MSVC)
-    if(HAS_GTK3)
-      list(APPEND SM_INCLUDE_DIRS "${GTK3_INCLUDE_DIRS}")
-    endif()
     if(X11_FOUND)
       list(APPEND SM_INCLUDE_DIRS "${X11_INCLUDE_DIR}")
     endif()
