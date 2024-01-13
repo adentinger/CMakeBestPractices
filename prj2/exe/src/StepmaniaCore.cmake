@@ -279,10 +279,10 @@ elseif(LINUX)
     set(HAS_XRANDR TRUE)
   endif()
 
-  set(HAS_LIBXTST FALSE)
-  if(WITH_LIBXTST)
+  set(HAS_Xtst FALSE)
+  if(WITH_Xtst)
     find_package(Xtst REQUIRED)
-    set(HAS_LIBXTST TRUE)
+    set(HAS_Xtst TRUE)
   endif()
 
   set(HAS_XINERAMA FALSE)
