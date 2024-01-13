@@ -1,4 +1,3 @@
-#define __USE_GNU
 #include "global.h"
 
 #include <cstdio>
