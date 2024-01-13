@@ -3,6 +3,10 @@
 	"name": "cmake-best-practices-tests",
 	"version": "1.0",
 	"dependencies": [
+		{
+			"name": "alsa",
+			"platform": "linux"
+		},
 		"bzip2",
 		"ffmpeg",
 		"glew",

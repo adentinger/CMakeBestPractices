@@ -28,7 +28,7 @@ sudo apt update
 # the case, see below.
 sudo apt-get install -y build-essential ninja-build pkg-config cmake python3
 # Needed by vcpkg ports
-sudo apt-get install -y curl zip unzip tar nasm bison alsa-base pulseaudio libgtk-3-dev libxmu-dev libxi-dev libgl-dev
+sudo apt-get install -y curl zip unzip tar autoconf libtool nasm bison libgtk-3-dev libxmu-dev libxi-dev libgl-dev
 # Optional dependencies --generally for regular contributors of the project
 sudo apt-get install -y clang-format-16 clang-tidy-16
 ```

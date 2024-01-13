@@ -291,7 +291,7 @@ elseif(LINUX)
     set(HAS_XINERAMA TRUE)
   endif()
 
-  find_package(ALSA REQUIRED)
+  find_package(ALSA MODULE REQUIRED)
   set(HAS_ALSA TRUE)
 
   set(HAS_JACK FALSE)
