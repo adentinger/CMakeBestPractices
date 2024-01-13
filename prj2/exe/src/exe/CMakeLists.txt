@@ -179,8 +179,6 @@ elseif(APPLE)
       "${SM_RESOURCE_DIR}"
       MACOSX_BUNDLE_INFO_PLIST
       "${SM_XCODE_DIR}/Info.StepMania.plist"
-      XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD
-      "${SM_CPP_STANDARD}"
       XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY
       "libc++"
       XCODE_ATTRIBUTE_INFOPLIST_FILE
@@ -368,8 +366,6 @@ else() # Linux
   if("${CMAKE_SYSTEM}" MATCHES "Linux")
     sm_add_compile_definition("${SM_EXE_NAME}" LINUX)
   endif()
-
-  sm_add_compile_flag("${SM_EXE_NAME}" "-std=${SM_CPP_STANDARD}")
 endif()
 
 set_property(TARGET "${SM_EXE_NAME}" PROPERTY FOLDER "Internal Libraries")
