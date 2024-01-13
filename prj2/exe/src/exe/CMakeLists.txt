@@ -439,7 +439,10 @@ else() # Unix / Linux TODO: Remember to find and locate the zip archive files.
   endif()
 
   if(X11_FOUND)
-    list(APPEND SMDATA_LINK_LIB ${X11_LIBRARIES})
+    list(APPEND SMDATA_LINK_LIB
+      # Needed by X11 libraries, so needs to come first
+      ${Xrandr_LIBRARIES}
+      ${X11_LIBRARIES})
   endif()
 
   if(SDL2_FOUND)
@@ -451,7 +454,7 @@ else() # Unix / Linux TODO: Remember to find and locate the zip archive files.
     list(APPEND SMDATA_LINK_LIB ${Xtst_LIBRARY})
   endif()
 
-  list(APPEND SMDATA_LINK_LIB ${XRANDR_LIBRARIES} ${XINERAMA_LIBRARIES})
+  list(APPEND SMDATA_LINK_LIB ${XINERAMA_LIBRARIES})
 
   list(REMOVE_DUPLICATES SMDATA_LINK_LIB)
 endif()
