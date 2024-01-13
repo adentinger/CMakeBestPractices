@@ -6,4 +6,6 @@
 #  GTK3_LIBRARIES
 
 find_package(PkgConfig REQUIRED QUIET)
-pkg_check_modules(GTK3 QUIET gtk+-3.0)
+pkg_check_modules(GTK3 QUIET gtk+-3.0
+  IMPORTED_TARGET)
+add_library(GTK3::GTK3 ALIAS PkgConfig::GTK3)
