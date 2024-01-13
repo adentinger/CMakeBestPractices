@@ -25,7 +25,7 @@ elseif(LINUX)
          "Build using libXinerama to query for monitor numbers (if available)."
          ON)
   option(WITH_ALSA "Build with ALSA support" ON)
-  set(WITH_PULSEAUDIO ON)
+  set(WITH_Pulseaudio ON)
   option(WITH_JACK "Build with JACK support" OFF)
   option(WITH_XRANDR "Build with Xrandr support" ON)
   option(WITH_Xtst "Build with libXtst support" ON)

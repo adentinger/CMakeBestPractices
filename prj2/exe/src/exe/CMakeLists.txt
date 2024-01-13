@@ -442,16 +442,6 @@ else() # Unix / Linux TODO: Remember to find and locate the zip archive files.
     sm_add_compile_definition("${SM_EXE_NAME}" "HAVE_OSS_VERSION=1")
   endif()
 
-  if(HAS_PULSE)
-    list(APPEND SMDATA_LINK_LIB ${PULSEAUDIO_LIBRARY})
-    # PACKAGE_NAME and PACKAGE_VERSION are only used in this scenario. Why is
-    # not clear. TODO: Remove this silliness.
-    sm_add_compile_definition("${SM_EXE_NAME}" PACKAGE_NAME="StepMania")
-    set(PACKAGE_VERSION "${SM_VERSION_MAJOR}.${SM_VERSION_MINOR}")
-    sm_add_compile_definition("${SM_EXE_NAME}"
-                              PACKAGE_VERSION="${PACKAGE_VERSION}")
-  endif()
-
   if(X11_FOUND)
     list(APPEND SMDATA_LINK_LIB ${X11_LIBRARIES})
   endif()
