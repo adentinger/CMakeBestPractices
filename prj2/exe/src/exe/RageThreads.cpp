@@ -103,7 +103,13 @@ void ThreadSlot::ThreadCheckpoint::Set( const char *szFile, int iLine, const cha
 			m_szFile = p+1;
 	}
 
-	snprintf( m_szFormattedBuf, sizeof(m_szFormattedBuf), "        %s:%i %s", m_szFile, m_iLine, m_szMessage? m_szMessage:"" );
+	snprintf(
+		m_szFormattedBuf,
+		sizeof(m_szFormattedBuf),
+		"        %s:%i %s",
+		m_szFile != nullptr ? m_szFile : "",
+		m_iLine,
+		m_szMessage != nullptr ? m_szMessage : "" );
 }
 
 const char *ThreadSlot::ThreadCheckpoint::GetFormattedCheckpoint()
