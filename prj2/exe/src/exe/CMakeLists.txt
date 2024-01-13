@@ -54,14 +54,14 @@ else()
   set(SM_NAME_RELWITHDEBINFO "stepmania-release-symbols")
 endif()
 
-# Configure generated files here.
-configure_file("${SM_XCODE_DIR}/Info.plist.in.xml"
-               "${SM_XCODE_DIR}/Info.StepMania.plist")
-configure_file("${SM_XCODE_DIR}/plistHelper.in.hpp"
-               "${SM_XCODE_DIR}/plistHelper.hpp")
-
 # TODO: Make this actually be data and not an executable.
 if(APPLE)
+  # Configure generated files here.
+  configure_file("${SM_XCODE_DIR}/Info.plist.in.xml"
+                "${SM_XCODE_DIR}/Info.StepMania.plist")
+  configure_file("${SM_XCODE_DIR}/plistHelper.in.hpp"
+                "${SM_XCODE_DIR}/plistHelper.hpp")
+
   set(MACOSX_BUNDLE_BUNDLE_NAME ${SM_EXE_NAME})
   add_executable("${SM_EXE_NAME}"
                  MACOSX_BUNDLE
