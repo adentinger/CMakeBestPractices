@@ -291,9 +291,6 @@ elseif(LINUX)
     set(HAS_XINERAMA TRUE)
   endif()
 
-  find_package(PulseAudio REQUIRED)
-  set(HAS_PULSE TRUE)
-
   find_package(ALSA REQUIRED)
   set(HAS_ALSA TRUE)
 
@@ -309,7 +306,7 @@ elseif(LINUX)
     set(HAS_OSS TRUE)
   endif()
 
-  if( NOT (HAS_OSS OR HAS_JACK OR HAS_ALSA OR HAS_PULSE) )
+  if( NOT (HAS_OSS OR HAS_JACK OR HAS_ALSA) )
     message(
       FATAL_ERROR
         "No sound libraries found (or selected). You will require at least one."

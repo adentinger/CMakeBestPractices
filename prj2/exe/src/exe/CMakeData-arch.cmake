@@ -47,11 +47,6 @@ elseif(APPLE)
   list(APPEND SMDATA_ARCH_SOUND_SRC "arch/Sound/RageSoundDriver_AU.cpp")
   list(APPEND SMDATA_ARCH_SOUND_HPP "arch/Sound/RageSoundDriver_AU.h")
 else() # Unix
-  if(HAS_PULSE)
-    list(APPEND SMDATA_ARCH_SOUND_SRC
-                "arch/Sound/RageSoundDriver_PulseAudio.cpp")
-    list(APPEND SMDATA_ARCH_SOUND_HPP "arch/Sound/RageSoundDriver_PulseAudio.h")
-  endif()
   if(HAS_ALSA)
     list(APPEND SMDATA_ARCH_SOUND_SRC
                 "arch/Sound/ALSA9Dynamic.cpp"
