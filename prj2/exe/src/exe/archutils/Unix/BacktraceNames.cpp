@@ -1,5 +1,4 @@
 /* for dladdr: */
-#define __USE_GNU
 #include "global.h"
 #include "BacktraceNames.h"
 
