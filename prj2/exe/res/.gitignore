@@ -1,2 +1,5 @@
 # This library seems to be created when building on Linux.
 /GtkModule.so
+# For some reason the buildsystem places the executable here.
+/stepmania
+/stepmania.exe
