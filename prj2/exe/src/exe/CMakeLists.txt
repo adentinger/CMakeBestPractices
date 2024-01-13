@@ -413,8 +413,8 @@ elseif(APPLE)
               "${ICONV_LIBRARIES}")
 else() # Unix / Linux TODO: Remember to find and locate the zip archive files.
   if(HAS_FFMPEG)
-    if(VA_FOUND)
-      list(APPEND SMDATA_LINK_LIB ${VA_LIBRARY})
+    if(Va_FOUND)
+      list(APPEND SMDATA_LINK_LIB ${Va_LIBRARY})
     endif()
   endif()
 
