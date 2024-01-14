@@ -13,7 +13,10 @@
 		"gtest",
 		"ijg-libjpeg",
 		"jsoncpp",
-		"libiconv",
+		{
+			"name": "libiconv",
+			"platform": "!windows"
+		},
 		"libmad",
 		"libogg",
 		"libpng",
