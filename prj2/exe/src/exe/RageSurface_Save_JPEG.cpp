@@ -17,8 +17,8 @@ namespace jpeg
 }
 
 // Newer versions of jpeglib and jpeglib-turbo define TRUE/FALSE in a
-// typedef enum {}
-#if JPEG_LIB_VERSION >= 80
+// typedef enum {}, except on Windows where they still use macros.
+#if !defined(_WIN32) && JPEG_LIB_VERSION >= 80
 #define TRUE jpeg::TRUE
 #define FALSE jpeg::FALSE
 #endif
