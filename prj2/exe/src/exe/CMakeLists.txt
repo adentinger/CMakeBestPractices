@@ -363,6 +363,11 @@ endif()
 
 set_property(TARGET "${SM_EXE_NAME}" PROPERTY FOLDER "Internal Libraries")
 
+if(UNIX)
+  list(APPEND SMDATA_LINK_LIB
+    ${ICONV_LIBRARIES})
+endif()
+
 if(WIN32)
   list(APPEND SMDATA_LINK_LIB
               "dbghelp.lib"
@@ -402,8 +407,6 @@ elseif(APPLE)
               ${MAC_FRAME_COREAUDIO}
               ${MAC_FRAME_CORESERVICES}
               ${MAC_FRAME_SYSTEM})
-  list(APPEND SMDATA_LINK_LIB
-              "${ICONV_LIBRARIES}")
 else() # Unix / Linux TODO: Remember to find and locate the zip archive files.
   if(HAS_FFMPEG)
     if(Va_FOUND)

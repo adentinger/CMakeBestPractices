@@ -209,7 +209,9 @@ endif()
 find_package(nasm)
 find_package(yasm REQUIRED)
 
-find_package(Iconv)
+if(UNIX)
+  find_package(Iconv REQUIRED)
+endif()
 
 find_package(Threads)
 if(${Threads_FOUND})
