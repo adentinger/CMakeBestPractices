@@ -364,8 +364,8 @@ endif()
 set_property(TARGET "${SM_EXE_NAME}" PROPERTY FOLDER "Internal Libraries")
 
 if(UNIX)
-  list(APPEND SMDATA_LINK_LIB
-    ${ICONV_LIBRARIES})
+  list(APPEND SM_EXE_OPTIONAL_LINK_LIBS_PRIVATE
+    Iconv::Iconv)
 endif()
 
 if(WIN32)
