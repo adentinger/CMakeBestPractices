@@ -569,10 +569,10 @@ if(NOT APPLE)
   install(DIRECTORY "${SM_RESOURCE_DIR}/NoteSkins"
           DESTINATION "${SM_INSTALL_DESTINATION}")
   if(NOT SM_INSTALL_DESTINATION)
-    install(DIRECTORY "${SM_RESOURCE_DIR}/Songs/StepMania 5" DESTINATION "Songs")
+    install(DIRECTORY "${SM_RESOURCE_DIR}/Songs/Kevin MacLeod" DESTINATION "Songs")
     install(FILES "${SM_RESOURCE_DIR}/Songs/instructions.txt" DESTINATION "Songs")
   else()
-    install(DIRECTORY "${SM_RESOURCE_DIR}/Songs/StepMania 5"
+    install(DIRECTORY "${SM_RESOURCE_DIR}/Songs/Kevin MacLeod"
             DESTINATION "${SM_INSTALL_DESTINATION}/Songs")
     install(FILES "${SM_RESOURCE_DIR}/Songs/instructions.txt"
             DESTINATION "${SM_INSTALL_DESTINATION}/Songs")
