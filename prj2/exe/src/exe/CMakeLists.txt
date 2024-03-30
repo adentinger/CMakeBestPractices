@@ -81,10 +81,10 @@ target_precompile_headers("${SM_EXE_NAME}"
 # However, there should always be an option to turn this OFF, since in some
 # situations consumer code might want to e.g. provide all of the dependencies
 # themselves, such as in the case of a package manager.
-option(exe_INSTALL_DEPENDANT_DLLS
-  "If ON, install any DLL that this executable depends on along with it."
+option(exe_INSTALL_RUNTIME_DEPENDENCIES
+  "If ON, install any runtime dependency that this executable depends on along with it."
   ON)
-if (exe_INSTALL_DEPENDANT_DLLS)
+if (exe_INSTALL_RUNTIME_DEPENDENCIES)
   # On Windows, DLLs need to be in the same directory as the executable for it
   # to run. This is not a perfect solution because 1) this is inconsistent with
   # what happens on Unix-like systems (where the shared libraries would need to
@@ -550,7 +550,7 @@ if(NOT APPLE)
       LIBRARY DESTINATION lib
       COMPONENT prj2-rtdeps)
 
-    if(exe_INSTALL_DEPENDANT_DLLS)
+    if(exe_INSTALL_RUNTIME_DEPENDENCIES)
       # Not sure where in this buildsystem we cause StepMania.exe to need the
       # DLL versions of the FFPMEG libraries, but CMake is unaware of this and
       # therefore does not install them. Until we figure this out, we'll have
