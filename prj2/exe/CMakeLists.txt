@@ -155,7 +155,7 @@
 # install(TARGETS exe
 #   EXPORT prj2Targets
 #   # https://youtu.be/IZXNsim9TWI?t=2475
-#   COMPONENT exe
+#   COMPONENT prj2
 #   DESTINATION bin)
 
 # add_subdirectory(test)
