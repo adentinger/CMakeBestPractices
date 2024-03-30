@@ -134,11 +134,11 @@
 # # dependant DLLs are installed in the same directory as the executable. This
 # # is the default because that's what happens on Unix-like systems as well,
 # # so keeping that OFF makes it nice and consistent.
-# option(exe_INSTALL_DEPENDANT_DLLS
-#   "If ON, install any DLL that this executable depends on along with it."
+# option(exe_INSTALL_RUNTIME_DEPENDENCIES
+#   "If ON, install any runtime dependency that this executable depends on along with it."
 #   OFF)
 
-# if (exe_INSTALL_DEPENDANT_DLLS)
+# if (exe_INSTALL_RUNTIME_DEPENDENCIES)
 #   # On Windows, DLLs need to be in the same directory as the executable for it
 #   # to run. This is not a perfect solution because 1) this is inconsistent with
 #   # what happens on Unix-like systems (where the shared libraries would need to
