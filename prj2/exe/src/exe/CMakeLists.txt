@@ -521,9 +521,34 @@ if(NOT APPLE)
   if(WIN32)
     set(SM_FULL_INSTALLATION_PATH_LIST "${SM_INSTALL_DESTINATION}" "bin")
     sm_join("${SM_FULL_INSTALLATION_PATH_LIST}" "/" SM_FULL_INSTALLATION_PATH)
-    install(TARGETS "${SM_EXE_NAME}" DESTINATION "${SM_FULL_INSTALLATION_PATH}")
-    # install(FILES "${SM_PROGRAM_DIR}/parallel_lights_io.dll"
-    #         DESTINATION "${SM_FULL_INSTALLATION_PATH}")
+    install(TARGETS "${SM_EXE_NAME}"
+      DESTINATION "${SM_FULL_INSTALLATION_PATH}"
+      # There is another option, RUNTIME_DEPENDENCIES, which directly copies the
+      # dependencies (e.g. used shared libraries) without having to create a
+      # dependency set, and which is mutually exclusive to RUNTIME_DEPENDENCY_SET.
+      # That option is easier to install the dependencies with, since it doesn't
+      # additionally require using install(RUNTIME_DEPENDENCY_SET).
+      #
+      # However, using RUNTIME_DEPENDENCY_SET instead means it's easier to let the
+      # user choose (usually via CMake cache variables) whether to install the
+      # runtime dependencies or not. Many projects let the user choose because,
+      # in some situations, the user might prefer to provide them.
+      #
+      # This is, in my experience, either because the project doesn't want to make
+      # assumptions about the user's setup, or for some licensing reasons. E.g., in
+      # practice, LGPL-3.0 allows the project to be used in closed source only if
+      # the LGPL-3.0 libraries are built as shared libraries and the project gives
+      # instructions on how a user can replace the version of these shared
+      # libraries. In a situation like this, the closed-source project that uses
+      # this library might choose not to provide these runtime libraries and
+      # therefore have a CMake build which chooses not to.
+      RUNTIME_DEPENDENCY_SET sm_rt_dependencies)
+    install(RUNTIME_DEPENDENCY_SET sm_rt_dependencies
+      # https://discourse.cmake.org/t/cmake-error-at-cmake-install-cmake-file-multiple-conflicting-paths-found-for/8950/2?u=anthonyd973
+      POST_EXCLUDE_REGEXES "${CMAKE_INSTALL_PREFIX}"
+      RUNTIME DESTINATION bin
+      LIBRARY DESTINATION lib
+      COMPONENT prj2-rtdeps)
 
     if(exe_INSTALL_DEPENDANT_DLLS)
       # Not sure where in this buildsystem we cause StepMania.exe to need the
@@ -540,7 +565,34 @@ if(NOT APPLE)
         DESTINATION bin)
     endif()
   else()
-    install(TARGETS "${SM_EXE_NAME}" DESTINATION "${SM_INSTALL_DESTINATION}")
+    install(TARGETS "${SM_EXE_NAME}"
+      DESTINATION "${SM_INSTALL_DESTINATION}"
+      # There is another option, RUNTIME_DEPENDENCIES, which directly copies the
+      # dependencies (e.g. used shared libraries) without having to create a
+      # dependency set, and which is mutually exclusive to RUNTIME_DEPENDENCY_SET.
+      # That option is easier to install the dependencies with, since it doesn't
+      # additionally require using install(RUNTIME_DEPENDENCY_SET).
+      #
+      # However, using RUNTIME_DEPENDENCY_SET instead means it's easier to let the
+      # user choose (usually via CMake cache variables) whether to install the
+      # runtime dependencies or not. Many projects let the user choose because,
+      # in some situations, the user might prefer to provide them.
+      #
+      # This is, in my experience, either because the project doesn't want to make
+      # assumptions about the user's setup, or for some licensing reasons. E.g., in
+      # practice, LGPL-3.0 allows the project to be used in closed source only if
+      # the LGPL-3.0 libraries are built as shared libraries and the project gives
+      # instructions on how a user can replace the version of these shared
+      # libraries. In a situation like this, the closed-source project that uses
+      # this library might choose not to provide these runtime libraries and
+      # therefore have a CMake build which chooses not to.
+      RUNTIME_DEPENDENCY_SET sm_rt_dependencies)
+    install(RUNTIME_DEPENDENCY_SET sm_rt_dependencies
+      # https://discourse.cmake.org/t/cmake-error-at-cmake-install-cmake-file-multiple-conflicting-paths-found-for/8950/2?u=anthonyd973
+      POST_EXCLUDE_REGEXES "${CMAKE_INSTALL_PREFIX}"
+      RUNTIME DESTINATION bin
+      LIBRARY DESTINATION lib
+      COMPONENT prj2-rtdeps)
   endif()
   if(UNIX OR LINUX)
     install(FILES "${SM_RESOURCE_DIR}/GtkModule.so"
