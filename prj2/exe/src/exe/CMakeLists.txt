@@ -517,64 +517,64 @@ else()
   set(SM_INSTALL_DESTINATION "stepmania-5.1")
 endif()
 
-if(NOT APPLE)
+if(WIN32)
+  set(SM_FULL_INSTALLATION_PATH_LIST "${SM_INSTALL_DESTINATION}" "bin")
+  sm_join("${SM_FULL_INSTALLATION_PATH_LIST}" "/" SM_FULL_INSTALLATION_PATH)
+endif()
+install(TARGETS "${SM_EXE_NAME}"
+  DESTINATION "${SM_FULL_INSTALLATION_PATH}"
+  # There is another option, RUNTIME_DEPENDENCIES, which directly copies the
+  # dependencies (e.g. used shared libraries) without having to create a
+  # dependency set, and which is mutually exclusive to RUNTIME_DEPENDENCY_SET.
+  # That option is easier to install the dependencies with, since it doesn't
+  # additionally require using install(RUNTIME_DEPENDENCY_SET).
+  #
+  # However, using RUNTIME_DEPENDENCY_SET instead means it's easier to let the
+  # user choose (usually via CMake cache variables) whether to install the
+  # runtime dependencies or not. Many projects let the user choose because,
+  # in some situations, the user might prefer to provide them.
+  #
+  # This is, in my experience, either because the project doesn't want to make
+  # assumptions about the user's setup, or for some licensing reasons. E.g., in
+  # practice, LGPL-3.0 allows the project to be used in closed source only if
+  # the LGPL-3.0 libraries are built as shared libraries and the project gives
+  # instructions on how a user can replace the version of these shared
+  # libraries. In a situation like this, the closed-source project that uses
+  # this library might choose not to provide these runtime libraries and
+  # therefore have a CMake build which chooses not to.
+  RUNTIME_DEPENDENCY_SET sm_rt_dependencies)
+if(exe_INSTALL_RUNTIME_DEPENDENCIES)
+  # Windows has to be treated specifically: for some reason,
+  # install(RUNTIME_DEPENDENCY_SET) causes hundreds of runtime dependencies
+  # that are acually system libraries to not be found, like:
+  # - AzureAttestManager.dll
+  # - api-ms-win-appmodel-advertisingid-l1-1-0.dll
+  # - ext-ms-mf-pal-l2-1-0.dll
+  #
+  # See: https://discourse.cmake.org/t/get-runtime-dependencies-has-difficulties-with-windows-api-sets/1768
   if(WIN32)
-    set(SM_FULL_INSTALLATION_PATH_LIST "${SM_INSTALL_DESTINATION}" "bin")
-    sm_join("${SM_FULL_INSTALLATION_PATH_LIST}" "/" SM_FULL_INSTALLATION_PATH)
+    # Not sure where in this buildsystem we cause StepMania.exe to need the
+    # DLL versions of the FFPMEG libraries, but CMake is unaware of this and
+    # therefore does not install them. Until we figure this out, we'll have
+    # to install the libraries manually.
+    install(FILES
+      "${SM_PROGRAM_DIR}/avcodec-60.dll"
+      "${SM_PROGRAM_DIR}/avformat-60.dll"
+      "${SM_PROGRAM_DIR}/avutil-58.dll"
+      "${SM_PROGRAM_DIR}/swresample-4.dll"
+      "${SM_PROGRAM_DIR}/swscale-7.dll"
+      "${SM_PROGRAM_DIR}/libpng16.dll"
+      DESTINATION bin)
+  else()
+    install(RUNTIME_DEPENDENCY_SET sm_rt_dependencies
+      # https://discourse.cmake.org/t/cmake-error-at-cmake-install-cmake-file-multiple-conflicting-paths-found-for/8950/2?u=anthonyd973
+      POST_EXCLUDE_REGEXES "${CMAKE_INSTALL_PREFIX}"
+      RUNTIME DESTINATION bin
+      LIBRARY DESTINATION lib
+      COMPONENT prj2-rtdeps)
   endif()
-  install(TARGETS "${SM_EXE_NAME}"
-    DESTINATION "${SM_FULL_INSTALLATION_PATH}"
-    # There is another option, RUNTIME_DEPENDENCIES, which directly copies the
-    # dependencies (e.g. used shared libraries) without having to create a
-    # dependency set, and which is mutually exclusive to RUNTIME_DEPENDENCY_SET.
-    # That option is easier to install the dependencies with, since it doesn't
-    # additionally require using install(RUNTIME_DEPENDENCY_SET).
-    #
-    # However, using RUNTIME_DEPENDENCY_SET instead means it's easier to let the
-    # user choose (usually via CMake cache variables) whether to install the
-    # runtime dependencies or not. Many projects let the user choose because,
-    # in some situations, the user might prefer to provide them.
-    #
-    # This is, in my experience, either because the project doesn't want to make
-    # assumptions about the user's setup, or for some licensing reasons. E.g., in
-    # practice, LGPL-3.0 allows the project to be used in closed source only if
-    # the LGPL-3.0 libraries are built as shared libraries and the project gives
-    # instructions on how a user can replace the version of these shared
-    # libraries. In a situation like this, the closed-source project that uses
-    # this library might choose not to provide these runtime libraries and
-    # therefore have a CMake build which chooses not to.
-    RUNTIME_DEPENDENCY_SET sm_rt_dependencies)
-  if(exe_INSTALL_RUNTIME_DEPENDENCIES)
-    # Windows has to be treated specifically: for some reason,
-    # install(RUNTIME_DEPENDENCY_SET) causes hundreds of runtime dependencies
-    # that are acually system libraries to not be found, like:
-    # - AzureAttestManager.dll
-    # - api-ms-win-appmodel-advertisingid-l1-1-0.dll
-    # - ext-ms-mf-pal-l2-1-0.dll
-    #
-    # See: https://discourse.cmake.org/t/get-runtime-dependencies-has-difficulties-with-windows-api-sets/1768
-    if(WIN32)
-      # Not sure where in this buildsystem we cause StepMania.exe to need the
-      # DLL versions of the FFPMEG libraries, but CMake is unaware of this and
-      # therefore does not install them. Until we figure this out, we'll have
-      # to install the libraries manually.
-      install(FILES
-        "${SM_PROGRAM_DIR}/avcodec-60.dll"
-        "${SM_PROGRAM_DIR}/avformat-60.dll"
-        "${SM_PROGRAM_DIR}/avutil-58.dll"
-        "${SM_PROGRAM_DIR}/swresample-4.dll"
-        "${SM_PROGRAM_DIR}/swscale-7.dll"
-        "${SM_PROGRAM_DIR}/libpng16.dll"
-        DESTINATION bin)
-    else()
-      install(RUNTIME_DEPENDENCY_SET sm_rt_dependencies
-        # https://discourse.cmake.org/t/cmake-error-at-cmake-install-cmake-file-multiple-conflicting-paths-found-for/8950/2?u=anthonyd973
-        POST_EXCLUDE_REGEXES "${CMAKE_INSTALL_PREFIX}"
-        RUNTIME DESTINATION bin
-        LIBRARY DESTINATION lib
-        COMPONENT prj2-rtdeps)
-    endif()
-  endif()
+endif()
+if(NOT APPLE)
   if(UNIX OR LINUX)
     install(FILES "${SM_RESOURCE_DIR}/GtkModule.so"
             LIBRARY DESTINATION "${SM_INSTALL_DESTINATION}" OPTIONAL)
