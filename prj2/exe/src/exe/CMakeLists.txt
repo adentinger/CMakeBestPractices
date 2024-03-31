@@ -611,3 +611,34 @@ if(NOT APPLE)
             DESTINATION "${SM_INSTALL_DESTINATION}/Songs")
   endif()
 endif()
+
+# Properties used only when building shared libraries.
+#
+# For Apple and Unix-like platforms (although maybe not Cygwin?), an RPATH
+# metadata variable can be set inside the linked executable/library to specify
+# a search path for dependant shared libraries. However, this cannot be a
+# relative path because it would be relative to where the executable is run
+# from, which isn't what we want. So instead we specify a special string to
+# make the path relative to where the executable is located.
+#
+# Note that we use CACHE variables here. This is to allow whoever is
+# configuring the CMake build to override the values if they want to, while
+# still providing a sane default.
+if(APPLE)
+  # There is also "@rpath" that is a bit more flexible, but really the equivalent
+  # of "$ORIGIN" for Unix is "@executable_path".
+  set("SM_EXE_INSTALL_RPATH" @executable_path/../lib CACHE STRING "RPATH to use for this target.")
+elseif(UNIX AND NOT CYGWIN)
+  # "$ORIGIN" is a special string that means "the directory containing the
+  # executable that is running".
+  set("SM_EXE_INSTALL_RPATH" $ORIGIN/../lib CACHE STRING "RPATH to use for this target.")
+elseif(WIN32)
+  # DLL platforms don't support RPATH.
+  set("SM_EXE_INSTALL_RPATH" "")
+else()
+  # Nothing to do
+endif()
+
+set_target_properties("${SM_EXE_NAME}"
+  PROPERTIES
+    INSTALL_RPATH "${SM_EXE_INSTALL_RPATH}")
