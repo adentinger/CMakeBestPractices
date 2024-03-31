@@ -514,7 +514,11 @@ target_include_directories("${SM_EXE_NAME}" PUBLIC ${SM_INCLUDE_DIRS})
 if(WIN32)
   set(SM_INSTALL_DESTINATION ".")
 else()
-  set(SM_INSTALL_DESTINATION "stepmania-5.1")
+  # On Linux and MacOS, 'Songs/' and other directories need to be within the
+  # directory where the executable is; see the
+  # "ArchHooks::MountInitialFilesystems()" functions within the files
+  # ArchHooks_MacOSX.mm and ArchHooks_Unix.cpp.
+  set(SM_INSTALL_DESTINATION bin)
 endif()
 
 if(WIN32)
@@ -601,15 +605,10 @@ if(NOT APPLE)
           DESTINATION "${SM_INSTALL_DESTINATION}")
   install(DIRECTORY "${SM_RESOURCE_DIR}/NoteSkins"
           DESTINATION "${SM_INSTALL_DESTINATION}")
-  if(NOT SM_INSTALL_DESTINATION)
-    install(DIRECTORY "${SM_RESOURCE_DIR}/Songs/Kevin MacLeod" DESTINATION "Songs")
-    install(FILES "${SM_RESOURCE_DIR}/Songs/instructions.txt" DESTINATION "Songs")
-  else()
-    install(DIRECTORY "${SM_RESOURCE_DIR}/Songs/Kevin MacLeod"
-            DESTINATION "${SM_INSTALL_DESTINATION}/Songs")
-    install(FILES "${SM_RESOURCE_DIR}/Songs/instructions.txt"
-            DESTINATION "${SM_INSTALL_DESTINATION}/Songs")
-  endif()
+  install(DIRECTORY "${SM_RESOURCE_DIR}/Songs/Kevin MacLeod"
+          DESTINATION "${SM_INSTALL_DESTINATION}/Songs")
+  install(FILES "${SM_RESOURCE_DIR}/Songs/instructions.txt"
+          DESTINATION "${SM_INSTALL_DESTINATION}/Songs")
 endif()
 
 # Properties used only when building shared libraries.
