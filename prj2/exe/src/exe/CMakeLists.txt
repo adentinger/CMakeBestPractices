@@ -581,7 +581,7 @@ endif()
 if(NOT APPLE)
   if(UNIX OR LINUX)
     install(FILES "${SM_RESOURCE_DIR}/GtkModule.so"
-            LIBRARY DESTINATION "${SM_INSTALL_DESTINATION}" OPTIONAL)
+            DESTINATION "${SM_INSTALL_DESTINATION}")
   endif()
   install(DIRECTORY "${SM_RESOURCE_DIR}/Announcers"
           DESTINATION "${SM_INSTALL_DESTINATION}")
