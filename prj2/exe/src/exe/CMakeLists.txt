@@ -491,6 +491,14 @@ if(WIN32)
   target_compile_definitions("${SM_EXE_NAME}"
     PRIVATE "_HAS_STD_BYTE=0")
 endif()
+set_target_properties("${SM_EXE_NAME}" PROPERTIES
+  # The StepMania executable defines symbols like 'CreateSurface' which
+  # are needed by shared libraries like 'GtkModule.so', so we have to
+  # add this property (similar to linker's "-export-dynamic" flag) to make
+  # the executable export its symbols so that the shared libraries can find
+  # them. See:
+  # https://stackoverflow.com/a/3623388/2252948
+  ENABLE_EXPORTS ON)
 list(APPEND SM_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}
             "${SM_SRC_DIR}/generated")
 if(NOT APPLE)
