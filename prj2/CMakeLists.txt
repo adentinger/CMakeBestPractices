@@ -2,10 +2,13 @@
 
 cmake_minimum_required(VERSION 3.26)
 
+if(NOT DEFINED CACHE{CMAKE_TOOLCHAIN_FILE})
+  message(STATUS "CMAKE_TOOLCHAIN_FILE is not set; using vcpkg submodule's toolchain file. You may specify this cache/env variable to be another vcpkg clone's toolchain file for further package sharing (-DCMAKE_TOOLCHAIN_FILE=<vcpkg-dir>/scripts/buildsystems/vcpkg.cmake)")
+endif()
 # This is required to be before the first project() call of the CMake build.
 set(CMAKE_TOOLCHAIN_FILE
   "${CMAKE_CURRENT_SOURCE_DIR}/../vcpkg/scripts/buildsystems/vcpkg.cmake"
-  CACHE STRING "Vcpkg toolchain file.")
+  CACHE FILEPATH "Vcpkg toolchain file: <vcpkg-dir>/scripts/buildsystems/vcpkg.cmake")
 
 project(prj2
   VERSION 1.0
