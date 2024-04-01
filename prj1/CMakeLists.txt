@@ -19,6 +19,11 @@ project(prj1
 set(PROJECT_LICENSE_FILE "${CMAKE_SOURCE_DIR}/../LICENSE.txt"
   CACHE FILEPATH "Path to the license file for this project.")
 
+# https://youtu.be/sBP17HQAQjk?t=1010
+option(CAN_TOUCH_FLAGS
+  "If ON, allows having this CMake configuration touch compile/link flags."
+  ON)
+
 # Reason to do that whether we have tests or not:
 # https://youtu.be/IZXNsim9TWI?t=2426
 enable_testing()
