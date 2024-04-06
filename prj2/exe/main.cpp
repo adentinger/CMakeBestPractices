@@ -20,7 +20,7 @@ int main() {
 		// Using std::cerr, or calling e.what(), may throw an exception.
 		try {
 			std::cerr << __FILE__ << "(" << __LINE__ << "): " << e.what()
-					  << std::endl;
+					  << '\n';
 		}
 		catch (...) {
 			std::terminate();
