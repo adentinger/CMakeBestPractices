@@ -8,3 +8,6 @@ packages/
 # Directory created by vcpkg in manifest mode (using vcpkg.json).
 vcpkg_installed/
 
+# It is common for Git users to ignore directories like .vscode/, so un-ignore
+# it.
+!.vscode/

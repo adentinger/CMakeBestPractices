@@ -1,0 +1,57 @@
+{
+  //////////
+  // NOTE:
+  //
+  // For VSCode C/C++ integration to work, there is some setup to do.
+  // Thankfully, the setup will work accross all projects. First, install
+  // these extensions:
+  //
+  // - "C/C++", by Microsoft (for clang-tidy and clang-format integration)
+  // - "CMake Tools", by Microsoft (for CMake integration)
+  //
+  // You may do this in the VSCode extensions pane. You should also setup these
+  // VSCode settings:
+  //
+  // - "C_Cpp.codeAnalysis.clangTidy.path" (for clang-tidy integration):
+  //     Needed only if clang-tidy is not in your PATH. Beware that this points
+  //     should point to the clang-tidy *executable*, not the directory it is in.
+  //     If not installed at all, you may install it from one of the LLVM
+  //     releases: https://github.com/llvm/llvm-project/releases
+  //     Note that projects generally expect a specific version of LLVM to be
+  //     installed (e.g. LLVM 18.1.3) because some of the tooling that comes
+  //     with it may change over releases. E.g., clang-format (which also comes
+  //     with LLVM) may not format the code exactly the same way accross
+  //     versions even with the same settings, so if a frequent developer wants
+  //     to have exactly the same formatting and analysis engine as the CI
+  //     instance, they need to use the same version.
+  //
+  // - "C_Cpp.clang_format_path" (for clang-format integration):
+  //     Same as "C_Cpp.codeAnalysis.clangTidy.path", but for clang-format.
+  //
+  // - "cmake.cmakePath" (for CMake integration):
+  //     Needed only if the cmake executable is not in the PATH.
+  //
+  // - Also have a look at the c_cpp_properties.json file.
+  //
+  // If some of these settings are different on your system (e.g. if clang-tidy
+  // is not in your PATH), don't edit this file. Instead, go to the command
+  // palette (CTRL+SHIFT+P by default) and choose
+  // "Preferences: Open Settings (UI)". Then, make sure you are in the "User"
+  // tab so that you only change your local settings rather than this file.
+  // Finally, in the search bar, specify the name of the setting (e.g.
+  // "C_Cpp.codeAnalysis.clangTidy.path") and change it appropriately.
+  //////////
+  "C_Cpp.codeAnalysis.clangTidy.enabled": true,
+
+	"cmake.configureArgs": [
+    "-DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE"
+  ],
+  "cmake.buildDirectory": "${workspaceFolder}/build",
+  "cmake.useCMakePresets": "auto",
+
+  "files.associations": {
+    ".clang-tidy": "yaml",
+    ".clang-format": "yaml",
+    ".clangd": "yaml"
+  }
+}

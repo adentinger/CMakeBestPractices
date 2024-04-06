@@ -1,0 +1,30 @@
+{
+  // To select the right configuration, in the command palette (CTRL+SHIFT+P),
+  // choose "C/C++: Select a Configuration..."
+  //
+  // If any of the settings here are not right on your system, then change this
+  // file locally.
+  "configurations": [
+    {
+      "name": "Linux",
+      "defines": [],
+      "intelliSenseMode": "linux-clang-x64",
+      "compilerPath": "/dev-installs/bin/clang",
+      "configurationProvider": "ms-vscode.cmake-tools",
+      "compileCommands": "${workspaceFolder}/build/compile_commands.json",
+      "cStandard": "c17",
+      "cppStandard": "c++20"
+    },
+    {
+      "name": "Windows",
+      "defines": [],
+      "intelliSenseMode": "windows-clang-x64",
+      "compilerPath": "C:/dev-installs/bin/clang",
+      "configurationProvider": "ms-vscode.cmake-tools",
+      "compileCommands": "${workspaceFolder}/build/compile_commands.json",
+      "cStandard": "c17",
+      "cppStandard": "c++20"
+    }
+  ],
+  "version": 4
+}
