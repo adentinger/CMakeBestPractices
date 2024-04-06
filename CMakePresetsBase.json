@@ -74,14 +74,6 @@
 			"hidden": true,
 			"description": "Base for dev/CI setup",
 			"cacheVariables": {
-				"CMAKE_CXX_CLANG_TIDY": {
-					"type": "STRING",
-					"value": "clang-tidy;--config-file=${sourceDir}/../.clang-tidy"
-				},
-				"ADE_CLANG_FORMAT_GIT": {
-					"type": "STRING",
-					"value": "git;clang-format;--style=file:${sourceDir}/../.clang-format"
-				},
 				"CMAKE_MESSAGE_LOG_LEVEL": {
 					"type": "STRING",
 					"value": "VERBOSE"

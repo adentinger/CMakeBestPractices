@@ -1,0 +1,146 @@
+# SPDX-License-Identifier: MIT
+
+# See: https://clang.llvm.org/docs/ClangFormatStyleOptions.html
+
+BasedOnStyle: Google
+
+# The C++ standard version to consider
+Standard: c++17
+
+IndentWidth: 4
+
+# Every developer's heated debate question! I prefer spaces, but work uses
+# tabs. This setting uses tabs, except for aligning stuff which is done using
+# spaces.
+UseTab: AlignWithSpaces
+TabWidth: 4
+
+# Visibility modifiers inside classes/structs are on the same column as the
+# e.g. "class" keyword.
+AccessModifierOffset: -4
+
+# Another heated debate. I tend to be pretty strict with 80 columns (I like
+# to boost my font size to be able to keep my eyes for many years), but I
+# realize that a tad more is also fine.
+ColumnLimit: 80
+
+# "int& foo", not "int &foo"
+DerivePointerAlignment: false
+PointerAlignment: Left
+
+# "const int", not "int const".
+#
+# Note that according to the clang-format doc, this setting can sometimes
+# produce badly formatted code.
+QualifierAlignment: Left
+
+# Function declaration parameters and function call arguments should be one per
+# line if breaks need to be inserted.
+BinPackParameters: false
+BinPackArguments: false
+
+# Open parentheses, angle brackets and square brackets should have a line-break
+# after them if whatever comes after them doesn't fit in one line, and the
+# closing brace shouldn't have a line-break before it:
+#
+# void long_func_name(
+#     int a,
+#     int b);
+AlignAfterOpenBracket: AlwaysBreak
+
+# Don't indent namespaces, and neither what's inside them.
+# Also add a "// namespace <name>" comment when closing a namespace.
+NamespaceIndentation: None
+FixNamespaceComments: true
+
+# Name says what this is...
+KeepEmptyLinesAtTheStartOfBlocks: false
+
+# Adds quote separators to integer literals. This is only valid starting in
+# C++14.
+# Not adding this at the moment because it causes AppleClang errors:
+# https://developer.apple.com/forums/thread/727253
+#
+# IntegerLiteralSeparator:
+#   Binary: 8
+#   Decimal: 3
+#   Hex: 8
+
+# Braces similar to Stroustrup style, but don't break after function
+# definitions.
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterCaseLabel:      false
+  AfterClass:          false
+  AfterControlStatement: Never
+  AfterEnum:           false
+  AfterFunction:       false
+  AfterNamespace:      false
+  AfterStruct:         false
+  AfterUnion:          false
+  AfterExternBlock:    false
+  BeforeCatch:         true
+  BeforeElse:          true
+  BeforeLambdaBody:    false
+  # Applies to do-while loops.
+  BeforeWhile:         false
+  IndentBraces:        false
+  SplitEmptyFunction:  false
+  SplitEmptyRecord:    false
+  # Namespaces should generally not be empty, so if they are break the body.
+  SplitEmptyNamespace: true
+
+# Class inheritance bases are one per line, with any comma being aligned with
+# the colon of the first base.
+BreakInheritanceList: BeforeComma
+
+# Initializers in an init-list are one per line, with any comma being aligned
+# with the colon of the first member.
+PackConstructorInitializers: Never
+BreakConstructorInitializers: BeforeComma
+
+# "case" is on the same level as the "switch".
+IndentCaseLabels: false
+
+# Fancy whitespaces after the "#", but the "#" itself is always the first
+# character of the line.
+IndentPPDirectives: AfterHash
+
+# Backslashes that escape newlines (such as in multiline macros) should be
+# placed on the right-most column allowed.
+AlignEscapedNewlines: Right
+
+# Group #include categories together into separate #include blocks (each block
+# being separated by an empty line), then sort include paths.
+# "IncludeCategories" defines the #include categories.
+IncludeBlocks: Regroup
+IncludeCategories:
+  - Regex: '^["<]lib1/'
+    Priority: 3000
+  - Regex: '^["<]lib2/'
+    Priority: 4000
+  - Regex: '^["<]exe/'
+    Priority: 5000
+  # For the Guideline Support Library:
+  # https://github.com/microsoft/GSL
+  - Regex: '^["<]gsl/'
+    Priority: 1000
+  - Regex: '^["<]gtest/'
+    Priority: 1100
+  - Regex: '^["<]gmock/'
+    Priority: 1200
+  # Headers included with angle brackets and which are not matched above should
+  # be first after the main header because these tend to be system headers.
+  - Regex: '^<'
+    Priority: 100
+  # Headers included with double quotes and which are not matched above should
+  # be first after the main header to keep them close to the headers of the
+  # preceding rule.
+  - Regex: '^"'
+    Priority: 101
+SortIncludes: CaseSensitive
+
+# Regex defining comments that should not be changed (e.g. moved to separate
+# lines, etc).
+CommentPragmas: ''
+

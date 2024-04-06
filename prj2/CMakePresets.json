@@ -15,6 +15,14 @@
 				"lib2_BUILD_WITH_PIC": {
 					"type": "BOOL",
 					"value": "ON"
+				},
+				"CMAKE_CXX_CLANG_TIDY": {
+					"type": "STRING",
+					"value": "clang-tidy;--config-file=${sourceDir}/.clang-tidy"
+				},
+				"ADE_CLANG_FORMAT_GIT": {
+					"type": "STRING",
+					"value": "git;clang-format;--style=file:${sourceDir}/.clang-format"
 				}
 			}
 		},

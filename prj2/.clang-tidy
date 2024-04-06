@@ -1,0 +1,96 @@
+# SPDX-License-Identifier: Apache-2.0
+#
+# Copyright 2017 Google LLC
+# License text: http://www.apache.org/licenses/LICENSE-2.0
+# Added/deleted checks and options.
+
+# Shamelessly taken from:
+# https://github.com/googleapis/google-cloud-cpp/blob/main/.clang-tidy
+
+# Reasons for choices (can't add comments inside a YAML multiline string):
+#
+# - -google-readability-todo:
+#     No need to ensure every TODO points to an issue or person to contact
+#     about it.
+#
+# - -misc-include-cleaner:
+#     Way too many matches. The matches are useful and correct, but existing
+#     codebases will see their code drowned in them. In such codebases, this
+#     check should be turned on once in a while, and the person doing it
+#     should spend a few hours doing only that; it's relatively fast anyway,
+#     and clang-tidy offers automatic fixits to help do it. The result
+#     of these fixits should definitely be reviewed, since, in some cases, the
+#     definition of some APIs is within internal headers that the user is not
+#     meant to include directly. Whether defining APIs there is a good idea or
+#     not is another question, but the fixit results should nonetheless be
+#     reviewed.
+#
+# - -modernize-use-trailing-return-type:
+#     No trailing return type check please! Who uses this verbose and
+#     unnatural C++ syntax when it's not required anyways?
+#
+# - -readability-identifier-length:
+#     We don't mind small identifiers. Though generally names should say more
+#     rather than less, there are plenty of cases (algorithms, tests, ...)
+#     where small identifiers are perfectly acceptable.
+Checks: >
+  -*,
+  abseil-*,
+  bugprone-*,
+  cppcoreguidelines-*,
+  google-*,
+  misc-*,
+  modernize-*,
+  performance-*,
+  portability-*,
+  readability-*,
+  -google-readability-braces-around-statements,
+  -google-readability-namespace-comments,
+  -google-readability-todo,
+  -google-runtime-references,
+  -misc-include-cleaner,
+  -misc-non-private-member-variables-in-classes,
+  -modernize-return-braced-init-list,
+  -modernize-use-trailing-return-type,
+  -modernize-avoid-c-arrays,
+  -performance-move-const-arg,
+  -readability-braces-around-statements,
+  -readability-identifier-length,
+  -readability-magic-numbers,
+  -readability-named-parameter,
+  -readability-redundant-declaration,
+  -readability-function-cognitive-complexity,
+  -bugprone-narrowing-conversions,
+  -bugprone-easily-swappable-parameters,
+  -bugprone-implicit-widening-of-multiplication-result
+# Turn all the warnings from the checks above into errors.
+WarningsAsErrors: "*"
+
+# Headers to report linting error on. Since we specify a custom header filter,
+# the linting errors may be reported multiple times if the header is included
+# from multiple .cpp files.
+HeaderFilterRegex: "^(exe|lib(1|2))/.*\\.(h|hpp|hxx)$"
+
+CheckOptions:
+  - { key: readability-identifier-naming.NamespaceCase,                 value: lower_case }
+  - { key: readability-identifier-naming.ClassCase,                     value: lower_case }
+  - { key: readability-identifier-naming.StructCase,                    value: lower_case }
+  - { key: readability-identifier-naming.TemplateParameterCase,         value: CamelCase  }
+  - { key: readability-identifier-naming.FunctionCase,                  value: lower_case }
+  - { key: readability-identifier-naming.VariableCase,                  value: lower_case }
+  - { key: readability-identifier-naming.ClassMemberCase,               value: lower_case }
+  - { key: readability-identifier-naming.ClassMemberPrefix,             value: m_         }
+  - { key: readability-identifier-naming.PrivateMemberPrefix,           value: m_         }
+  - { key: readability-identifier-naming.ProtectedMemberPrefix,         value: m_         }
+  - { key: readability-identifier-naming.ScopedEnumConstantCase,        value: UPPER_CASE }
+  - { key: readability-identifier-naming.EnumConstantCase,              value: UPPER_CASE }
+  - { key: readability-identifier-naming.ConstexprVariableCase,         value: UPPER_CASE }
+  - { key: readability-identifier-naming.GlobalConstantCase,            value: UPPER_CASE }
+  # Not super useful; cppcoreguidelines-avoid-const-or-ref-data-members
+  # prevents that. If that linting rule is overridden, then we really don't
+  # know what to do, so just set aNy_CasE.
+  - { key: readability-identifier-naming.MemberConstantCase,            value: aNy_CasE   }
+  - { key: readability-identifier-naming.StaticConstantCase,            value: UPPER_CASE }
+  - { key: readability-implicit-bool-conversion.AllowIntegerConditions, value: 1          }
+  - { key: readability-implicit-bool-conversion.AllowPointerConditions, value: 1          }
+  - { key: readability-function-cognitive-complexity.IgnoreMacros,      value: 1          }
