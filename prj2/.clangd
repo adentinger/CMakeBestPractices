@@ -2,8 +2,10 @@
 
 # A YAML file for the clangd tool that implements C++ LSP:
 # https://clangd.llvm.org/
+# This is not needed for VSCode; only for IDEs using clangd (which users of
+# Emacs, Vim and other IDEs often setup).
 
 CompileFlags:
-  # Directory where the compile_commands.json file is.
+  # Directory where the compile_commands.json file is. Technically, if this is
+  # exactly "build", then this whole file is not required.
   CompilationDatabase: build
-
